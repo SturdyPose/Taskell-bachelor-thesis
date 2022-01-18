@@ -1,0 +1,220 @@
+\documentclass[male,czech]{kithesis}
+
+\usepackage{graphics}
+\usepackage{array}
+
+% zde nastavte základní informace o bakalářské práci
+\newcommand{\AUTOR}{Oleg Musijenko}
+\newcommand{\TITULcz}{Tacit programming - návrh doménově specifického jazyka a implementace jeho interpretu} % titul v českém jazyce
+\newcommand{\TITULen}{Tacit programming - design of a domain specific language and implementation of it's interpreter} % titul v anglickém jazyce
+\newcommand{\KLICOVASLOVAcz}{bakalářská práce, odborný text, programování} % klíčová slova v českém jazyce
+\newcommand{\KLICOVASLOVAen}{bachelor thesis} % klíčová slova v anglickém jazyce
+\newcommand{\VEDOUCI}{Mgr. Jiří Fišer, Ph.D.}    
+
+\newcommand{\PROGRAM}{Aplikovaná informatika}    
+\newcommand{\OBOR}{Informační systémy}    
+
+% nastavení fontů (liší se podle TeXovského stroje)
+\iftutex
+\usepackage{fontspec}
+\setmainfont{Libertinus Serif} % použito je opensource písmo Libertinus, lze použít jakékoliv jiné rozumné
+\setsansfont{Libertinus Sans}
+\setmonofont[Scale = MatchLowercase]{Libertinus Mono}
+\usepackage{unicode-math}  
+% písmo pro matematiku, vhodná písma viz  	např. https://developer.mozilla.org/en-US/docs/Mozilla/MathML_Project/Fonts
+\setmathfont{Libertinus Math}
+\else
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{libertinus}
+\usepackage{amsmath,amssymb}
+\usepackage{libertinust1math}
+\fi
+
+\usepackage[style=authoryear,backend=biber]{biblatex}
+\usepackage{minted}
+
+\addbibresource{bibliografie.bib}
+% vylepšení vzhledu
+\usepackage{microtype}
+%\sloppy %odpoznámkujte pokud vám často přetékají řádky
+\renewcommand{\arraystretch}{1.23} % vertikální roztažení tabulek o 23%
+            
+% nastavení pro sazbu výpisu kódu
+\usepackage{listings}
+
+\lstset{ %
+  language=Haskell,                % hlavní programovací jazyk, seznam podporovaných viz https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+  basicstyle=\ttfamily,    
+  showspaces=false,                % show spaces adding particular underscores
+  showstringspaces=true,           % underline spaces within strings
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  frame=single,                    % adds a frame around the code
+  tabsize=3,                       % sets default tabsize to 3 spaces
+  breaklines=true,                 % sets automatic line breaking
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  keywordstyle=\bfseries,          % keyword style
+  commentstyle=\rmfamily,          % comment style
+  stringstyle=\itshape,            % string literal style
+}
+
+% nastavení hypertextových odkazů a PDF metainformací
+\usepackage{url} % přidává příkaz url pro sazbu url
+\usepackage[unicode=true,colorlinks=true,
+            pdftitle={\TITULcz},pdfauthor={\AUTOR},
+            pdfkeywords={\KLICOVASLOVAcz}]{hyperref}
+            
+\pagestyle{fancy} % aktivování stylu záhlaví a zápatí z kithesis
+
+%---------------------------------------------------------
+
+\begin{document}
+\thispagestyle{empty}
+\begin{center}
+{\Huge Univerzita Jana Evangelisty Purkyně \\
+v~Ústí nad Labem}
+\\[16pt]
+{\huge Přírodovědecká fakulta}
+
+\vspace{2cm}
+\resizebox{8cm}{!}{\includegraphics{LOGO_PRF_CZ_RGB_standard.jpg}}
+
+\vspace{2cm}
+{
+\huge
+\TITULcz\par
+
+\vspace{0.5em}
+\LARGE\scshape bakalářská práce
+}
+\end{center} 
+ 
+\vfill
+{
+\large
+\begin{tabular}{>{\bfseries}rl}
+    Vypracoval: 	& \AUTOR\\
+    Vedoucí práce: 	& \VEDOUCI\\
+&\\
+Studijní program:       & \PROGRAM\\
+Studijní obor:          & \OBOR\\
+\end{tabular} 
+}
+\vspace{1.5cm}
+\begin{center}
+\Large\scshape   Ústí nad Labem \the\year
+\end{center}
+
+\cleardoublepage
+\thispagestyle{empty}
+
+\textbf{Zde bude vloženo zadání bakalářské práce!!}
+
+Zadání bakalářské je možné získat až
+v okamžiku, kdy je práce schválena ve STAGu vedoucím práce, vedoucím katedry a garantem oboru a nelze tak učinit elektronicky.
+
+Požádejte o něj vedoucího katedry informatiky. Zadání vám bude doporučeno v podobě elektronicky podepsaného PDF, které vložíte na místo toho listu
+(dvojstránky) některým z nástrojů pro práci s PDF dokumenty.
+
+\cleardoublepage
+\thispagestyle{empty}
+
+\textbf{Prohlášení}
+
+Prohlašuji, že jsem tuto bakalářskou práci vypracoval\ifthenelse{\boolean{feminum}}{a}{} samostatně a použil\ifthenelse{\boolean{feminum}}{a}{}
+jen pramenů, které cituji a uvádím v přiloženém seznamu literatury.
+
+\vspace{1em}
+Byl\ifthenelse{\boolean{feminum}}{a}{} jsem seznámen\ifthenelse{\boolean{feminum}}{a}{} s tím, že se na moji práci vztahují práva a povinnosti vyplývající ze zákona č. 121/2000 Sb., ve znění zákona č. 81/2005 Sb., autorský zákon, zejména se skutečností, že Univerzita Jana Evangelisty Purkyně v Ústí nad Labem má právo na uzavření licenční smlouvy o užití této práce jako školního díla podle § 60 odst. 1 autorského zákona,s tím, že pokud dojde k užití této práce mnou nebo bude poskytnuta licence o užití jinému
+subjektu, je Univerzita Jana Evangelisty Purkyně v Ústí nad Labem oprávněna ode mne požadovat přiměřený příspěvek na úhradu nákladů, které na vytvoření díla vynaložila, a to podle okolností až do jejich skutečné výše.
+
+\vspace{1em}
+V Ústí nad Labem dne \today \hspace{0.3\textwidth} Podpis:
+
+
+\cleardoublepage
+\thispagestyle{empty}
+~\vfill
+
+\begin{flushright}
+  Děkuji vedoucímu práce Mgr. Jiřímu Fišerovi, Ph.D.\\ za neocenitelné rady a pomoc při tvorbě bakalářské práce.
+\end{flushright}
+
+\cleardoublepage
+\thispagestyle{empty}
+
+\textbf{\textsf{Abstrakt}}
+
+\textsc{\TITULcz}
+
+Abstrakt shrnuje základní motivaci práce (kontext), hlavní cíl a následně jednotlivé
+autorské kroky k~jeho splnění (co bylo uděláno od úvodních rešerší, přes návrh, implementaci k případnému nasazení. Minimální rozsah je 800 znaků (maximální půl strany).
+
+\textbf{\textsf{Klíčová slova}}
+
+seznam klíčových slov (obecných termínů vystihujících téma práce) v počtu dva až deset 
+
+\vspace{1em}
+\hrulefill
+\vspace{1em}
+
+\textbf{\textsf{Abstract}}
+
+\textsc{\TITULen}
+
+Translation of Czech abstract.
+
+\textbf{\textsf{Key words}}
+
+Translation of czech key words.
+
+\tableofcontents
+
+\addchap{Úvod}
+
+
+\chapter{Tacit programming}
+
+Tacit programming je styl programování, kde nevyužíváme parametry funkcí, 
+ale funkce přímo přes sebe řetězíme. Ukažme si jednoduchý a intuitivní příklad v javascriptu.
+
+\begin{minted}{js}
+  fetch("APIURL")
+  .then(x => fancyFunction(x))
+  .then(x => console.log(x))
+  .catch(e => throw Error(e))
+\end{minted}
+
+Po získání dat provedeme transformaci dat a poté zapíšeme výsledek do Konzole. 
+Toto je jeden ze způsobů, jak můžeme na sebe řetězit funkce zpětného volání ("Callbacks").
+
+
+
+\section{Principy a odlišnosti od klasického procedurálního paradigmatu}
+
+\section{Rešerše existujících implementací}
+
+\chapter{DSL - principy a využití}
+
+\chapter{Návrh vlastního DSL}
+
+\chapter{Implementace interpretu navrženého DSL}
+
+\chapter{Ověření použitelnosti (testování funkčnosti, praktické příklady využití)}
+
+\chapter{Závěr}
+
+\chapter{Citace}
+
+
+\cite{Katuscakc}
+\cite{IntroToLLVM}
+\printbibliography
+
+
+\appendix
+
+
+
+
+\end{document}

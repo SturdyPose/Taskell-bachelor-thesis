@@ -175,8 +175,8 @@ Translation of czech key words.
 
 \chapter{Tacit programming}
 
-Tacit programming je styl programování, kde nevyužíváme parametry funkcí, 
-ale funkce přímo přes sebe řetězíme. Ukažme si jednoduchý a intuitivní příklad v javascriptu.
+\textbf{Tacit programming} je styl programování, kde nevyužíváme parametry funkcí, 
+ale funkce řetězíme, nebo kompozicujeme. Ukažme si jednoduchý a intuitivní příklad v javascriptu.
 
 \begin{minted}{js}
   fetch("APIURL")
@@ -185,10 +185,48 @@ ale funkce přímo přes sebe řetězíme. Ukažme si jednoduchý a intuitivní 
   .catch(e => throw Error(e))
 \end{minted}
 
-Po získání dat provedeme transformaci dat a poté zapíšeme výsledek do Konzole. 
+Po získání dat provedeme transformaci dat (definice fancyFunction není v tomto kontextu důležitá, stačí pouze vědět, že vrací Promise/Slib) a poté zapíšeme výsledek do Konzole. 
 Toto je jeden ze způsobů, jak můžeme na sebe řetězit funkce zpětného volání ("Callbacks").
 
+Toto je zcela běžná praxe javascript programátorů, ale bohužel má jednu malou nevýhodu.
+Tvoří se zde zbytečná anonymní funkce ("arrow function nebo-li šipková") a pokud bychom prohlubovali čím dál víc 
+zásobník volání, mohou nám tyto anonymní funkce zabírat paměť. 
 
+\begin{minted}{js}
+  fetch("APIURL")
+  .then(fancyFunction)
+  .then(console.log)
+  .catch(throw Error)
+\end{minted}
+
+Zde se nachází kód, který dělá stejné instrukce, jako ten předchozí. Rozdíl je ten, že je zapsán jako \textit{beztečkový "point free"}.
+Takto programátor předchází potřebě dělat wrappovací funkce.
+
+Na následujícím přikladě si ukážeme, jak funguje \textbf{currying} a proč souvisí s tacit programováním.
+
+\begin{minted}{js}
+const curry = (f) => a => b => f(a,b);
+
+const sayHello = (a, b) = `Hello ${a} from ${b}`;
+
+const applyToFunctionArray = (input,...args) => args.map(a => a(input))
+
+const partiallyAppliedData = ["A", "B", "C"].map(curry(sayHello)); 
+// [(b) => "Hello A from ${b}", 
+//  (b) => "Hello B from ${b}", 
+//  (b) => "Hello C from ${b}"]
+
+const partiallyAppliedData2 = ["A", "B", "C"].map(curry(sayHello)(1)); 
+// ["Hello A from 1", 
+//  "Hello B from 1", 
+//  "Hello C from 1"]
+\end{minted}
+
+Curry funkce zařizuje, že máme pro každý argument vlastní funkci. V čem je toto výhodné?
+Například je zde uvedené pole, které se skládá z částečně aplikovaných funkcí. 
+Takto může programátor u předchozí ukázky naiterovat odpověď ze serveru do objektu, které je závislé na třeba na uživatelském vstupu. 
+
+Zajímavější část je u \textit{partiallyAppliedData2}.
 
 \section{Principy a odlišnosti od klasického procedurálního paradigmatu}
 

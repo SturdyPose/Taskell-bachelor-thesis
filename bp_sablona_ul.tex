@@ -112,11 +112,13 @@ Studijní obor:          & \OBOR\\
 
 \textbf{Zde bude vloženo zadání bakalářské práce!!}
 
-Zadání bakalářské je možné získat až
-v okamžiku, kdy je práce schválena ve STAGu vedoucím práce, vedoucím katedry a garantem oboru a nelze tak učinit elektronicky.
-
-Požádejte o něj vedoucího katedry informatiky. Zadání vám bude doporučeno v podobě elektronicky podepsaného PDF, které vložíte na místo toho listu
-(dvojstránky) některým z nástrojů pro práci s PDF dokumenty.
+Cílem bakalářské práce je ukázat výhody a nevýhody tacit přístupu k programování. Výstupem práce bude návrh vlastního doménově specifického jazyka (DSL), který
+bude využívat tacit programming, a navazující pilotní implementace jeho interpretu.
+Návrh jazyka by se měl soustředit na následující body:
+• přehledná syntaxe,
+• možnosti použití vysokoúrovňových nástrojů pro překlad a podporu běhu programu (např. LLVM v Haskellu) včetně parsování jazyka (např. Parsec v Haskellu),
+• efektivita při vykonávaní,
+• případná podpora paralelních výpočtů
 
 \cleardoublepage
 \thispagestyle{empty}
@@ -174,11 +176,13 @@ Translation of czech key words.
 
 \addchap{Úvod}
 
-Jsou různá programovací paradigmata s kterými se může programátor setkat. Mezi nejznámější 
-paradigmata patří strukturované, kde počátek tohoto paradigmatu se datuje v 1967 s Dijkstrovo článkem 
+Tohle potřebuju kurva přepsat, protože to nedává hlavu ani patu. Kurňa, tohle nedává vůbec nic, jen to jen píčovina.
+
+Existují různá programovací paradigma s kterými se může softwarový inženýr setkat. Mezi nejznámější 
+paradigma patří strukturované, kde počátek tohoto paradigmatu se datuje v 1967 s Dijkstrovo článkem 
 "Goto statement considered harmful". Dijkstra díky 'goto' výrazům nemohl určit správnost programu, proto 
 se 'goto' nahradil za struktury typu 'if else', 'while', atd... Poté se můžeme setkat s objektově orientovaným
-paradigmatem, který je v dnešní době využíván jak pro menší aplikace, tak pro enterprise systémy. Toto paradigma
+paradigmatem, který je v dnešní době využíván od menších aplikací až po enterprise systémy. Toto paradigma
 dává programátorům možnosti využití polymorfismu, není zapotřebí využívát ukazatele na funkce a pomocí dnešních
 nástrojů je jednodušší se zorientovat v zdrojovém kódu. Jako finální paradigma je zde funkcionální. Funkcionální jazyky
 omezují primárně omezují mutaci existujících proměnných a zároveň se zaměřují na kompozici funkcí.
@@ -194,21 +198,22 @@ protože návrh je vytvořen v Haskellu pomocí knihoven Parsec a LLVM.
 
 \chapter{Tacit programming}
 
-\textbf{Tacit programming} je styl programování, kde nevyužíváme parametry funkcí, 
-místo toho funkce řetězíme, nebo kompozicujeme. Na následujících příkladech v programovacím jazyce
-javascript si tento princip ukážeme. 
+\textbf{Tacit programming} je programovací styl, 
+který klade důraz na skládání a řetězení funkcí a není založen na explicitní specifikaci parametrů funkcí.
+Základní principy funkcionálního a taci programování jsou v jazyce JavaScript, 
+jelikož se jedná o jeden z nejvíce populárních programovacích jazyků a v zíkladě má funkcionální možnosti. 
+Detailnější principy jsou psány v Haskellu.
 
 \begin{minted}{js}
   fetch("APIURL")
   .then(x => fancyFunction(x))
   .then(x => console.log(x))
-  .catch(e => throw Error(e))
+  .catch(e => console.error(e))
 \end{minted}
 
-Po získání dat provedeme transformaci dat (definice fancyFunction není v tomto kontextu důležitá, stačí pouze vědět, že vrací Promise/Slib) a poté zapíšeme výsledek do konzole. 
-Toto je jeden ze způsobů, jak můžeme na sebe řetězit funkce zpětného volání ("Callbacks").
+Zde se řetězí funkce zpětného volání ("Callbacks").
 
-Toto je zcela běžná praxe javascript programátorů, ale bohužel má jednu malou nevýhodu.
+Tento postup je běžný u JavasSript programátorů, ale bohužel má jednu malou nevýhodu.
 Tvoří se zde zbytečná anonymní funkce ("arrow function nebo-li šipková") a pokud bychom prohlubovali čím dál víc 
 zásobník volání, mohou nám tyto anonymní funkce zabírat paměť a během debuggingu nám tento styl zápisu "znečišťuje" 
 zásobník volání. 
@@ -217,13 +222,13 @@ zásobník volání.
   fetch("APIURL")
   .then(fancyFunction)
   .then(console.log)
-  .catch(throw Error)
+  .catch(console.error)
 \end{minted}
 
-Zde se nachází kód, který dělá stejné instrukce, jako ten předchozí. Rozdíl je ten, že je zapsán jako \textit{beztečkový - "point free"}.
-Takto programátor předchází potřebě dělat obklopující lambda funkce.
+Přepsaná ukázka je logicky ekvivalentní k té předešlé. Zásadní rozdíl je ten, že se nemusí na paměťový zásobník ukládat kontext anonymní funkce 
+a explicitně se nepředávají parametry funkce. Tudíž se jedná o \textit{tacit} zápis.
 
-Na následujícím přikladě si ukážeme, jak funguje \textbf{currying} a proč souvisí s tacit programováním.
+Následující úryvek ukazuje, jak funguje \textbf{currying} a proč souvisí s tacit programováním.
 
 \begin{minted}{js}
 const curry = (f) => a => b => f(a,b);
@@ -265,10 +270,10 @@ const curry = (f) => (..args) => args.length >= f.length ?
 Procedurální paradigma se zaměřuje na psaní procedurálních instrukcí.
 Typickým příkladem tohoto paradigmatu je programovací jazyk C, protože se
 jedná o standard, tak v následujících příkladech budu porovnávat jazyk C s jazykem Haskell.
-Haskell je primárně funkcionální jazyk, tento jazyk nám umožňujě psát funkce
+Haskell je primárně funkcionální jazyk, tento jazyk umožňujě psát funkce
 v "beztečkovém" stylu. 
 
-Ukažme si následující příklad sumace.
+Následující příklad sumace:
 
 \textbf{Haskell}
 \begin{minted}{Haskell}
@@ -296,18 +301,17 @@ int sum(int* arr, size_t numOfElements)
 \end{minted}
 
 Na příkladu jde vidět, že beztečkový styl zápisu je opravdu kompaktní. 
-V Haskellu vůbec neinteragujeme s parametry funkce.
+V Haskellu není třeba zasahovat do parametrů funkcí.
 Tento příklad je založen na podstatě tacit programmingu.
 Co se týče algoritmizace, tacit programming je známý pro vytváření 
 algoritmických řešení pomocí pouze jednoho řádku kódu. 
-
 
 Na dalším příkladě si ukážeme fibonnacciho posloupnost.
 
 \textbf{Haskell}
 \begin{minted}{Haskell}
--- Využijeme lenivosti haskellu a vytvoříme nekonečnou 
--- posloupnost fibonacciho čísel
+-- Haskell je lenivý jazyk a proto je možné vytvořit nekonečnou 
+-- fibonnacciho posloupnost a z té si vzít jen potřebný počet čísel 
 
 fibonacci:: Num a => Int -> [a]
 fibonacci = (flip take) fibonacciInfinite
@@ -349,12 +353,12 @@ velice podobná funkci foldl, jen místo vracení akumulátoru, tak vrací průb
 \chapter{DSL - principy a využití}
 DSL (Domain Specific Language) jsou jazyky, které se zaměřují na specifickou doménu problematiky.
 Obecně DSL jazyky jsou mnohem jednodušší než jejich plnohodnotné protějšky. Výhodou je, že 
-křivka učení je o mnohem nižší než u GPL (General Purpouse Language). Zároveň pokud potřebujete
-na dannou práci experty z oboru, jako jsou například doktoři nebo architekti, tak ty nepotřebují znát detaily 
-implementace algoritmů, ale místo toho pokud budou mít přístup rovnou k DSL - šikmost stěny,
+náročnost učení je mnohem nižší než u GPL (General Purpouse Language). Zároveň při potřebě 
+expertů na specializovaný obor, jako jsou například doktoři nebo architekti, tak ti nepotřebují znát detaily 
+implementace algoritmů, ale místo toho pokud budou mít přístup rovnou k DSL - výpočet šikmosti stěny budovy,
 hodnota cukrů v krvi pacienta, tak mohou plnit svojí práci o mnohem efektivněji. \cite{DomainSpecificLanguages}
 
-Jedním z takových typických jazyků je \textbf{HTML a CSS}. HTML se zaměřuje na vytvoření rámce pro zobrazení textu,
+Jedním z nejrozšířenejších DSL jazyků je ze světa webu a to \textbf{HTML a CSS}. HTML se zaměřuje na vytvoření rámce pro zobrazení textu,
 zatímco CSS se zaměřuje na stylizaci webu pomocí DOM selectorů. Pravdou je, že pro CSS se nenachází žádný 
 protocol a proto v různých webových enginech, můžete dostat různé výsledky. Příkladem z praxe je zpracování
 fontů.
@@ -367,18 +371,69 @@ stylizuje UI a zároveň zbavuje potřeby tvoření "glue" kódu.
 Další jazyk který je velice využíván v hardwarovém prostředí je \textbf{VHDL} nebo \textbf{Verilog}. Tyto DSL jsou zaměřená
 na simulaci obvodů pomocí FPGA (hradlových polí). Pro building C/C++ projektů existuje \textbf{makefile}. Jedním ze zajímavějších
 DSL je DSL pro "continuous integration and deployment". Různé firmy co nabízejí online repositáře se v tomto budou trochu lišit, ale
-většina z nich poskytují jakousi formu automatizaci deploymentu. Toto poskytují firmy jako je GitHub,
-GitLab nebo Azure Dev Ops. Na GitHubu pomocí YAMLu můžete sepsat instrukce na testování a deployment aplikace.
+většina z nich poskytují jakousi formu automatizace vydání programu do oběhu. Toto poskytují firmy jako je GitHub,
+GitLab nebo Azure Dev Ops. Na GitHubu pomocí YAMLu můžete sepsat konfigurační soubor na testování a deployment.
 
 \pagebreak
-\centering
+{\centering
 \captionof{figure}{Výstřižek z GitHub Actions}
 \resizebox{15cm}{!}{\includegraphics{Deployment.PNG}}
+}
 
 \chapter{Návrh vlastního DSL}
-Pro návrh jsem zvolil programovací jazyk Haskell. 
+Pro návrh DSL je hlavní vědět o jakou doménu problematiky se jedná. Zatím neexistuje žádná DSL implementace pro konkurenci či paralelizaci vysokého objemu dat.
+Příkladem vysokého počtu dat je vzorek signálu a detailnější zpracování takového vzorku je časově velice náročné. Tato časová náročnost může být vyřešena právě zmíněnou
+konkurencí, či paralelizací problému. Toto DSL je identifikováno jako \textbf{Haskallyzer}.
+Pro řešení této problematiky byl zvolen Haskell, jelikož se zdá jako nejoptimálnější. Jsou zde rozsáhlé knihovny pro parsování jazyka (Parsec, MegaParse, AttoParsec),
+obsahuje mechaniky tacit programmingu, je staticky silně typovaný a díky monádám, řešení okrajových případů je snadné.
+
+Návrh danného jazyka:
+
+\begin{minted}{hs}
+[CompileTime]
+{
+  let exampleCSV = "example.csv" :
+    (a,Int)
+    (b,Float)
+    (c,String)
+}
+
+let exampleConcurrentProcess = exampleCSV | kalmanFilter 
+                                          | gaussianFilter 
+                                      
+let exampleAnnotatedProcess = exampleConcurrentProcess => "kalmanFilter" 
+                                                          -> writeToIO
+                                                       => "gaussianFilter" 
+                                                          -> writeToIO
+
+let exampleNestedConcurrentProcess = exampleCSV | kalmanFilter | sum
+                                                               | product
+                                                | gaussianFilter
+
+let exampleGUIMainLoop = mainLoop | calculateMainState -> writeToEventQueue
+                                  | gatherEventQueue -> fireEvents
+\end{minted}
+
+\subsection{Vysvětlivka}
+
+Načte se csv soubor do proměné exampleCSV. Při kompilaci se kontrolují v csv souboru dvojice "(a, Int)" a to název sloupce i o jaký datový typ se jedná. 
+Atribut CompileTime umožňí uložit hodnoty během kompilace a tím není zapotřebí načíst 
+soubor při běhu programu. Nevýhodou je, že se tím zaplní paměť při spuštění programu, ale vzato není zapotřebí IO monáda a hodnoty
+jsou ihned připraveny.
+
+\begin{minted}{hs}
+[CompileTime]
+{
+  let exampleCSV = "example.csv" :
+    (a,Int)
+    (b,Float)
+    (c,String)
+}
+\end{minted}
 
 \chapter{Implementace interpretu navrženého DSL}
+
+Prvopočáteční implementace zahrnovala převedení jazyka 
 
 \chapter{Ověření použitelnosti (testování funkčnosti, praktické příklady využití)}
 

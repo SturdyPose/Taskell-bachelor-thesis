@@ -27,6 +27,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{libertinus}
+
 \usepackage{amsmath,amssymb}
 \usepackage{libertinust1math}
 \usepackage{graphicx}
@@ -35,6 +36,7 @@
 
 \usepackage[style=authoryear,backend=biber,citestyle=nature]{biblatex}
 \usepackage{minted}
+\usepackage{listings}
 
 \addbibresource{bibliografie.bib}
 % vylepšení vzhledu
@@ -43,7 +45,7 @@
 \renewcommand{\arraystretch}{1.23} % vertikální roztažení tabulek o 23%
             
 % nastavení pro sazbu výpisu kódu
-\usepackage{listings}
+% \usepackage{listings}
 
 \lstset{ %
   language=Haskell,                % hlavní programovací jazyk, seznam podporovaných viz https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
@@ -65,7 +67,10 @@
 \usepackage[unicode=true,colorlinks=true,
             pdftitle={\TITULcz},pdfauthor={\AUTOR},
             pdfkeywords={\KLICOVASLOVAcz}]{hyperref}
+\usepackage[skip=10pt plus1pt]{parskip}
             
+\newcommand{\haskellInline}[1]{\colorbox{gray!10}{\mintinline{haskell}{#1}}}
+
 \pagestyle{fancy} % aktivování stylu záhlaví a zápatí z kithesis
 
 %---------------------------------------------------------
@@ -110,7 +115,7 @@ Studijní obor:          & \OBOR\\
 \cleardoublepage
 \thispagestyle{empty}
 
-\textbf{Zde bude vloženo zadání bakalářské práce!!}
+\textbf{\textsf{Cíl bakalářské práce}}
 
 Cílem bakalářské práce je ukázat výhody a nevýhody tacit přístupu k programování. Výstupem práce bude návrh vlastního doménově specifického jazyka (DSL), který
 bude využívat tacit programming, a navazující pilotní implementace jeho interpretu.
@@ -136,7 +141,7 @@ subjektu, je Univerzita Jana Evangelisty Purkyně v Ústí nad Labem oprávněna
 V Ústí nad Labem dne \today \hspace{0.3\textwidth} Podpis:
 
 
-\cleardoublepage
+\clearpage
 \thispagestyle{empty}
 ~\vfill
 
@@ -186,10 +191,10 @@ paradigmatem, který je v dnešní době využíván od menších aplikací až 
 dává programátorům možnosti využití polymorfismu, není zapotřebí využívát ukazatele na funkce a pomocí dnešních
 nástrojů je jednodušší se zorientovat v zdrojovém kódu. Jako finální paradigma je zde funkcionální. Funkcionální jazyky
 omezují primárně omezují mutaci existujících proměnných a zároveň se zaměřují na kompozici funkcí.
-
 Existují samozřejmě i další paradigmata, ale mnohdy je na ně pohlíženo jako na kuriozity. Třeba 
 mezi takové patří deklarativní jazyk Prolog, který ověřuje pravdivost výroku v závislosti na předchozích
 relací.
+
 Hlavně se budeme zaměřovat na tacit - "beztečkové" paradigma. Do tohoto paradigmatu spadá 
 jazyky APL rodiny. Ukážeme si, že i jazyky, které nebyly navržené jako "beztečkové" umožňují v tomto stylu psát.
 
@@ -197,13 +202,11 @@ Tato bakalářská práce předpokládá, že čtenář zná základy funkcioná
 protože návrh je vytvořen v Haskellu pomocí knihoven Parsec a LLVM.
 
 \chapter{Tacit programming}
-
 \textbf{Tacit programming} je programovací styl, 
 který klade důraz na skládání a řetězení funkcí a není založen na explicitní specifikaci parametrů funkcí.
 Základní principy funkcionálního a taci programování jsou v jazyce JavaScript, 
 jelikož se jedná o jeden z nejvíce populárních programovacích jazyků a v zíkladě má funkcionální možnosti. 
 Detailnější principy jsou psány v Haskellu.
-
 \begin{minted}{js}
   fetch("APIURL")
   .then(x => fancyFunction(x))
@@ -229,25 +232,19 @@ Přepsaná ukázka je logicky ekvivalentní k té předešlé. Zásadní rozdíl
 a explicitně se nepředávají parametry funkce. Tudíž se jedná o \textit{tacit} zápis.
 
 Následující úryvek ukazuje, jak funguje \textbf{currying} a proč souvisí s tacit programováním.
-
 \begin{minted}{js}
 const curry = (f) => a => b => f(a,b);
-
 const sayHello = (a, b) = `Hello ${a} from ${b}`;
-
 const applyToFunctionArray = (input,...args) => args.map(a => a(input))
-
 const partiallyAppliedData = ["A", "B", "C"].map(curry(sayHello)); 
 // [(b) => "Hello A from ${b}", 
 //  (b) => "Hello B from ${b}", 
 //  (b) => "Hello C from ${b}"]
-
 const partiallyAppliedData2 = ["A", "B", "C"].map(curry(sayHello)(1)); 
 // ["Hello A from 1", 
 //  "Hello B from 1", 
 //  "Hello C from 1"]
 \end{minted}
-
 Curry funkce transfomuje existujícé funkci tak, že máme pro každý argument vlastní vracející funkci. Z 
 funkce \textbf{f(a,b,c,d)} vzniká funkce \textbf{f(a)(b)(c)(d)} \cite{Currying}. V čem je toto výhodné?
 Například je zde uvedené pole, které se skládá z částečně aplikovaných funkcí. 
@@ -264,7 +261,6 @@ která prijímá dva argumenty. Zde je definice funkce, která převádí jakouk
 const curry = (f) => (..args) => args.length >= f.length ? 
   f.apply(this, args) : (...args2) => curry.apply(this, args.concat(args2));
 \end{minted}
-
 \section{Principy a odlišnosti od klasického procedurálního paradigmatu}
 
 Procedurální paradigma se zaměřuje na psaní procedurálních instrukcí.
@@ -277,16 +273,12 @@ Následující příklad sumace:
 
 \textbf{Haskell}
 \begin{minted}{Haskell}
-
 sumCustom:: (Traversable t, Num a) => t a -> a
 sumCustom = foldr (+) 0
-
 \end{minted}
-
 \pagebreak
-
 \textbf{C}
-\begin{minted}{C}
+\begin{minted}{c}
 int sum(int* arr, size_t numOfElements)
 {
     int acc = 0;
@@ -299,7 +291,6 @@ int sum(int* arr, size_t numOfElements)
     return acc;
 }
 \end{minted}
-
 Na příkladu jde vidět, že beztečkový styl zápisu je opravdu kompaktní. 
 V Haskellu není třeba zasahovat do parametrů funkcí.
 Tento příklad je založen na podstatě tacit programmingu.
@@ -307,25 +298,22 @@ Co se týče algoritmizace, tacit programming je známý pro vytváření
 algoritmických řešení pomocí pouze jednoho řádku kódu. 
 
 Na dalším příkladě si ukážeme fibonnacciho posloupnost.
-
 \textbf{Haskell}
 \begin{minted}{Haskell}
 -- Haskell je lenivý jazyk a proto je možné vytvořit nekonečnou 
 -- fibonnacciho posloupnost a z té si vzít jen potřebný počet čísel 
-
 fibonacci:: Num a => Int -> [a]
 fibonacci = (flip take) fibonacciInfinite
   where
     fibonacciInfinite:: Num a => [a]
     fibonacciInfinite = scanl (+) 0 (1:fibonacciInfinite)
-
 \end{minted}
 
+\vfill
 \pagebreak
 
 \textbf{C}
-\begin{minted}{C}
-
+\begin{minted}{c}
 void fibonacci(int* arr, size_t numOfElements)
 {
     if(numOfElements > 0)
@@ -341,7 +329,6 @@ void fibonacci(int* arr, size_t numOfElements)
       arr[i] = arr[i - 1] + arr[i - 2];
     }
 }
-
 \end{minted}
 
 Z pohledu imperativního programátora implementace v C je zcela jasná. Funkce přijímá ukazatel na
@@ -374,6 +361,7 @@ DSL je DSL pro "continuous integration and deployment". Různé firmy co nabíze
 většina z nich poskytují jakousi formu automatizace vydání programu do oběhu. Toto poskytují firmy jako je GitHub,
 GitLab nebo Azure Dev Ops. Na GitHubu pomocí YAMLu můžete sepsat konfigurační soubor na testování a deployment.
 
+\vfill
 \pagebreak
 {\centering
 \captionof{figure}{Výstřižek z GitHub Actions}
@@ -383,13 +371,13 @@ GitLab nebo Azure Dev Ops. Na GitHubu pomocí YAMLu můžete sepsat konfiguračn
 \chapter{Návrh vlastního DSL}
 Pro návrh DSL je hlavní vědět o jakou doménu problematiky se jedná. Zatím neexistuje žádná DSL implementace pro konkurenci či paralelizaci vysokého objemu dat.
 Příkladem vysokého počtu dat je vzorek signálu a detailnější zpracování takového vzorku je časově velice náročné. Tato časová náročnost může být vyřešena právě zmíněnou
-konkurencí, či paralelizací problému. Toto DSL je identifikováno jako \textbf{Haskallyzer}.
-Pro řešení této problematiky byl zvolen Haskell, jelikož se zdá jako nejoptimálnější. Jsou zde rozsáhlé knihovny pro parsování jazyka (Parsec, MegaParse, AttoParsec),
+konkurencí, či paralelizací problému. Toto DSL je pojmenované jako \textbf{Haskallyzer}.
+Pro řešení této problematiky byl zvolen Haskell, jelikož se zdá jako nejoptimálnější. Pro rozbor jazyka byly komunitami vytvořené knihovny (Parsec, MegaParse, AttoParsec),
 obsahuje mechaniky tacit programmingu, je staticky silně typovaný a díky monádám, řešení okrajových případů je snadné.
 
 Návrh danného jazyka:
 
-\begin{minted}{hs}
+\begin{minted}{haskell}
 [CompileTime]
 {
   let exampleCSV = "example.csv" :
@@ -401,10 +389,6 @@ Návrh danného jazyka:
 let exampleConcurrentProcess = exampleCSV | kalmanFilter 
                                           | gaussianFilter 
                                       
-let exampleAnnotatedProcess = exampleConcurrentProcess => "kalmanFilter" 
-                                                          -> writeToIO
-                                                       => "gaussianFilter" 
-                                                          -> writeToIO
 
 let exampleNestedConcurrentProcess = exampleCSV | kalmanFilter | sum
                                                                | product
@@ -414,28 +398,52 @@ let exampleGUIMainLoop = mainLoop | calculateMainState -> writeToEventQueue
                                   | gatherEventQueue -> fireEvents
 \end{minted}
 
-\subsection{Vysvětlivka}
+\section{Vysvětlení gramatiky jazyka}
 
-Načte se csv soubor do proměné exampleCSV. Při kompilaci se kontrolují v csv souboru dvojice "(a, Int)" a to název sloupce i o jaký datový typ se jedná. 
-Atribut CompileTime umožňí uložit hodnoty během kompilace a tím není zapotřebí načíst 
-soubor při běhu programu. Nevýhodou je, že se tím zaplní paměť při spuštění programu, ale vzato není zapotřebí IO monáda a hodnoty
-jsou ihned připraveny.
+Celý proces je závislý na \textit{Template Haskell} mechanismu. Díky tomuto mechanismu jsou k dispozici části kompilátoru, které umožní generovat kód dle specifikace.
 
-\begin{minted}{hs}
-[CompileTime]
-{
-  let exampleCSV = "example.csv" :
-    (a,Int)
-    (b,Float)
-    (c,String)
-}
-\end{minted}
+Vytvoří se funkce \textit{exampleCSV}, která vrací obsah csv souboru. Při procesu kompilace se provádí kontrola, zda v csv souboru existuje dvojice "(a, Int)", kde "a" představuje název sloupce a všechny hodnoty ve sloupci "a" jsou typu "Int".
+Díky atributu \textit{CompileTime} je možné vytvořit funkci \textit{exampleCSV} bez nutnosti použití IO monády. Jednou z nevýhod této metody je, že při spuštění programu se zaplní paměť, protože obsah csv souboru je součástí samotného spustitelného programu.
+Nicméně, díky tomu není nutné používat IO monádu a obsah csv souboru je k dispozici kdekoliv v programu.
+
+Funkce \textit{exampleConcurrentProcess} vytvoří funkci typu \haskellInline{IO ([a],[b])} a předpokládá, že v programu jsou definované a implementované funkce
+\haskellInline{kalmanFilter:: CSV -> [a]} a \\
+\haskellInline{gaussianFilter:: CSV -> [a]}. Výsledné IO monádě se nejde vyhnout, jelikož se jedná o konkurentní proces, kde vznikají vlákna v jež jsou provedeny výpočty. 
+
+Pro vytvoření konkurentního výpočtu je zapotřebí využít \textit{concurrent pipe compostion}
+\haskellInline{ | } operátoru. Každý další \textit{pipe operátor} vytváří dálší vlákno na kterém je prováděný výpočet.
+Celá syntaxe je závislá na odsazení, tudíž všechny \textit{pipe operátory} musí mít stejné odsazení.
+
+Příklad s funkcí \haskellInline{let exampleNestedConcurrentProcess} ukazuje, že \textit{pipe operátory} se dají vnořovat.
+To znamená, že funkce sum i product musí mít typ
+\haskellInline{sum:: (Num a, Num b) => [a] -> b}. Výsledná funkce bude vygenerováná jako typ \\
+\haskellInline{exampleConcurrentProcess:: (Num a, Num b) => IO((a,b), [c])}.
+
+Poslední příklad s \haskellInline{let exampleGUIMainLoop} poukazuje, že není potřeba využít toto DSL pouze pro analýzu dat, ale
+i pro definování kritických business části programu. Nedílnou součástí GUI aplikací je \textit{EventQueue}, kde
+se zaznamenávají všechny interakce uživatele a program může s těmito interakcemi pracovat.
+
+% \begin{minted}{hs}
+% [CompileTime]
+% {
+%   let exampleCSV = "example.csv" :
+%     (a,Int)
+%     (b,Float)
+%     (c,String)
+% }
+% \end{minted}
 
 \chapter{Implementace interpretu navrženého DSL}
 
 Prvopočáteční implementace zahrnovala převedení jazyka 
 
 \chapter{Ověření použitelnosti (testování funkčnosti, praktické příklady využití)}
+
+Čím více kódu a fíčur v projektu tím obtížnější je definovat, kde se nachází problém a jak se distribujují 
+data. Haskallyzer má výhodu oproti konvenčnímu psaní kódu tu, že ty nejkritičtější části kódu jsou sepsány mimo 
+business řešení a nabízí šírší pohled na \textit{dataflow}.
+
+
 
 \chapter{Závěr}
 

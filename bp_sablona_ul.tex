@@ -119,10 +119,10 @@ Studijní obor:          & \OBOR\\
 
 Cílem bakalářské práce je ukázat výhody a nevýhody tacit přístupu k programování. Výstupem práce bude návrh vlastního doménově specifického jazyka (DSL), který
 bude využívat tacit programming, a navazující pilotní implementace jeho interpretu.
-Návrh jazyka by se měl soustředit na následující body:
-• přehledná syntaxe,
-• možnosti použití vysokoúrovňových nástrojů pro překlad a podporu běhu programu (např. LLVM v Haskellu) včetně parsování jazyka (např. Parsec v Haskellu),
-• efektivita při vykonávaní,
+Návrh jazyka by se měl soustředit na následující body:\\
+• přehledná syntaxe,\\
+• možnosti použití vysokoúrovňových nástrojů pro překlad a podporu běhu programu (např. LLVM v Haskellu) včetně parsování jazyka (např. Parsec v Haskellu),\\
+• efektivita při vykonávaní,\\
 • případná podpora paralelních výpočtů
 
 \cleardoublepage
@@ -156,12 +156,12 @@ V Ústí nad Labem dne \today \hspace{0.3\textwidth} Podpis:
 
 \textsc{\TITULcz}
 
-Abstrakt shrnuje základní motivaci práce (kontext), hlavní cíl a následně jednotlivé
-autorské kroky k~jeho splnění (co bylo uděláno od úvodních rešerší, přes návrh, implementaci k případnému nasazení. Minimální rozsah je 800 znaků (maximální půl strany).
+% Abstrakt shrnuje základní motivaci práce (kontext), hlavní cíl a následně jednotlivé
+% autorské kroky k~jeho splnění (co bylo uděláno od úvodních rešerší, přes návrh, implementaci k případnému nasazení. Minimální rozsah je 800 znaků (maximální půl strany).
 
 \textbf{\textsf{Klíčová slova}}
 
-seznam klíčových slov (obecných termínů vystihujících téma práce) v počtu dva až deset 
+% seznam klíčových slov (obecných termínů vystihujících téma práce) v počtu dva až deset 
 
 \vspace{1em}
 \hrulefill
@@ -181,31 +181,73 @@ Translation of czech key words.
 
 \addchap{Úvod}
 
-Tohle potřebuju kurva přepsat, protože to nedává hlavu ani patu. Kurňa, tohle nedává vůbec nic, jen to jen píčovina.
+Programovací paradigma je způsob myšlení a přístupu k návrhu, 
+strukturování a implementaci počítačových programů. 
+Definuje sadu pravidel, postupů, technik a konceptů, které určují způsob,
+jakým se programy píší a organizují. Paradigma poskytuje rámec pro definici a 
+řešení problémů v programování.
 
-Existují různá programovací paradigma s kterými se může softwarový inženýr setkat. Mezi nejznámější 
-paradigma patří strukturované, kde počátek tohoto paradigmatu se datuje v 1967 s Dijkstrovo článkem 
-"Goto statement considered harmful". Dijkstra díky 'goto' výrazům nemohl určit správnost programu, proto 
-se 'goto' nahradil za struktury typu 'if else', 'while', atd... Poté se můžeme setkat s objektově orientovaným
-paradigmatem, který je v dnešní době využíván od menších aplikací až po enterprise systémy. Toto paradigma
-dává programátorům možnosti využití polymorfismu, není zapotřebí využívát ukazatele na funkce a pomocí dnešních
-nástrojů je jednodušší se zorientovat v zdrojovém kódu. Jako finální paradigma je zde funkcionální. Funkcionální jazyky
-omezují primárně omezují mutaci existujících proměnných a zároveň se zaměřují na kompozici funkcí.
-Existují samozřejmě i další paradigmata, ale mnohdy je na ně pohlíženo jako na kuriozity. Třeba 
-mezi takové patří deklarativní jazyk Prolog, který ověřuje pravdivost výroku v závislosti na předchozích
-relací.
+Některé z nejznámějších programovacích paradigmat zahrnují:
 
-Hlavně se budeme zaměřovat na tacit - "beztečkové" paradigma. Do tohoto paradigmatu spadá 
-jazyky APL rodiny. Ukážeme si, že i jazyky, které nebyly navržené jako "beztečkové" umožňují v tomto stylu psát.
+\section{Procedurální paradigma}
+Zaměřuje se na sekvenci instrukcí, 
+které jsou vykonávány postupně. 
+Program je rozdělen na procedury a funkce, které provádějí určité operace. Příkladem takového 
+paradigmatu je jazyk C, GOlang a Assembly. Zde se programátoři často setkávají s nutností
+manuální správou paměti (\textit{malloc}, \textit{free}).
+
+\section{Objektově orientované paradigma - OOP}
+Klade důraz na objekty a jejich interakce. 
+Program je strukturován kolem tříd, které obsahují data (atributy) a metody (funkce), 
+které s těmito daty pracují. Toto paradigma je obohaceno o \textbf{polymorfismus}.
+Vývojáři si mohou OOP představit jako nadmonžinu Procedurálního paradigmatu.
+
+V závislosti na programovacím jazyce, 
+vývojáři mohou vužívat automatickou správu paměti díky \textit{garbage collectoru}, kde 
+tuto správu paměti vužívají C\# a Java. Pokud je zapotřebí manuální správa paměti, je zde
+C\+\+ nebo Rust. Rust je zajímavý tím, že využívá \textit{borrow checker} a má napodobit
+chování smart pointerů.
+
+
+\section{Funkcionální paradigma - FP}
+Jedná se o deklarativní způsob programování, kde funkce jsou 
+považovány za základní stavební bloky programu. 
+Funkcionální jazyky mají za cíl minimalizovat mutaci dat a preferovat neměnné \textit{immutable}
+struktury. 
+To přispívá ke stabilitě, zjednodušené paralelizaci a eliminaci některých typů chyb. 
+Jazyky jako Lisp a jeho dialekty, oCaml, Closure, F\# a Haskell 
+jsou běžnými příklady funkcioního programování.
+
+V jednotlivých funkcionálních jazycích je povolena různá míra mutace dat. 
+Například jazyk F\# umožňuje mutaci dat kdekoli v programu, což je částečně záměrem, 
+aby oslovil uživatele jazyka C\#. Na druhou stranu, 
+v jazyce Haskell jsou mutace omezeny v IO monádě a data musí být uloženy 
+ve specifických typech jako IORef, STRef nebo MVar. Takto Haskell 
+pomáhá udržet jasnou separaci mezi čistým funkcionalním kódem a kódem, 
+který se zabývá měnícím se stavem nebo interakcí s okolím.
+
+
+Je důležité si uvědomit, že míra povolené mutace dat se může lišit mezi jednotlivými funkcionálními jazyky a je závislá na jejich návrhu a filozofii. Každý jazyk si volí kompromis mezi funkcionalitou a striktností v oblasti mutace, aby splňoval požadavky svých uživatelů a cílů, které si klade.
+
+\section{Cíl práce}
+
+Cílem práce je zaměření na \textit{tacit} - "beztečkové" paradigma a implementovat
+\textit{Domain Specific Language} s tímto paradigmatem. V práci budou ukázky, jak
+tacit programming vypadá a budou vyzdvyženy argumenty proč s tacit programmingem
+vůbec pracovat.
+Do tohoto paradigmatu spadají jazyky APL rodiny. 
+Ukázky v této práci potvrdí, že jazyky které nebyly primárně navržené jako "beztečkové" 
+umožňují v tomto stylu psát.
 
 Tato bakalářská práce předpokládá, že čtenář zná základy funkcionálních jazyků a obzvlášť Haskellu, 
-protože návrh je vytvořen v Haskellu pomocí knihoven Parsec a LLVM.
+protože návrh je vytvořen v Haskellu pomocí knihoven Parsec.
 
 \chapter{Tacit programming}
 \textbf{Tacit programming} je programovací styl, 
 který klade důraz na skládání a řetězení funkcí a není založen na explicitní specifikaci parametrů funkcí.
-Základní principy funkcionálního a taci programování jsou v jazyce JavaScript, 
-jelikož se jedná o jeden z nejvíce populárních programovacích jazyků a v zíkladě má funkcionální možnosti. 
+Pro základní ukázky bude využit JavaScript jelikož se jedná o jeden z nejpopulárnějších jazyků. 
+Základní principy funkcionálního a tacit programování jsou v jazyce JavaScript,
+jelikož se jedná o jeden z nejvíce populárních programovacích jazyků a v základu má již funkcionální možnosti.
 Detailnější principy jsou psány v Haskellu.
 \begin{minted}{js}
   fetch("APIURL")
@@ -261,7 +303,7 @@ která prijímá dva argumenty. Zde je definice funkce, která převádí jakouk
 const curry = (f) => (..args) => args.length >= f.length ? 
   f.apply(this, args) : (...args2) => curry.apply(this, args.concat(args2));
 \end{minted}
-\section{Principy a odlišnosti od klasického procedurálního paradigmatu}
+\section{Principy a odlišnosti od klasického paradigmatu}
 
 Procedurální paradigma se zaměřuje na psaní procedurálních instrukcí.
 Typickým příkladem tohoto paradigmatu je programovací jazyk C, protože se
@@ -335,13 +377,44 @@ Z pohledu imperativního programátora implementace v C je zcela jasná. Funkce 
 pole a modifikuje toto pole. Zatímco v Haskellu tato implementace může být matoucí. Funkce scanl je 
 velice podobná funkci foldl, jen místo vracení akumulátoru, tak vrací průběžně vypočtené hodnoty.
 
+\section{Debugging}
+
+Debugging je zásadní činností při vývoji softwaru, která umožňuje identifikovat, 
+analyzovat a odstraňovat chyby ve zdrojovém kódu. 
+Proces debuggování je obzvláště důležitý v imperativních a objektově orientovaných jazycích, 
+které často disponují vyspělými debugovacími nástroji. 
+V těchto jazycích je očekáváno sekvenční vykonávání instrukcí, 
+což usnadňuje postupné sledování jejich provádění. 
+Inspekce zásobníku volání představuje 
+další přirozenou součást debuggingu v těchto jazycích.
+
+V případě lenivého jazyka Haskell však debugging přináší značné obtíže. 
+Haskell využívá mechanismu lenivého vyhodnocování, což znamená, 
+že hodnoty jsou vypočteny až ve chvíli, kdy jsou skutečně potřeba. 
+Tato vlastnost komplikuje proces sledování výpočtu a identifikaci chyb. 
+I přes existenci několika debuggovacích nástrojů pro Haskell může 
+debugging pro zkušeného vývojáře představovat opravdovou výzvu. 
+Zmatek může vznikat zejména při určování, 
+kde a jak byla konkrétní proměnná získána, 
+neboť její hodnota je vypočítána až v okamžiku, 
+kdy je použita.
+\pagebreak
+
+Naštěstí Haskell nabízí možnost využití REPL 
+(Read - Eval - Print - Loop) prostředí, 
+které umožňuje interaktivní evaluaci výrazů a postupné zkoumání jejich chování. 
+REPL tak může sloužit jako užitečný nástroj pro rychlé testování 
+a experimentování s funkcemi a výrazy. 
+Přítomnost REPL v Haskellu zčásti kompenzuje obtíže spojené 
+s debuggingem a poskytuje prostředí pro analýzu a ladění kódu.
+
 \section{Rešerše existujících implementací}
 
 \chapter{DSL - principy a využití}
 DSL (Domain Specific Language) jsou jazyky, které se zaměřují na specifickou doménu problematiky.
 Obecně DSL jazyky jsou mnohem jednodušší než jejich plnohodnotné protějšky. Výhodou je, že 
-náročnost učení je mnohem nižší než u GPL (General Purpouse Language). Zároveň při potřebě 
-expertů na specializovaný obor, jako jsou například doktoři nebo architekti, tak ti nepotřebují znát detaily 
+náročnost učení je mnohem nižší než u GPL (General Purpose Language). Zároveň při potřebě 
+expertů na specializovaný obor, nepotřebují znát detaily 
 implementace algoritmů, ale místo toho pokud budou mít přístup rovnou k DSL - výpočet šikmosti stěny budovy,
 hodnota cukrů v krvi pacienta, tak mohou plnit svojí práci o mnohem efektivněji. \cite{DomainSpecificLanguages}
 
@@ -356,10 +429,12 @@ zjednodušení UI nebo business logiky. Třeba pro porovnání \textbf{XAML} pro
 stylizuje UI a zároveň zbavuje potřeby tvoření "glue" kódu.
 
 Další jazyk který je velice využíván v hardwarovém prostředí je \textbf{VHDL} nebo \textbf{Verilog}. Tyto DSL jsou zaměřená
-na simulaci obvodů pomocí FPGA (hradlových polí). Pro building C/C++ projektů existuje \textbf{makefile}. Jedním ze zajímavějších
-DSL je DSL pro "continuous integration and deployment". Různé firmy co nabízejí online repositáře se v tomto budou trochu lišit, ale
+na simulaci obvodů pomocí FPGA (hradlových polí). Pro kompilaci projektů existuje \textbf{makefile} a je nejčastěji spárován s C/C++. 
+Jsou zde DSL pro "continuous integration and deployment". 
+Různé firmy co nabízejí online repositáře se v tomto budou trochu lišit, ale
 většina z nich poskytují jakousi formu automatizace vydání programu do oběhu. Toto poskytují firmy jako je GitHub,
-GitLab nebo Azure Dev Ops. Na GitHubu pomocí YAMLu můžete sepsat konfigurační soubor na testování a deployment.
+GitLab nebo Azure Dev Ops. Na GitHubu pomocí YAMLu se dají sepsat konfigurační soubory 
+na testování a deployment.
 
 \vfill
 \pagebreak
@@ -404,7 +479,7 @@ Celý proces je závislý na \textit{Template Haskell} mechanismu. Díky tomuto 
 
 Vytvoří se funkce \textit{exampleCSV}, která vrací obsah csv souboru. Při procesu kompilace se provádí kontrola, zda v csv souboru existuje dvojice "(a, Int)", kde "a" představuje název sloupce a všechny hodnoty ve sloupci "a" jsou typu "Int".
 Díky atributu \textit{CompileTime} je možné vytvořit funkci \textit{exampleCSV} bez nutnosti použití IO monády. Jednou z nevýhod této metody je, že při spuštění programu se zaplní paměť, protože obsah csv souboru je součástí samotného spustitelného programu.
-Nicméně, díky tomu není nutné používat IO monádu a obsah csv souboru je k dispozici kdekoliv v programu.
+Nicméně díky tomu není nutné používat IO monádu a obsah csv souboru je k dispozici kdekoliv v programu.
 
 Funkce \textit{exampleConcurrentProcess} vytvoří funkci typu \haskellInline{IO ([a],[b])} a předpokládá, že v programu jsou definované a implementované funkce
 \haskellInline{kalmanFilter:: CSV -> [a]} a \\
@@ -414,8 +489,8 @@ Pro vytvoření konkurentního výpočtu je zapotřebí využít \textit{concurr
 \haskellInline{ | } operátoru. Každý další \textit{pipe operátor} vytváří dálší vlákno na kterém je prováděný výpočet.
 Celá syntaxe je závislá na odsazení, tudíž všechny \textit{pipe operátory} musí mít stejné odsazení.
 
-Příklad s funkcí \haskellInline{let exampleNestedConcurrentProcess} ukazuje, že \textit{pipe operátory} se dají vnořovat.
-To znamená, že funkce sum i product musí mít typ
+Příklad s funkcí \haskellInline{let exampleNestedConcurrentProcess} ukazuje, 
+že \textit{pipe operátory} se dají vnořovat. To znamená, že funkce sum i product musí mít typ
 \haskellInline{sum:: (Num a, Num b) => [a] -> b}. Výsledná funkce bude vygenerováná jako typ \\
 \haskellInline{exampleConcurrentProcess:: (Num a, Num b) => IO((a,b), [c])}.
 
@@ -435,14 +510,55 @@ se zaznamenávají všechny interakce uživatele a program může s těmito inte
 
 \chapter{Implementace interpretu navrženého DSL}
 
-Prvopočáteční implementace zahrnovala převedení jazyka 
+Návrh jakéhokoliv DSL (a nejen DSL, ale i programovacího jazyka celkově) zahrnuje
+\textbf{Lexer, Parser a Abstraktní syntaktický strom}.
+
+\textbf{Lexer} má zaúkol přečíst soubor a najít jednotlivé tokeny v daném souboru.
+Tyto tokeny mohou obsahovat metadata, jako jsou řádek a sloupec, kde se token nachází,
+jaký token předcházel a jaký následuje atd... Tyto tokeny jsou zpracovány \textbf{parserem}, 
+který má zaúkol přečíst tokeny a hledat mezi nimi dle předem definované gramatiky vztahy 
+a zpracovat je do abstraktního syntaktického stromu. Abstraktní syntaktický strom je výsledek
+parsování a obsahuje všechny definice jazyka.
+
+\section{Implementace pomocí LLVM}
+
+Prvopočáteční implementace zahrnovala využití knihovny LLVM, která 
+má za následek převzít AST a převést tento jazyk do LLVM intermediate representation (IR).
+Bohužel LLVM se spíše hodí na vytvoření generického programovacího jazyka, než na vytvoření
+DSL. DSL se dá touto knihovnou vytvořit, ale pro každou vygenerovanou funkci se musí
+vytvořit binding mezi IR, jazykem C a Haskellem. Toto řešení je rozhodně možné, 
+ale zvyšuje komplexitu projektu, což je nad rámcem této práce.
+
+\section{Lexer}
+
+\section{Parser}
+
+\section{Abstraktní sysnaktický strom - AST}
+
+\section{Testování}
 
 \chapter{Ověření použitelnosti (testování funkčnosti, praktické příklady využití)}
 
-Čím více kódu a fíčur v projektu tím obtížnější je definovat, kde se nachází problém a jak se distribujují 
-data. Haskallyzer má výhodu oproti konvenčnímu psaní kódu tu, že ty nejkritičtější části kódu jsou sepsány mimo 
-business řešení a nabízí šírší pohled na \textit{dataflow}.
+Abychom si ověřili využití Haskelyzeru, hodil by se nějaký praktický příklad.
 
+
+
+\section{Praktické využití}
+S rozšiřujícím se kódem a funkcionalitou projektu se zvyšuje obtížnost určení, 
+kde se nachází problém a jak jsou data distribuována v daném systému. 
+Jednou z nejkomplikovanějších výzev při psaní softwaru je jeho škálovatelnost. 
+Haskallyzer má výhodu oproti tradičnímu způsobu psaní kódu v tom, 
+že nejkritičtější části kódu jsou odděleny od business řešení a nabízejí širší pohled na tok dat. 
+To může být z jedním hlavních argumentů, proč toto DSL využí pro větší projekty,
+protože usnadnuje jeho škálování.
+Vývojáři mají možnost určit, které části jsou nejdůležitější pro daný cíl a zapsat je do Haskallyzeru.
+
+Konkurence má výhodu v tom, že obecně zvyšuje škálovatelnost softwaru, 
+ale zároveň přináší složitější stav a zvyšuje riziko výskytu chyb. 
+Haskallyzer není pouze DSL pro vnější zápis kritických částí softwaru, 
+ale také umožňuje zápis konkurentních výpočtů v snadno čitelné formě. 
+Tím vzniká určitá forma samo-dokumentace, 
+kterou lze statickým jazykovým analyzátorem například převést do UML zápisu.
 
 
 \chapter{Závěr}

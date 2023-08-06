@@ -418,6 +418,7 @@ expertů na specializovaný obor, nepotřebují znát detaily
 implementace algoritmů, ale místo toho pokud budou mít přístup rovnou k DSL - výpočet šikmosti stěny budovy,
 hodnota cukrů v krvi pacienta, tak mohou plnit svojí práci o mnohem efektivněji. \cite{DomainSpecificLanguages}
 
+\section{Web a enterprise}
 Jedním z nejrozšířenejších DSL jazyků je ze světa webu a to \textbf{HTML a CSS}. HTML se zaměřuje na vytvoření rámce pro zobrazení textu,
 zatímco CSS se zaměřuje na stylizaci webu pomocí DOM selectorů. Pravdou je, že pro CSS se nenachází žádný 
 protocol a proto v různých webových enginech, můžete dostat různé výsledky. Příkladem z praxe je zpracování
@@ -426,18 +427,34 @@ fontů.
 Též existují jazyky DSL, které jsou specifické pouze pro jednu dannou enterprise aplikaci, kde její implementace
 často spočívá na bázi XML nebo podobného formátu jako je např YAML. Zde DSL slouží například pro 
 zjednodušení UI nebo business logiky. Třeba pro porovnání \textbf{XAML} pro .NET platformu zjednodušuje logiku, 
-stylizuje UI a zároveň zbavuje potřeby tvoření "glue" kódu.
+stylizuje UI a zároveň zbavuje potřeby tvoření "glue" kódu, který je vygenerován automaticky.
 
+\section{Grafické DSL}
+DSL se též týká programů co běží na grafických kartách. 
+Renderovací programy jsou též známé pod pojmem \textit{shader}.
+Každá grafická knihovna má vlastí DSL jazyk, který jsou velmi
+podobné jazyku C. Všechny renderovací jazyky prochází takzvanou 
+\textit{graphic pipeline}. OpenGL a Vulkan využívají pro rendering 
+OpengGL Shading Language (GLSL). OpenGL kompiluje GLSL během runtime 
+programu zatímco Vulkan využívá předkompilovaného GLSL bytecode nazývaný SPIRV.
+
+Grafické karty se nevyužívají pouze pro rendering jelikož mají širokou škálu
+využitelnosti. 
+Třeba \textit{CUDA} vyvinutý firmou NVIDIA 
+využívá dnešní architekturu grafických karet pro paralelní výpočet 
+velkoobjemných dat, kde tuto techniku využívají dnešní algoritmy pro 
+strojové učení. 
+
+\section{Ostatní DSL}
 Další jazyk který je velice využíván v hardwarovém prostředí je \textbf{VHDL} nebo \textbf{Verilog}. Tyto DSL jsou zaměřená
-na simulaci obvodů pomocí FPGA (hradlových polí). Pro kompilaci projektů existuje \textbf{makefile} a je nejčastěji spárován s C/C++. 
+na simulaci obvodů pomocí FPGA (hradlových polí). 
+Pro kompilaci projektů existuje \textbf{makefile} a je nejčastěji spárován s C/C++. 
 Jsou zde DSL pro "continuous integration and deployment". 
 Různé firmy co nabízejí online repositáře se v tomto budou trochu lišit, ale
 většina z nich poskytují jakousi formu automatizace vydání programu do oběhu. Toto poskytují firmy jako je GitHub,
 GitLab nebo Azure Dev Ops. Na GitHubu pomocí YAMLu se dají sepsat konfigurační soubory 
 na testování a deployment.
 
-\vfill
-\pagebreak
 {\centering
 \captionof{figure}{Výstřižek z GitHub Actions}
 \resizebox{15cm}{!}{\includegraphics{Deployment.PNG}}
@@ -511,13 +528,13 @@ se zaznamenávají všechny interakce uživatele a program může s těmito inte
 \chapter{Implementace interpretu navrženého DSL}
 
 Návrh jakéhokoliv DSL (a nejen DSL, ale i programovacího jazyka celkově) zahrnuje
-\textbf{Lexer, Parser a Abstraktní syntaktický strom}.
+\textbf{Lexer, Parser a Abstraktní syntaktický strom (AST)}.
 
 \textbf{Lexer} má zaúkol přečíst soubor a najít jednotlivé tokeny v daném souboru.
 Tyto tokeny mohou obsahovat metadata, jako jsou řádek a sloupec, kde se token nachází,
 jaký token předcházel a jaký následuje atd... Tyto tokeny jsou zpracovány \textbf{parserem}, 
 který má zaúkol přečíst tokeny a hledat mezi nimi dle předem definované gramatiky vztahy 
-a zpracovat je do abstraktního syntaktického stromu. Abstraktní syntaktický strom je výsledek
+a zpracovat je do abstraktního syntaktického stromu. AST je výsledek
 parsování a obsahuje všechny definice jazyka.
 
 \section{Implementace pomocí LLVM}
@@ -527,7 +544,9 @@ má za následek převzít AST a převést tento jazyk do LLVM intermediate repr
 Bohužel LLVM se spíše hodí na vytvoření generického programovacího jazyka, než na vytvoření
 DSL. DSL se dá touto knihovnou vytvořit, ale pro každou vygenerovanou funkci se musí
 vytvořit binding mezi IR, jazykem C a Haskellem. Toto řešení je rozhodně možné, 
-ale zvyšuje komplexitu projektu, což je nad rámcem této práce.
+ale zvyšuje to komplexitu projektu a jednotlivé bindings mohou též být zdrojem 
+nechtěných bugů. Proto se sešlo od implementace pomocí LLVM a místo toho ho nahradil 
+mechanismus Template Haskell.
 
 \section{Lexer}
 
@@ -536,6 +555,8 @@ ale zvyšuje komplexitu projektu, což je nad rámcem této práce.
 \section{Abstraktní sysnaktický strom - AST}
 
 \section{Testování}
+
+\section{Template Haskell}
 
 \chapter{Ověření použitelnosti (testování funkčnosti, praktické příklady využití)}
 

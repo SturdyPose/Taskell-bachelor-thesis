@@ -548,7 +548,47 @@ ale zvyšuje to komplexitu projektu a jednotlivé bindings mohou též být zdro
 nechtěných bugů. Proto se sešlo od implementace pomocí LLVM a místo toho ho nahradil 
 mechanismus Template Haskell.
 
-\section{Lexer}
+\section{Parsec a kombinátory}
+
+V tradičních imperativních jazycích parsování probíha pomocí načtení souboru 
+do takzvaného \textit{streamu} a poté se ze streamu načítají jednotlivé znaky 
+na zpracování tokenů. Díky Haskell knihovnám jako je Parsec, AttoParsec nebo Megaparsec,
+není potřeba zpracovávat jednotlivé znaky, ale stačí definovat kombinátory, 
+které tyto tokeny vrací. Haskelyzer využívá knihovnu Parsec. Zde je následující přiklad 
+jednoduchého kombinátoru.
+
+\begin{minted}{haskell}
+import qualified Text.Parsec.Token as Tok
+type CustomParser a = Parsec String () a
+
+data Variant = Double | Integer | String deriving Show
+
+emptyLexer:: Tok.GenTokenParser String () Identity
+emptyLexer = Tok.makeTokenParser Tok.emptyDef
+
+integer :: CustomParser Variant 
+integer = Tok.integer emptyLexer 
+
+float :: CustomParser Variant 
+float = Tok.float emptyLexer 
+
+parseToVariant:: CustomParser [Variant]
+parseToVariant = many $ integer <|> float <|> (lexeme $ (manyTill alphaNum $ try space))
+\end{minted}
+
+Cílem výše zmíněného příkladu je, přečíst soubor a rozparsovat ho na list, 
+který obsahuje 3 různé datové typy a to na \textit{integer, double, string}.
+Typový synonym \haskellInline{CustomParser a} je synonym pro \haskellInline{Parsec String () a},
+což znamená, že Parsec čte soubor do streamu typu String, nemá žádný stav (Parsec je \textit{Monad Transformer},
+který zároveň má v sobě zahrnutou stavovou monádu) a po úspěšném parsování 
+vrací generický typ a. 
+
+Je nutné zmínit fukci \haskellInline{parseToVariant}. Díky kombinačnímu operátoru \haskellInline{<|>} 
+lze pouze definovat vysokoúrovňovou parsovací logiku. Tento operátor funguje na bázi \textbf{alternativa} nebo
+\textbf{fallback}. Pokud selže parser integer, tak se pokusí parsovat float, pokud i ten selže, tak vždy se 
+rozparsuje poslední možnost a tou je jakýkoliv text.
+
+\section{Lexer a hlavní datové typy}
 
 \section{Parser}
 

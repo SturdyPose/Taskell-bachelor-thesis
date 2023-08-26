@@ -13,13 +13,14 @@
 
 \newcommand{\PROGRAM}{Aplikovaná informatika}    
 \newcommand{\OBOR}{Informační systémy}    
-
 % nastavení fontů (liší se podle TeXovského stroje)
 \iftutex
 \usepackage{fontspec}
 \setmainfont{Libertinus Serif} % použito je opensource písmo Libertinus, lze použít jakékoliv jiné rozumné
 \setsansfont{Libertinus Sans}
 \setmonofont[Scale = MatchLowercase]{Libertinus Mono}
+%\setmainfont{APL385}
+\newfontfamily\apl{APL385}
 \usepackage{unicode-math}  
 % písmo pro matematiku, vhodná písma viz  	např. https://developer.mozilla.org/en-US/docs/Mozilla/MathML_Project/Fonts
 \setmathfont{Libertinus Math}
@@ -68,8 +69,9 @@
             pdftitle={\TITULcz},pdfauthor={\AUTOR},
             pdfkeywords={\KLICOVASLOVAcz}]{hyperref}
 \usepackage[skip=10pt plus1pt]{parskip}
-            
+
 \newcommand{\haskellInline}[1]{\colorbox{gray!10}{\mintinline{haskell}{#1}}}
+\newcommand{\aplInline}[1]{\colorbox{gray!10}{{\apl{#1}}}}
 
 \pagestyle{fancy} % aktivování stylu záhlaví a zápatí z kithesis
 
@@ -410,6 +412,21 @@ s debuggingem a poskytuje prostředí pro analýzu a ladění kódu.
 
 \section{Rešerše existujících implementací}
 
+Jazyk APL je jazyk orientovaný na pole nebo-li \textit{array oriented programming language} se 
+syntaxí zaměřenou na tacit programming. Všechny data se ukládají do polí a nad 
+nimi jsou dělány matematické operaci s poněkud netradiční syntaxí. Totiž každá 
+předem jazykem definovaná funkce je přidělená k unicode charakteru. 
+Například funkce pro přirozený logaritmus je {\apl '⍟'} nebo zaokrouhlení nahoru či dolů 
+jsou {\apl '⌈' '⌊'}.
+Každá funkce se dá zapsat monadicky či dyadicky. 
+
+Monadický zápis:
+\aplInline{-5    ⍝ monadic}
+
+Dyadický zápis:
+\aplInline{10-7  ⍝ dyadic}
+
+
 \chapter{DSL - principy a využití}
 DSL (Domain Specific Language) jsou jazyky, které se zaměřují na specifickou doménu problematiky.
 Obecně DSL jazyky jsou mnohem jednodušší než jejich plnohodnotné protějšky. Výhodou je, že 
@@ -592,7 +609,7 @@ rozparsuje poslední možnost a tou je jakýkoliv text.
 
 \section{Parser}
 
-\section{Abstraktní sysnaktický strom - AST}
+\section{Abstraktně syntaktický strom - AST}
 
 \section{Testování}
 

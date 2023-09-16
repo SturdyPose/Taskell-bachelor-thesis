@@ -38,30 +38,85 @@
 \usepackage[style=authoryear,backend=biber,citestyle=nature]{biblatex}
 \usepackage{minted}
 \usepackage{listings}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{CodeBackGround}{cmyk}{0.0,0.0,0,0.05}  % light gray
+\definecolor{CodeComment}{rgb}{0,0.50,0.00}         % dark green {0,0.45,0.08}
 
 \addbibresource{bibliografie.bib}
 % vylepšení vzhledu
 \usepackage{microtype}
 %\sloppy %odpoznámkujte pokud vám často přetékají řádky
 \renewcommand{\arraystretch}{1.23} % vertikální roztažení tabulek o 23%
-            
-% nastavení pro sazbu výpisu kódu
-% \usepackage{listings}
 
-\lstset{ %
-  language=Haskell,                % hlavní programovací jazyk, seznam podporovaných viz https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
-  basicstyle=\ttfamily,    
-  showspaces=false,                % show spaces adding particular underscores
-  showstringspaces=true,           % underline spaces within strings
-  showtabs=false,                  % show tabs within strings adding particular underscores
-  frame=single,                    % adds a frame around the code
-  tabsize=3,                       % sets default tabsize to 3 spaces
-  breaklines=true,                 % sets automatic line breaking
-  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
-  keywordstyle=\bfseries,          % keyword style
-  commentstyle=\rmfamily,          % comment style
-  stringstyle=\itshape,            % string literal style
+
+% Source from: https://github.com/bakerjd99/jacks/blob/master/latex/apl-lstlisting.tex
+\lstdefinelanguage{apl}
+{
+extendedchars=true,
+morekeywords={},
+otherkeywords={:if,:else,:for,:in,:while,:until
+,:andif,:orif,:repeat,:select,:case
+,:go,:return,:try,:catch,:catchif,:catchall
+,:endfor,:endwhile,:endselect,:endif,:endrepeat,:endselect},
+keywordstyle=\bfseries\color{red},
+sensitive=True,
+morecomment=[l]{⍝}
 }
+\setmonofont{APL385}
+
+\lstset{%
+  basicstyle=\ttfamily\small,  
+  keywordstyle=\bfseries\normalsize,  % can color key words        
+  identifierstyle=,                             
+  commentstyle=\slshape\color{CodeComment}, % no slanted shape in APL385    
+  stringstyle=\ttfamily,                        
+  showstringspaces=false,                      
+  framesep=1pt,                                
+  framerule=0.8pt,                              
+  breaklines=true,      % break long code lines                        
+  breakindent=0pt                             
+}
+
+\makeatletter
+\lst@InputCatcodes
+\def\lst@DefEC{%
+ \lst@CCECUse \lst@ProcessLetter
+  ^^80^^81^^82^^83^^84^^85^^86^^87^^88^^89^^8a^^8b^^8c^^8d^^8e^^8f%
+  ^^90^^91^^92^^93^^94^^95^^96^^97^^98^^99^^9a^^9b^^9c^^9d^^9e^^9f%
+  ^^a0^^a1^^a2^^a3^^a4^^a5^^a6^^a7^^a8^^a9^^aa^^ab^^ac^^ad^^ae^^af%
+  ^^b0^^b1^^b2^^b3^^b4^^b5^^b6^^b7^^b8^^b9^^ba^^bb^^bc^^bd^^be^^bf%
+  ^^c0^^c1^^c2^^c3^^c4^^c5^^c6^^c7^^c8^^c9^^ca^^cb^^cc^^cd^^ce^^cf%
+  ^^d0^^d1^^d2^^d3^^d4^^d5^^d6^^d7^^d8^^d9^^da^^db^^dc^^dd^^de^^df%
+  ^^e0^^e1^^e2^^e3^^e4^^e5^^e6^^e7^^e8^^e9^^ea^^eb^^ec^^ed^^ee^^ef%
+  ^^f0^^f1^^f2^^f3^^f4^^f5^^f6^^f7^^f8^^f9^^fa^^fb^^fc^^fd^^fe^^ff%
+  ^^^^20ac^^^^0153^^^^0152%
+  ^^^^20a7^^^^2190^^^^2191^^^^2192^^^^2193^^^^2206^^^^2207^^^^220a%
+  ^^^^2218^^^^2228^^^^2229^^^^222a^^^^2235^^^^223c^^^^2260^^^^2261%
+  ^^^^2262^^^^2264^^^^2265^^^^2282^^^^2283^^^^2296^^^^22a2^^^^22a3%
+  ^^^^22a4^^^^22a5^^^^22c4^^^^2308^^^^230a^^^^2336^^^^2337^^^^2339%
+  ^^^^233b^^^^233d^^^^233f^^^^2340^^^^2342^^^^2347^^^^2348^^^^2349%
+  ^^^^234b^^^^234e^^^^2350^^^^2352^^^^2355^^^^2357^^^^2359^^^^235d%
+  ^^^^235e^^^^235f^^^^2361^^^^2362^^^^2363^^^^2364^^^^2365^^^^2368%
+  ^^^^236a^^^^236b^^^^236c^^^^2371^^^^2372^^^^2373^^^^2374^^^^2375%
+  ^^^^2377^^^^2378^^^^237a^^^^2395^^^^25af^^^^25ca^^^^25cb%  
+  ^^00}
+\lst@RestoreCatcodes
+\makeatother
+
+% \lstset{ %
+%   language=Haskell,                % hlavní programovací jazyk, seznam podporovaných viz https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
+%   basicstyle=\ttfamily,    
+%   showspaces=false,                % show spaces adding particular underscores
+%   showstringspaces=true,           % underline spaces within strings
+%   showtabs=false,                  % show tabs within strings adding particular underscores
+%   frame=single,                    % adds a frame around the code
+%   tabsize=3,                       % sets default tabsize to 3 spaces
+%   breaklines=true,                 % sets automatic line breaking
+%   breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+%   keywordstyle=\bfseries,          % keyword style
+%   commentstyle=\rmfamily,          % comment style
+%   stringstyle=\itshape,            % string literal style
+% }
 
 % nastavení hypertextových odkazů a PDF metainformací
 \usepackage{url} % přidává příkaz url pro sazbu url
@@ -69,7 +124,6 @@
             pdftitle={\TITULcz},pdfauthor={\AUTOR},
             pdfkeywords={\KLICOVASLOVAcz}]{hyperref}
 \usepackage[skip=10pt plus1pt]{parskip}
-
 \newcommand{\haskellInline}[1]{\colorbox{gray!10}{\mintinline{haskell}{#1}}}
 \newcommand{\aplInline}[1]{\colorbox{gray!10}{{\apl{#1}}}}
 
@@ -233,8 +287,9 @@ Je důležité si uvědomit, že míra povolené mutace dat se může lišit mez
 
 \section{Cíl práce}
 
-Cílem práce je zaměření na \textit{tacit} - "beztečkové" paradigma a implementovat
-\textit{Domain Specific Language} s tímto paradigmatem. V práci budou ukázky, jak
+Cílem práce je vytvoření doménově specifický konkuretní jazyk, který usnadní přehled business logiky a zlepší 
+vývojářské prostředí (developer experience) se zaměřením na \textit{tacit} - "beztečkové" paradigma.
+V práci budou ukázky, jak
 tacit programming vypadá a budou vyzdvyženy argumenty proč s tacit programmingem
 vůbec pracovat.
 Do tohoto paradigmatu spadají jazyky APL rodiny. 
@@ -242,7 +297,7 @@ Ukázky v této práci potvrdí, že jazyky které nebyly primárně navržené 
 umožňují v tomto stylu psát.
 
 Tato bakalářská práce předpokládá, že čtenář zná základy funkcionálních jazyků a obzvlášť Haskellu, 
-protože návrh je vytvořen v Haskellu pomocí knihoven Parsec.
+protože návrh je vytvořen v Haskellu pomocí knihoven jako je Parsec a MTL (Monad Transformer).
 
 \chapter{Tacit programming}
 \textbf{Tacit programming} je programovací styl, 
@@ -410,22 +465,61 @@ a experimentování s funkcemi a výrazy.
 Přítomnost REPL v Haskellu zčásti kompenzuje obtíže spojené 
 s debuggingem a poskytuje prostředí pro analýzu a ladění kódu.
 
-\section{Rešerše existujících implementací}
+\section{Rešerše existujících implementací - APL}
 
 Jazyk APL je jazyk orientovaný na pole nebo-li \textit{array oriented programming language} se 
-syntaxí zaměřenou na tacit programming. Všechny data se ukládají do polí a nad 
-nimi jsou dělány matematické operaci s poněkud netradiční syntaxí. Totiž každá 
-předem jazykem definovaná funkce je přidělená k unicode charakteru. 
+syntaxí zaměřenou na tacit programming. V APL jsou všechny data reprezentovány jako pole 
+a všechny pole jsou skládány ze skalárů a nad 
+nimi jsou dělané matematické operace s poněkud netradiční syntaxí. Totiž každá 
+předem jazykem definovaná funkce je přidělená ke speciálnímu UTF-8 chararakteru. 
 Například funkce pro přirozený logaritmus je {\apl '⍟'} nebo zaokrouhlení nahoru či dolů 
 jsou {\apl '⌈' '⌊'}.
 Každá funkce se dá zapsat monadicky či dyadicky. 
 
-Monadický zápis:
+Monadický zápis má argument operandu na pravé straně:
 \aplInline{-5    ⍝ monadic}
 
-Dyadický zápis:
+Dyadický zápis má argumenty na obou stranách operandu:
 \aplInline{10-7  ⍝ dyadic}
 
+% https://mathspp.com/blog/why-apl-is-a-language-worth-knowing
+Jelikož všechny pole jsou tvořeny skaláry, tak operace "ignorují" strukturu pole a pracují přímo 
+s obsahem pole.
+
+\begin{lstlisting}[language=apl,extendedchars=true]
+  ⍳6          ⍝ 6 integers starting from the origin.
+0 1 2 3 4 5
+  1+⍳6        ⍝ Add 1 to the 6 integers starting from the origin.
+1 2 3 4 5 6
+  2×⍳6        ⍝ Multiply by 2 the 6 integers starting from the origin.
+0 2 4 6 8 10
+\end{lstlisting}
+
+Pokud pole jsou u dyadického zápisu stejné délky, tak jsou hodnoty vypočteny jako jednotlivé 
+skaláry.
+
+\begin{lstlisting}[language=apl,extendedchars=true]
+  100 0 1 × 2 3 4
+200 0 4
+\end{lstlisting}
+
+Operátory jsou vyhodnocovány z prava do leva.
+
+\begin{lstlisting}[language=apl,extendedchars=true]
+  24 ÷ 12 6 - 4 2   ⍝ -> 24 ÷ 8 3
+3 6
+\end{lstlisting}
+
+Booleany jsou reprezentovány jako 1 (True) a 0 (False). Zde je ukázka algoritmu, kde 
+se sečte sekvence přirozených čísel (včetně nuly, ale při součtu nemá vliv), 
+která jsou dělitelná buď třemi nebo pěti.
+
+\begin{lstlisting}[language=apl,extendedchars=true]
+  Euler1 ← {+/((0=3|⍵)∨(0=5|⍵))/⍵}
+
+  Euler1 ⍳1000
+234168
+\end{lstlisting}
 
 \chapter{DSL - principy a využití}
 DSL (Domain Specific Language) jsou jazyky, které se zaměřují na specifickou doménu problematiky.

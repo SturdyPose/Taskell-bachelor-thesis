@@ -795,7 +795,9 @@ data Literal =
 
 \haskellInline{Data Literal} jsou pouze primitivní datové typy stejně jako
 \haskellInline{CsvDataType}, rozdílem je že \haskellInline{CsvDataType} předem definuje, 
-zda-li všechny sloupce v CSV souboru jsou očekáváným datovým typem.
+zda-li všechny sloupce v CSV souboru jsou očekáváným datovým typem. \\
+Typ \haskellInline{OptionalColumnNameWithType} je pro CSV soubory, kde CSV soubor má možnost
+mít záhlaví a \haskellInline{data Schema} ukládá tuto informaci včetně cestu k tomuto souboru. 
 
 Velmi důležitou součástí je \haskellInline{data HaskelyzerFunction}. První část je pouze 
 funkce a její argumenty, druhá část je \haskellInline{Concurrent [[HaskellyzerFunction]]}.
@@ -809,6 +811,17 @@ v tomto případě jsou \textbf{aplikovány zleva do prava}.
 
 
 \section{Parser}
+
+Zpočátku se určí tabulka operátorů a v jakém pořadí se aplikují.
+
+\begin{minted}{haskell}
+binary s f assoc = Ex.Infix (reservedOp s >> return (BinOp f)) assoc
+
+table = [[binary "*" Times Ex.AssocLeft,
+          binary "/" Divide Ex.AssocLeft]
+        ,[binary "+" Plus Ex.AssocLeft,
+          binary "-" Minus Ex.AssocLeft]]
+\end{minted}
 
 \section{Abstraktně syntaktický strom - AST}
 

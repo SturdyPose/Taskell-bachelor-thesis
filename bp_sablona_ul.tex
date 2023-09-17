@@ -521,6 +521,15 @@ která jsou dělitelná buď třemi nebo pěti.
 234168
 \end{lstlisting}
 
+Funkce \aplInline{(0=3|⍵)∨(0=5|⍵) ⍝ '|' - modulo, '=' is equal operator} zjišťuje zda-li je číslo
+dělitelné třemi nebo pěti a vrací 0 nebo 1. Operátor \aplInline{/} funguje jako replicate (pokud je spojené s dalším
+operátorem, tak funguje jako reduce). Jelikož je vyhodnocování z prava do leva, tak pokud argument funkce je 
+například 7 a 12 tak: 
+
+\aplInline{((0=3|7 12)∨(0=10 | 7 12))/7 12 ⍝ Result: 12}.
+
+Toto celé funguje jako filtrování, kombinací operátorů \aplInline{+/} se udělá suma výsledků.
+
 \chapter{DSL - principy a využití}
 DSL (Domain Specific Language) jsou jazyky, které se zaměřují na specifickou doménu problematiky.
 Obecně DSL jazyky jsou mnohem jednodušší než jejich plnohodnotné protějšky. Výhodou je, že 
@@ -618,7 +627,7 @@ Pro vytvoření konkurentního výpočtu je zapotřebí využít \textit{concurr
 Celá syntaxe je závislá na odsazení, tudíž všechny \textit{pipe operátory} musí mít stejné odsazení.
 
 Příklad s funkcí \haskellInline{let exampleNestedConcurrentProcess} ukazuje, 
-že \textit{pipe operátory} se dají vnořovat. To znamená, že funkce sum i product musí mít typ
+že \textit{pipe operátory} se dají vnořovat. To znamená, že funkce sum i product musí mít typ \\
 \haskellInline{sum:: (Num a, Num b) => [a] -> b}. Výsledná funkce bude vygenerováná jako typ \\
 \haskellInline{exampleConcurrentProcess:: (Num a, Num b) => IO((a,b), [c])}.
 
@@ -684,7 +693,8 @@ float :: CustomParser Variant
 float = Tok.float emptyLexer 
 
 parseToVariant:: CustomParser [Variant]
-parseToVariant = many $ integer <|> float <|> (lexeme $ (manyTill alphaNum $ try space))
+parseToVariant = many $ integer <|> float <|> 
+  (lexeme $ (manyTill alphaNum $ try space))
 \end{minted}
 
 Cílem výše zmíněného příkladu je, přečíst soubor a rozparsovat ho na list, 
@@ -695,11 +705,108 @@ který zároveň má v sobě zahrnutou stavovou monádu) a po úspěšném parso
 vrací generický typ a. 
 
 Je nutné zmínit fukci \haskellInline{parseToVariant}. Díky kombinačnímu operátoru \haskellInline{<|>} 
-lze pouze definovat vysokoúrovňovou parsovací logiku. Tento operátor funguje na bázi \textbf{alternativa} nebo
+lze pouze definovat vysokoúrovňovou parsovací logiku bez potřeby manuální jednotlivých tokenů. 
+Tento operátor funguje na bázi \textbf{alternativa} nebo
 \textbf{fallback}. Pokud selže parser integer, tak se pokusí parsovat float, pokud i ten selže, tak vždy se 
 rozparsuje poslední možnost a tou je jakýkoliv text.
 
 \section{Lexer a hlavní datové typy}
+
+Na začátku je důležité si nadefinovat výsledek parsování. Parsec zprostředkovává 
+jednoduchý token parser, který definuje například komentáře, operátory a reservovaná
+jména.
+
+\begin{minted}{haskell}
+haskelyzerLexer :: Tok.GenTokenParser String () (IndentT Identity)
+haskelyzerLexer =
+  Tok.makeTokenParser Tok.emptyDef 
+    { 
+        Tok.commentStart = "#{",
+        Tok.commentEnd = "}#",
+        Tok.commentLine = "##",
+        Tok.reservedOpNames = ops,
+        Tok.reservedNames = names,
+        Tok.identStart = letter,
+        Tok.identLetter = letter,
+        Tok.opStart = oneOf ":!#$%&*+./<=>?@\\^|-~",
+        Tok.opLetter = oneOf ":!#$%&*+./<=>?@\\^|-~",
+        Tok.nestedComments = True,
+        Tok.caseSensitive = True
+    }
+    where
+        ops = ["+","*","-",";", "->" , ":", ",", "|"]
+        names = ["let"]
+\end{minted}
+
+Lze si všimnout, že tato funkce má poněkud zajímavý typ \haskellInline{IndentT Identity}.
+Jelikož jazyk nepoužívá středníky tak místo toho využívá odsazení, proto se zde využívá 
+pomocný monad transformer \haskellInline{IndentT} z knihovny \textit{indents}.
+
+Dále je zapotřebí si definovat jednoduché binární a unární operátory.
+
+\begin{minted}{haskell}
+data BinOp
+  = Plus
+  | Minus
+  | Times
+  | Divide
+  deriving (Eq, Ord, Show)
+
+data UnaryOp
+    = Not
+    | Nroot -- Like SquareRoot but N 
+    | Exponent
+    deriving (Eq, Ord, Show)
+\end{minted}
+
+Nejzajímavější částí je definice datových typů, které jsou zároveň rekurzivní. 
+
+\begin{minted}{haskell}
+type OptionalColumnNameWithType = (Maybe String, CsvDataType)
+data Schema = Schema VarNamePath [OptionalColumnNameWithType] 
+  deriving (Show, Eq, Ord)
+
+data Expr
+  = BinOp BinOp Expr Expr
+  | CsvDataType CsvDataType 
+  | UnaryOp UnaryOp Expr 
+  | Var Name [HaskelyzerFunction]
+  | SchemaExpr Schema 
+  | LiteralExpr Literal
+  deriving (Eq, Ord, Show)
+
+data HaskelyzerFunction = 
+  HaskelyzerFunction Name [Name] -- Function name args
+  | Concurrent [[HaskelyzerFunction]]
+  deriving (Show, Ord, Eq)
+
+data CsvDataType = 
+  CsvFloat 
+  | CsvInt 
+  | CsvString 
+  deriving (Show, Ord, Eq)
+
+data Literal = 
+  Float Double 
+  | Int Integer
+  | String String
+  deriving (Show, Ord, Eq)
+\end{minted}
+
+\haskellInline{Data Literal} jsou pouze primitivní datové typy stejně jako
+\haskellInline{CsvDataType}, rozdílem je že \haskellInline{CsvDataType} předem definuje, 
+zda-li všechny sloupce v CSV souboru jsou očekáváným datovým typem.
+
+Velmi důležitou součástí je \haskellInline{data HaskelyzerFunction}. První část je pouze 
+funkce a její argumenty, druhá část je \haskellInline{Concurrent [[HaskellyzerFunction]]}.
+Ve výše zmíněných příkladech bylo poukázáno, jak každá vygenerovaná funkce může vytvořit 
+další konkurentní funkce a v nich další vnořené konkurentní funkce. Díky této vnořenosti 
+je potřeba uchovávat funkce v listu listů.
+
+\haskellInline{Var Name [HaskellyzerFunction]} vygeneruje funkci s názvem "Name" a pořadí 
+funkcí v \haskellInline{[HaskellyzerFunction]} určují, v jakém pořadí budou funkce aplikovány,
+v tomto případě jsou \textbf{aplikovány zleva do prava}.
+
 
 \section{Parser}
 

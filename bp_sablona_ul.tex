@@ -35,10 +35,23 @@
 \usepackage[font=small, labelfont=bf]{caption}
 \fi
 
-\usepackage[style=authoryear,backend=biber,citestyle=nature]{biblatex}
+\usepackage[
+  style=authoryear,
+  backend=biber,
+  citestyle=authortitle
+  ]{biblatex}
 \usepackage{minted}
 \usepackage{listings}
 \usepackage[dvipsnames]{xcolor}
+
+% \newcommand\mkbibcolor[2]{\textcolor{#1}{\hypersetup{citecolor=#1}#2}}
+% \DeclareCiteCommand{\cite}[\mkbibcolor{red}]
+%   {\usebibmacro{prenote}}%
+%   {\usebibmacro{citeindex}%
+%    \usebibmacro{cite}}
+%   {\multicitedelim}
+%   {\usebibmacro{postnote}}
+
 \definecolor{CodeBackGround}{cmyk}{0.0,0.0,0,0.05}  % light gray
 \definecolor{CodeComment}{rgb}{0,0.50,0.00}         % dark green {0,0.45,0.08}
 
@@ -121,6 +134,8 @@ morecomment=[l]{⍝}
 % nastavení hypertextových odkazů a PDF metainformací
 \usepackage{url} % přidává příkaz url pro sazbu url
 \usepackage[unicode=true,colorlinks=true,
+            citecolor=blue, linkcolor=blue,
+            urlcolor=blue,
             pdftitle={\TITULcz},pdfauthor={\AUTOR},
             pdfkeywords={\KLICOVASLOVAcz}]{hyperref}
 \usepackage[skip=10pt plus1pt]{parskip}
@@ -203,6 +218,8 @@ V Ústí nad Labem dne \today \hspace{0.3\textwidth} Podpis:
 
 \begin{flushright}
   Děkuji vedoucímu práce Mgr. Jiřímu Fišerovi, Ph.D.\\ za neocenitelné rady a pomoc při tvorbě bakalářské práce.
+
+  Též chci poděkovat své ženě, Anetě Musijenko, \\ za neustálou podporu během psaní práce.
 \end{flushright}
 
 \cleardoublepage
@@ -233,7 +250,10 @@ Translation of Czech abstract.
 
 Translation of czech key words.
 
-\tableofcontents
+{
+  \hypersetup{linkcolor=black}
+  \tableofcontents
+}
 
 \addchap{Úvod}
 
@@ -334,20 +354,24 @@ Následující úryvek ukazuje, jak funguje \textbf{currying} a proč souvisí s
 \begin{minted}{js}
 const curry = (f) => a => b => f(a,b);
 const sayHello = (a, b) = `Hello ${a} from ${b}`;
-const applyToFunctionArray = (input,...args) => args.map(a => a(input))
+const applyToFunctionArray = 
+    (input,...args) => args.map(a => a(input))
 const partiallyAppliedData = ["A", "B", "C"].map(curry(sayHello)); 
 // [(b) => "Hello A from ${b}", 
 //  (b) => "Hello B from ${b}", 
 //  (b) => "Hello C from ${b}"]
-const partiallyAppliedData2 = ["A", "B", "C"].map(curry(sayHello)(1)); 
+const partiallyAppliedData2 = ["A", "B", "C"]
+                              .map(curry(sayHello)(1)); 
 // ["Hello A from 1", 
 //  "Hello B from 1", 
 //  "Hello C from 1"]
 \end{minted}
-Curry funkce transfomuje existujícé funkci tak, že máme pro každý argument vlastní vracející funkci. Z 
-funkce \textbf{f(a,b,c,d)} vzniká funkce \textbf{f(a)(b)(c)(d)} \cite{Currying}. V čem je toto výhodné?
+Curry funkce transfomuje existujícé funkci tak, že máme pro každý argument vlastní vracející funkci. 
+Z funkce \textbf{f(a,b,c,d)} vzniká funkce \textbf{f(a)(b)(c)(d)} (\cite{Currying}).
+V čem je toto výhodné?
 Například je zde uvedené pole, které se skládá z částečně aplikovaných funkcí. 
-Takto může programátor naiterovat odpověď ze serveru do objektu z předchozí ukázky, které je závislé na třeba na uživatelském vstupu. 
+Takto může programátor naiterovat odpověď ze serveru do objektu z předchozí ukázky,
+které je závislé na třeba na uživatelském vstupu. 
 
 Zajímavější část je u \textit{partiallyAppliedData2}. Curryovaná funkce vrací 
 funkci, jež očekává vstupní parametr, aby byla vyhodnocena. Tento princip je důležitý
@@ -358,7 +382,8 @@ která prijímá dva argumenty. Zde je definice funkce, která převádí jakouk
 
 \begin{minted}{js}
 const curry = (f) => (..args) => args.length >= f.length ? 
-  f.apply(this, args) : (...args2) => curry.apply(this, args.concat(args2));
+  f.apply(this, args) : (...args2) => 
+    curry.apply(this, args.concat(args2));
 \end{minted}
 \section{Principy a odlišnosti od klasického paradigmatu}
 
@@ -482,7 +507,6 @@ Monadický zápis má argument operandu na pravé straně:
 Dyadický zápis má argumenty na obou stranách operandu:
 \aplInline{10-7  ⍝ dyadic}
 
-% https://mathspp.com/blog/why-apl-is-a-language-worth-knowing
 Jelikož všechny pole jsou tvořeny skaláry, tak operace "ignorují" strukturu pole a pracují přímo 
 s obsahem pole.
 
@@ -493,7 +517,8 @@ s obsahem pole.
 1 2 3 4 5 6
   2×⍳6        ⍝ Multiply by 2 the 6 integers starting from the origin.
 0 2 4 6 8 10
-\end{lstlisting}
+\end{lstlisting} 
+(\cite{WhyAPLIsWorthKnowing})
 
 Pokud pole jsou u dyadického zápisu stejné délky, tak jsou hodnoty vypočteny jako jednotlivé 
 skaláry.
@@ -522,21 +547,108 @@ která jsou dělitelná buď třemi nebo pěti.
 \end{lstlisting}
 
 Funkce \aplInline{(0=3|⍵)∨(0=5|⍵) ⍝ '|' - modulo, '=' is equal operator} zjišťuje zda-li je číslo
-dělitelné třemi nebo pěti a vrací 0 nebo 1. Operátor \aplInline{/} funguje jako replicate (pokud je spojené s dalším
-operátorem, tak funguje jako reduce). Jelikož je vyhodnocování z prava do leva, tak pokud argument funkce je 
+dělitelné třemi nebo pěti a vrací 0 nebo 1. Operátor \aplInline{/} funguje jako replicate 
+(pokud je spojené s dalším operátorem, tak funguje jako reduce). 
+Jelikož je vyhodnocování z prava do leva, tak pokud argument funkce je 
 například 7 a 12 tak: 
 
-\aplInline{((0=3|7 12)∨(0=10 | 7 12))/7 12 ⍝ Result: 12}.
+\aplInline{((0=3| 7 12)∨(0=10 | 7 12))/7 12 ⍝ Result: 12}.
 
-Toto celé funguje jako filtrování, kombinací operátorů \aplInline{+/} se udělá suma výsledků.
+Toto celé funguje jako filtrování, 
+kombinací operátorů \aplInline{+/} se udělá suma výsledků.
 
+Lze si ale povšimnout, 
+že výše zmíněný příklad není zapsán v tacit stylu jelikož využívá argument \aplInline{⍵}.
+Je možné napsat zmíněný příklad do tacit stylu, ale zároveň se zvyšuje komplexita porozumění.
+\begin{lstlisting}[language=apl,extendedchars=true]
+  Euler1 ← +/((0=3|⊢)∨(0=5|⊢))×⊢
+\end{lstlisting}
+
+(\cite{CzechApl})
+
+\section{Kdy využít tacit zápis}
+
+Tacit styl může být mocný a elegantní.
+Zde je několik argumentů, proč by se měl tacit zápis využít:
+
+\textbf{Kompaktnost a elegance:}
+Tacitní zápis může často zredukovat kód na mnohem kratší a elegantnější formu, 
+což může zvýšit čitelnost a snížit objem psaného kódu.
+
+\textbf{Snížení chybovosti:}
+Vzhledem k tomu, že tacitní zápis minimalizuje použití proměnných a stavu, 
+může to snížit možnosti chyb spojených s nechtěnými efekty a nekonzistencemi v datech.
+
+\textbf{Výkonové optimalizace:}
+V některých případech může tacitní zápis vést k efektivnějšímu kódu, 
+protože se snižuje zbytečná manipulace s proměnnými a daty.
+
+\textbf{Snížení náročnosti na paměť:}
+Tacitní zápis může minimalizovat požadavky na paměť tím, 
+že eliminuje nutnost uchovávat mezivýsledky v proměnných.
+
+\textbf{Zvyšuje jasnost:}
+V některých případech může tacitní zápis zvýšit jasnost kódu tím, 
+že se soustředí na to, co se děje (funkce a operace), 
+a minimalizuje odvádějící pozornost od proměnných a argumentů.
+
+\textbf{Kód s méně chybami:}
+S minimálním množstvím stavových proměnných a 
+nečekaných efektů může být kód napsaný v tacitním stylu méně náchylný k chybám.
+
+\textbf{Přenositelnost:}
+Tacitní zápis může být často snadněji přenositelný mezi různými jazyky nebo platformami, 
+protože se soustředí na základní funkce a operace.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Kdy se vyhnout tacit zápisu}
+
+Bohužel tacit styl také může být obtížný pro programátory, 
+zejména pokud nejsou na tento způsob programování zvyklí. 
+Zde jsou argumenty proti tacit stylu:
+
+\textbf{Složitost čtení a porozumění:} 
+Tacitní styl může být velmi těžko čitelný a obtížný k pochopení, 
+což může způsobit problémy v týmu a při údržbě kódu. 
+Programátoři by měli být schopni snadno rozumět kódu,
+který píšou, a kód napsaný v tacitním stylu může být matoucí.
+
+\textbf{Náročná údržba:}
+I když může být výrazně kratší, 
+kód napsaný v tacitním stylu může být obtížný k úpravám a opravám chyb. 
+Programátoři, kteří nejsou zvyklí na tento styl, 
+budou mít problémy s debugováním a vylepšováním kódu.
+
+\textbf{Nepodporované vývojářské prostředí:}
+Některé programovací jazyky a prostředí nejsou vhodné pro zápis ve formě tacit, 
+což může být dalším důvodem, proč by nemělo být programátorům vnucováno.
+
+\textbf{Ztráta flexibility:}
+Tacitní styl může omezit flexibilitu programátorů při psaní kódu.
+Může být obtížnější provádět změny a úpravy v kódu, což může zpomalit vývoj.
+
+\textbf{Vzdělávací nároky:}
+Programátoři, kteří nejsou obeznámeni s tacitním stylem, 
+budou muset investovat čas a úsilí do jeho pochopení a osvojení. 
+To může zpomalit vývojový cyklus a zvyšovat náklady na vývoj.
+
+\textbf{Nedostatek standardů:}
+V různých programovacích jazycích mohou být různé konvence a 
+standardy pro zápis ve formě tacit. To může způsobit nekonzistenci a zmatek mezi programátory.
+
+\textbf{Kompromisy na úkor čitelnosti:}
+Někdy se programátoři mohou pokoušet dosáhnout krátkého kódu na úkor čitelnosti a jasnosti. 
+To může vést k nepřehledným a těžko udržovatelným programům.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{DSL - principy a využití}
 DSL (Domain Specific Language) jsou jazyky, které se zaměřují na specifickou doménu problematiky.
 Obecně DSL jazyky jsou mnohem jednodušší než jejich plnohodnotné protějšky. Výhodou je, že 
 náročnost učení je mnohem nižší než u GPL (General Purpose Language). Zároveň při potřebě 
 expertů na specializovaný obor, nepotřebují znát detaily 
 implementace algoritmů, ale místo toho pokud budou mít přístup rovnou k DSL - výpočet šikmosti stěny budovy,
-hodnota cukrů v krvi pacienta, tak mohou plnit svojí práci o mnohem efektivněji. \cite{DomainSpecificLanguages}
+hodnota cukrů v krvi pacienta, tak mohou plnit svojí práci o mnohem efektivněji. (\cite{DomainSpecificLanguages})
 
 \section{Web a enterprise}
 Jedním z nejrozšířenejších DSL jazyků je ze světa webu a to \textbf{HTML a CSS}. HTML se zaměřuje na vytvoření rámce pro zobrazení textu,
@@ -577,16 +689,22 @@ na testování a deployment.
 
 {\centering
 \captionof{figure}{Výstřižek z GitHub Actions}
-\resizebox{15cm}{!}{\includegraphics{Deployment.PNG}}
+\resizebox{16.9cm}{!}{\includegraphics{Deployment.PNG}}
 }
 
 \chapter{Návrh vlastního DSL}
-Pro návrh DSL je hlavní vědět o jakou doménu problematiky se jedná. Zatím neexistuje žádná DSL implementace pro konkurenci či paralelizaci vysokého objemu dat.
-Příkladem vysokého počtu dat je vzorek signálu a detailnější zpracování takového vzorku je časově velice náročné. Tato časová náročnost může být vyřešena právě zmíněnou
-konkurencí, či paralelizací problému. Toto DSL je pojmenované jako \textbf{Haskallyzer}.
-Pro řešení této problematiky byl zvolen Haskell, jelikož se zdá jako nejoptimálnější. Pro rozbor jazyka byly komunitami vytvořené knihovny (Parsec, MegaParse, AttoParsec),
-obsahuje mechaniky tacit programmingu, je staticky silně typovaný a díky monádám, řešení okrajových případů je snadné.
+Pro návrh DSL je hlavní vědět o jakou doménu problematiky se jedná.
+Zatím neexistuje žádná DSL implementace pro konkurenci či paralelizaci vysokého objemu dat.
+Příkladem vysokého počtu dat je vzorek signálu a 
+detailnější zpracování takového vzorku je časově velice náročné. Tato časová náročnost může být vyřešena právě zmíněnou
+konkurencí, či paralelizací problému. 
+Toto DSL je pojmenované jako \textbf{Haskelyzer}.
+Pro řešení této problematiky byl zvolen Haskell, jelikož se zdá jako nejoptimálnější.
+Pro rozbor jazyka byly komunitami vytvořené knihovny (Parsec, MegaParse, AttoParsec),
+obsahuje mechaniky tacit programmingu, 
+je staticky silně typovaný a díky monádám, řešení okrajových případů je donucené GHC kompilátorem.
 
+\setlength{\parindent}{0pt}
 Návrh danného jazyka:
 
 \begin{minted}{haskell}
@@ -598,16 +716,16 @@ Návrh danného jazyka:
     (c,String)
 }
 
-let exampleConcurrentProcess = exampleCSV | kalmanFilter 
-                                          | gaussianFilter 
+let concurrentProcess = exampleCSV | kalmanFilter 
+                                   | gaussianFilter 
                                       
 
-let exampleNestedConcurrentProcess = exampleCSV | kalmanFilter | sum
-                                                               | product
-                                                | gaussianFilter
+let nestedConcurrentProcess = exampleCSV | kalmanFilter | sum
+                                                        | product
+                                         | gaussianFilter
 
-let exampleGUIMainLoop = mainLoop | calculateMainState -> writeToEventQueue
-                                  | gatherEventQueue -> fireEvents
+let guiMainLoop = mainLoop | calculateMainState -> writeToEventQueue
+                           | gatherEventQueue -> fireEvents
 \end{minted}
 
 \section{Vysvětlení gramatiky jazyka}
@@ -618,7 +736,7 @@ Vytvoří se funkce \textit{exampleCSV}, která vrací obsah csv souboru. Při p
 Díky atributu \textit{CompileTime} je možné vytvořit funkci \textit{exampleCSV} bez nutnosti použití IO monády. Jednou z nevýhod této metody je, že při spuštění programu se zaplní paměť, protože obsah csv souboru je součástí samotného spustitelného programu.
 Nicméně díky tomu není nutné používat IO monádu a obsah csv souboru je k dispozici kdekoliv v programu.
 
-Funkce \textit{exampleConcurrentProcess} vytvoří funkci typu \haskellInline{IO ([a],[b])} a předpokládá, že v programu jsou definované a implementované funkce
+Funkce \textit{concurrentProcess} vytvoří funkci typu \haskellInline{IO ([a],[b])} a předpokládá, že v programu jsou definované a implementované funkce
 \haskellInline{kalmanFilter:: CSV -> [a]} a \\
 \haskellInline{gaussianFilter:: CSV -> [a]}. Výsledné IO monádě se nejde vyhnout, jelikož se jedná o konkurentní proces, kde vznikají vlákna v jež jsou provedeny výpočty. 
 
@@ -626,12 +744,12 @@ Pro vytvoření konkurentního výpočtu je zapotřebí využít \textit{concurr
 \haskellInline{ | } operátoru. Každý další \textit{pipe operátor} vytváří dálší vlákno na kterém je prováděný výpočet.
 Celá syntaxe je závislá na odsazení, tudíž všechny \textit{pipe operátory} musí mít stejné odsazení.
 
-Příklad s funkcí \haskellInline{let exampleNestedConcurrentProcess} ukazuje, 
+Příklad s funkcí \haskellInline{let nestedConcurrentProcess} ukazuje, 
 že \textit{pipe operátory} se dají vnořovat. To znamená, že funkce sum i product musí mít typ \\
 \haskellInline{sum:: (Num a, Num b) => [a] -> b}. Výsledná funkce bude vygenerováná jako typ \\
-\haskellInline{exampleConcurrentProcess:: (Num a, Num b) => IO((a,b), [c])}.
+\haskellInline{concurrentProcess:: (Num a, Num b) => IO((a,b), [c])}.
 
-Poslední příklad s \haskellInline{let exampleGUIMainLoop} poukazuje, že není potřeba využít toto DSL pouze pro analýzu dat, ale
+Poslední příklad s \haskellInline{let guiMainLoop} poukazuje, že není potřeba využít toto DSL pouze pro analýzu dat, ale
 i pro definování kritických business části programu. Nedílnou součástí GUI aplikací je \textit{EventQueue}, kde
 se zaznamenávají všechny interakce uživatele a program může s těmito interakcemi pracovat.
 
@@ -656,17 +774,6 @@ jaký token předcházel a jaký následuje atd... Tyto tokeny jsou zpracovány 
 který má zaúkol přečíst tokeny a hledat mezi nimi dle předem definované gramatiky vztahy 
 a zpracovat je do abstraktního syntaktického stromu. AST je výsledek
 parsování a obsahuje všechny definice jazyka.
-
-\section{Implementace pomocí LLVM}
-
-Prvopočáteční implementace zahrnovala využití knihovny LLVM, která 
-má za následek převzít AST a převést tento jazyk do LLVM intermediate representation (IR).
-Bohužel LLVM se spíše hodí na vytvoření generického programovacího jazyka, než na vytvoření
-DSL. DSL se dá touto knihovnou vytvořit, ale pro každou vygenerovanou funkci se musí
-vytvořit binding mezi IR, jazykem C a Haskellem. Toto řešení je rozhodně možné, 
-ale zvyšuje to komplexitu projektu a jednotlivé bindings mohou též být zdrojem 
-nechtěných bugů. Proto se sešlo od implementace pomocí LLVM a místo toho ho nahradil 
-mechanismus Template Haskell.
 
 \section{Parsec a kombinátory}
 
@@ -740,7 +847,9 @@ haskelyzerLexer =
 
 Lze si všimnout, že tato funkce má poněkud zajímavý typ \haskellInline{IndentT Identity}.
 Jelikož jazyk nepoužívá středníky tak místo toho využívá odsazení, proto se zde využívá 
-pomocný monad transformer \haskellInline{IndentT} z knihovny \textit{indents}.
+pomocný monad transformer \haskellInline{IndentT} z knihovny \textit{indents}. 
+Díky tomu není nutné manuálně počítat jednotlivá odsazení, ale jsou automaticky
+dle kontextu započteny.
 
 Dále je zapotřebí si definovat jednoduché binární a unární operátory.
 
@@ -812,7 +921,11 @@ v tomto případě jsou \textbf{aplikovány zleva do prava}.
 
 \section{Parser}
 
-Zpočátku se určí tabulka operátorů a v jakém pořadí se aplikují.
+Zpočátku se určí tabulka operátorů a v jakém pořadí se operátory 
+aplikují, poté se tato tabulka předá nultému výrazovému parseru, kde 
+tento parser dokáže rozpoznat zda-li výraz  patří mezi
+hlavní výrazy. Zároveň se pro zjednodušení zápisu se definuje typový 
+synonym pro parser.
 
 \begin{minted}{haskell}
 binary s f assoc = Ex.Infix (reservedOp s >> return (BinOp f)) assoc
@@ -821,51 +934,117 @@ table = [[binary "*" Times Ex.AssocLeft,
           binary "/" Divide Ex.AssocLeft]
         ,[binary "+" Plus Ex.AssocLeft,
           binary "-" Minus Ex.AssocLeft]]
+
+type IParser a = 
+  IndentParser -- Indent monáda z knihovny indent
+    String     -- Vstupní typ, může zde být i Text nebo Bytestring
+    ()         -- Stav, v tomto případě stav není zapotřebí
+    a          -- Vracející typ po úspěšném parsování
+
+expr :: IParser Expr
+expr = Ex.buildExpressionParser table factor
+
+factor :: IParser Expr
+factor = 
+      try schemaParser 
+      <|> try variableParser
+      <|> parens factor 
+
+toplevelP :: IParser [Expr]
+toplevelP = do 
+    def <- many $ do 
+        try $ many newline
+        s <- expr 
+        try $ many newline
+        return s
+    eof
+    return def
+
+parseToplevelP :: String -> Either ParseError [Expr]
+parseToplevelP input = 
+    runIndent $ runParserT toplevelP () "<stdin>" input
 \end{minted}
 
-\section{Abstraktně syntaktický strom - AST}
+Funkce \haskellInline{parseToplevelP} je hlavní vstup pro parsování obsahu,
+který vrací \textbf{AST}. Jelikož typ \haskellInline{[Expr]} je zároveň rekurzivní,
+tak tvoří strom - \textbf{AST}.
 
 \section{Testování}
 
-\section{Template Haskell}
+Bez testování parseru by nevznikl žádný spolehlivý parser, 
+což dělá testovací fázi jakousi nutností.
+S každou přidanou větví parseru musí být přidaná další část v testování,
+kterou tuto větev prošetří. Logika testování parseru stojí pouze na tom,
+že se předá jednoduchý vstup ve formě řetězce 
+a předpokladá se, že tento vstup bude parsován identicky jako předem definované AST.
+
+\section{Implementace pomocí LLVM}
+
+Prvopočáteční implementace zahrnovala využití knihovny LLVM, která 
+má za následek převzít AST a převést tento jazyk do LLVM intermediate representation (IR)
+(\cite{IntroToLLVM}).
+Bohužel LLVM se spíše hodí na vytvoření generického programovacího jazyka, než na vytvoření
+DSL. DSL se dá touto knihovnou vytvořit, ale pro každou vygenerovanou funkci se musí
+vytvořit binding mezi IR, jazykem C a Haskellem. Toto řešení je rozhodně možné, 
+ale zvyšuje to komplexitu projektu a jednotlivé bindings mohou též být zdrojem 
+nechtěných bugů. Proto se sešlo od implementace pomocí LLVM a místo toho ho nahradil 
+mechanismus Template Haskell.
+
+\section{Z AST do Template Haskell}
 
 \chapter{Ověření použitelnosti (testování funkčnosti, praktické příklady využití)}
 
-Abychom si ověřili využití Haskelyzeru, hodil by se nějaký praktický příklad.
-
-
-
-\section{Praktické využití}
 S rozšiřujícím se kódem a funkcionalitou projektu se zvyšuje obtížnost určení, 
 kde se nachází problém a jak jsou data distribuována v daném systému. 
 Jednou z nejkomplikovanějších výzev při psaní softwaru je jeho škálovatelnost. 
-Haskallyzer má výhodu oproti tradičnímu způsobu psaní kódu v tom, 
+Haskelyzer má výhodu oproti tradičnímu způsobu psaní kódu v tom, 
 že nejkritičtější části kódu jsou odděleny od business řešení a nabízejí širší pohled na tok dat. 
 To může být z jedním hlavních argumentů, proč toto DSL využí pro větší projekty,
 protože usnadnuje jeho škálování.
-Vývojáři mají možnost určit, které části jsou nejdůležitější pro daný cíl a zapsat je do Haskallyzeru.
+Vývojáři mají možnost určit, které části jsou nejdůležitější pro daný cíl a zapsat je do Haskelyzeru.
 
 Konkurence má výhodu v tom, že obecně zvyšuje škálovatelnost softwaru, 
 ale zároveň přináší složitější stav a zvyšuje riziko výskytu chyb. 
-Haskallyzer není pouze DSL pro vnější zápis kritických částí softwaru, 
+Haskelyzer není pouze DSL pro vnější zápis kritických částí softwaru, 
 ale také umožňuje zápis konkurentních výpočtů v snadno čitelné formě. 
 Tím vzniká určitá forma samo-dokumentace, 
-kterou lze statickým jazykovým analyzátorem například převést do UML zápisu.
+kterou lze statickým jazykovým analyzátorem převést do UML zápisu.
 
+\section{Využití při načítání 3D modelů a scén}
+
+Skvělým příkladem, kde se dá využit konkurence je při načítání 
+scén. Scény jsou tvořeny 3D modely, které mohou být komplexní a 
+dlouhé a proto jejich parsování může zabrat hodně času. Pro 
+tento příklad byl zvolen vedlejší projekt, který má zaúkol 
+vyrenderovat 3D modely pomocí knihovny OpenGL a samozřejmě 
+je napsán v programovacím jazyku Haskell.
+
+Vysvětlení samotného rendereru je mimo tuto práci, stačí 
+pouze vědět, že je zapsán pomocí OpenGL, jelikož tato grafická 
+knihovna nemá nejlepší podporu pro multithreading a renderuje 
+3D modely ve Wavefront formátu. 
+
+\section{Využití pro web scraping}
+
+Haskellyzer zjednodušuje proces web scrapingu. Příkladem může být tahání dat z různých veřejných
+zpravodajských zdrojů a následné ukládání výsledků do databáze. Spojením s Haskellyzer, knihovnou 
+Scalpel a jakýmkoliv databázovým systémem je možné dosáhnout rychlé sbírání dat.
+
+\section{Využití pro datovou analytiku}
+
+Haskellyzer má již v sobě zabudované čtení CSV souborů včetně verifikace. Je možné provést 
+transformaci dat konkurentně 
 
 \chapter{Závěr}
+
+\section{Nedostatky a potenciální vylepšení do budoucna}
 
 \chapter{Citace}
 
 
-\cite{Katuscakc}
-\cite{IntroToLLVM}
-\printbibliography
-
-
+%%\cite{IntroToLLVM}
+\printbibliography[heading=none]
 \appendix
-
-
 
 
 \end{document}

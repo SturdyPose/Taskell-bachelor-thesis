@@ -138,6 +138,7 @@ morecomment=[l]{⍝}
             urlcolor=blue,
             pdftitle={\TITULcz},pdfauthor={\AUTOR},
             pdfkeywords={\KLICOVASLOVAcz}]{hyperref}
+
 \usepackage[skip=10pt plus1pt]{parskip}
 \newcommand{\haskellInline}[1]{\colorbox{gray!10}{\mintinline{haskell}{#1}}}
 \newcommand{\aplInline}[1]{\colorbox{gray!10}{{\apl{#1}}}}
@@ -326,32 +327,41 @@ Pro základní ukázky bude využit JavaScript jelikož se jedná o jeden z nejp
 Základní principy funkcionálního a tacit programování jsou v jazyce JavaScript,
 jelikož se jedná o jeden z nejvíce populárních programovacích jazyků a v základu má již funkcionální možnosti.
 Detailnější principy jsou psány v Haskellu.
-\begin{minted}{js}
+\begin{minted}[bgcolor=CodeBackGround]{js}
   fetch("APIURL")
   .then(x => fancyFunction(x))
   .then(x => console.log(x))
   .catch(e => console.error(e))
 \end{minted}
 
-Zde se řetězí funkce zpětného volání ("Callbacks").
-
-Tento postup je běžný u JavasSript programátorů, ale bohužel má jednu malou nevýhodu.
-Tvoří se zde zbytečná anonymní funkce ("arrow function nebo-li šipková") a pokud bychom prohlubovali čím dál víc 
-zásobník volání, mohou nám tyto anonymní funkce zabírat paměť a během debuggingu nám tento styl zápisu "znečišťuje" 
+Zde se řetězí funkce zpětného volání ("Callbacks"). 
+Tento postup je běžný u JavasSript programátorů,
+ale bohužel má jednu malou nevýhodu.
+Tvoří se zde zbytečná anonymní funkce ("arrow function nebo-li šipková") 
+a pokud bychom prohlubovali čím dál víc zásobník volání,
+mohou nám tyto anonymní funkce zabírat paměť a 
+během debuggingu nám tento styl zápisu "znečišťuje" 
 zásobník volání. 
 
-\begin{minted}{js}
+\begin{minted}[bgcolor=CodeBackGround]{js}
+
   fetch("APIURL")
   .then(fancyFunction)
   .then(console.log)
   .catch(console.error)
+
 \end{minted}
 
-Přepsaná ukázka je logicky ekvivalentní k té předešlé. Zásadní rozdíl je ten, že se nemusí na paměťový zásobník ukládat kontext anonymní funkce 
-a explicitně se nepředávají parametry funkce. Tudíž se jedná o \textit{tacit} zápis.
+Přepsaná ukázka je logicky ekvivalentní k té předešlé. 
+Zásadní rozdíl je ten, 
+že se nemusí na paměťový zásobník ukládat kontext anonymní funkce 
+a explicitně se nepředávají parametry funkce. 
+Tudíž se jedná o \textit{tacit} zápis.
 
-Následující úryvek ukazuje, jak funguje \textbf{currying} a proč souvisí s tacit programováním.
-\begin{minted}{js}
+Následující úryvek ukazuje, 
+jak funguje \textbf{currying} a proč souvisí s tacit programováním.
+\begin{minted}[bgcolor=CodeBackGround]{js}
+
 const curry = (f) => a => b => f(a,b);
 const sayHello = (a, b) = `Hello ${a} from ${b}`;
 const applyToFunctionArray = 
@@ -365,44 +375,60 @@ const partiallyAppliedData2 = ["A", "B", "C"]
 // ["Hello A from 1", 
 //  "Hello B from 1", 
 //  "Hello C from 1"]
+
 \end{minted}
-Curry funkce transfomuje existujícé funkci tak, že máme pro každý argument vlastní vracející funkci. 
+Curry funkce transfomuje existujícé funkci tak, 
+že máme pro každý argument vlastní vracející funkci. 
 Z funkce \textbf{f(a,b,c,d)} vzniká funkce \textbf{f(a)(b)(c)(d)} (\cite{Currying}).
 V čem je toto výhodné?
-Například je zde uvedené pole, které se skládá z částečně aplikovaných funkcí. 
+Například je zde uvedené pole, 
+které se skládá z částečně aplikovaných funkcí. 
 Takto může programátor naiterovat odpověď ze serveru do objektu z předchozí ukázky,
 které je závislé na třeba na uživatelském vstupu. 
 
-Zajímavější část je u \textit{partiallyAppliedData2}. Curryovaná funkce vrací 
-funkci, jež očekává vstupní parametr, aby byla vyhodnocena. Tento princip je důležitý
-pro lenivé vyhodnocení, který využívá Haskell.
+Zajímavější část je u \textit{partiallyAppliedData2}. 
+Curryovaná funkce vrací funkci, 
+jež očekává vstupní parametr, 
+aby byla vyhodnocena. 
+Tento princip je důležitý
+pro lenivé vyhodnocení, 
+který využívá Haskell.
 
-Může zde padnout argument, že v našem případě se curryování nachází pouze pro funkci,
-která prijímá dva argumenty. Zde je definice funkce, která převádí jakoukoliv funkci na curryovanou.
+Může zde padnout argument, 
+že ve zmíněném případě se curryování nachází pouze pro funkci,
+která přijímá pouze dva argumenty. 
+Zde je definice funkce, 
+která převádí jakoukoliv funkci na curryovanou.
 
-\begin{minted}{js}
+\begin{minted}[bgcolor=CodeBackGround]{js}
+
 const curry = (f) => (..args) => args.length >= f.length ? 
   f.apply(this, args) : (...args2) => 
     curry.apply(this, args.concat(args2));
+
 \end{minted}
 \section{Principy a odlišnosti od klasického paradigmatu}
 
 Procedurální paradigma se zaměřuje na psaní procedurálních instrukcí.
-Typickým příkladem tohoto paradigmatu je programovací jazyk C, protože se
-jedná o standard, tak v následujících příkladech budu porovnávat jazyk C s jazykem Haskell.
-Haskell je primárně funkcionální jazyk, tento jazyk umožňujě psát funkce
-v "beztečkovém" stylu. 
+Typickým příkladem tohoto paradigmatu je programovací jazyk C, 
+protože se jedná o standard, 
+tak v následujících příkladech budu porovnávat jazyk C s jazykem Haskell.
+Haskell je primárně funkcionální jazyk, 
+tento jazyk umožňujě psát funkce v "beztečkovém" stylu. 
 
 Následující příklad sumace:
 
 \textbf{Haskell}
-\begin{minted}{Haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
 sumCustom:: (Traversable t, Num a) => t a -> a
 sumCustom = foldr (+) 0
+
 \end{minted}
-\pagebreak
+
 \textbf{C}
-\begin{minted}{c}
+\begin{minted}[bgcolor=CodeBackGround]{c}
+
 int sum(int* arr, size_t numOfElements)
 {
     int acc = 0;
@@ -414,16 +440,19 @@ int sum(int* arr, size_t numOfElements)
     
     return acc;
 }
-\end{minted}
-Na příkladu jde vidět, že beztečkový styl zápisu je opravdu kompaktní. 
-V Haskellu není třeba zasahovat do parametrů funkcí.
-Tento příklad je založen na podstatě tacit programmingu.
-Co se týče algoritmizace, tacit programming je známý pro vytváření 
-algoritmických řešení pomocí pouze jednoho řádku kódu. 
 
-Na dalším příkladě si ukážeme fibonnacciho posloupnost.
+\end{minted}
+Na příkladu jde vidět, 
+že beztečkový styl zápisu je opravdu kompaktní. 
+V Haskellu není třeba explicitně manipulovat s parametry funkcí.
+Tento příklad je založen na podstatě tacit programmingu.
+Co se týče algoritmizace, 
+tacit programming je znám pro vytváření algoritmických řešení pomocí pouze jednoho řádku kódu. 
+
+Další příklad poukazuje Fibonacciho posloupnost.
 \textbf{Haskell}
-\begin{minted}{Haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
 -- Haskell je lenivý jazyk a proto je možné vytvořit nekonečnou 
 -- fibonnacciho posloupnost a z té si vzít jen potřebný počet čísel 
 fibonacci:: Num a => Int -> [a]
@@ -431,13 +460,15 @@ fibonacci = (flip take) fibonacciInfinite
   where
     fibonacciInfinite:: Num a => [a]
     fibonacciInfinite = scanl (+) 0 (1:fibonacciInfinite)
+
 \end{minted}
 
-\vfill
-\pagebreak
+% \vfill
+% \pagebreak
 
 \textbf{C}
-\begin{minted}{c}
+\begin{minted}[bgcolor=CodeBackGround]{c}
+
 void fibonacci(int* arr, size_t numOfElements)
 {
     if(numOfElements > 0)
@@ -453,6 +484,7 @@ void fibonacci(int* arr, size_t numOfElements)
       arr[i] = arr[i - 1] + arr[i - 2];
     }
 }
+
 \end{minted}
 
 Z pohledu imperativního programátora implementace v C je zcela jasná. Funkce přijímá ukazatel na
@@ -480,7 +512,6 @@ Zmatek může vznikat zejména při určování,
 kde a jak byla konkrétní proměnná získána, 
 neboť její hodnota je vypočítána až v okamžiku, 
 kdy je použita.
-\pagebreak
 
 Naštěstí Haskell nabízí možnost využití REPL 
 (Read - Eval - Print - Loop) prostředí, 
@@ -707,7 +738,8 @@ je staticky silně typovaný a díky monádám, řešení okrajových případů
 \setlength{\parindent}{0pt}
 Návrh danného jazyka:
 
-\begin{minted}{haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
 [CompileTime]
 {
   let exampleCSV = "example.csv" :
@@ -726,6 +758,7 @@ let nestedConcurrentProcess = exampleCSV | kalmanFilter | sum
 
 let guiMainLoop = mainLoop | calculateMainState -> writeToEventQueue
                            | gatherEventQueue -> fireEvents
+
 \end{minted}
 
 \section{Vysvětlení gramatiky jazyka}
@@ -784,7 +817,8 @@ není potřeba zpracovávat jednotlivé znaky, ale stačí definovat kombinátor
 které tyto tokeny vrací. Haskelyzer využívá knihovnu Parsec. Zde je následující přiklad 
 jednoduchého kombinátoru.
 
-\begin{minted}{haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
 import qualified Text.Parsec.Token as Tok
 type CustomParser a = Parsec String () a
 
@@ -802,6 +836,7 @@ float = Tok.float emptyLexer
 parseToVariant:: CustomParser [Variant]
 parseToVariant = many $ integer <|> float <|> 
   (lexeme $ (manyTill alphaNum $ try space))
+
 \end{minted}
 
 Cílem výše zmíněného příkladu je, přečíst soubor a rozparsovat ho na list, 
@@ -823,7 +858,8 @@ Na začátku je důležité si nadefinovat výsledek parsování. Parsec zprost�
 jednoduchý token parser, který definuje například komentáře, operátory a reservovaná
 jména.
 
-\begin{minted}{haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
 haskelyzerLexer :: Tok.GenTokenParser String () (IndentT Identity)
 haskelyzerLexer =
   Tok.makeTokenParser Tok.emptyDef 
@@ -843,6 +879,7 @@ haskelyzerLexer =
     where
         ops = ["+","*","-",";", "->" , ":", ",", "|"]
         names = ["let"]
+
 \end{minted}
 
 Lze si všimnout, že tato funkce má poněkud zajímavý typ \haskellInline{IndentT Identity}.
@@ -853,7 +890,8 @@ dle kontextu započteny.
 
 Dále je zapotřebí si definovat jednoduché binární a unární operátory.
 
-\begin{minted}{haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
 data BinOp
   = Plus
   | Minus
@@ -866,11 +904,13 @@ data UnaryOp
     | Nroot -- Like SquareRoot but N 
     | Exponent
     deriving (Eq, Ord, Show)
+
 \end{minted}
 
 Nejzajímavější částí je definice datových typů, které jsou zároveň rekurzivní. 
 
-\begin{minted}{haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
 type OptionalColumnNameWithType = (Maybe String, CsvDataType)
 data Schema = Schema VarNamePath [OptionalColumnNameWithType] 
   deriving (Show, Eq, Ord)
@@ -900,6 +940,7 @@ data Literal =
   | Int Integer
   | String String
   deriving (Show, Ord, Eq)
+
 \end{minted}
 
 \haskellInline{Data Literal} jsou pouze primitivní datové typy stejně jako
@@ -927,7 +968,8 @@ tento parser dokáže rozpoznat zda-li výraz  patří mezi
 hlavní výrazy. Zároveň se pro zjednodušení zápisu se definuje typový 
 synonym pro parser.
 
-\begin{minted}{haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
 binary s f assoc = Ex.Infix (reservedOp s >> return (BinOp f)) assoc
 
 table = [[binary "*" Times Ex.AssocLeft,
@@ -963,6 +1005,7 @@ toplevelP = do
 parseToplevelP :: String -> Either ParseError [Expr]
 parseToplevelP input = 
     runIndent $ runParserT toplevelP () "<stdin>" input
+
 \end{minted}
 
 Funkce \haskellInline{parseToplevelP} je hlavní vstup pro parsování obsahu,
@@ -1019,7 +1062,7 @@ tento příklad byl zvolen vedlejší projekt, který má zaúkol
 vyrenderovat 3D modely pomocí knihovny OpenGL a samozřejmě 
 je napsán v programovacím jazyku Haskell.
 
-Vysvětlení samotného rendereru je mimo tuto práci, stačí 
+Vysvětlení samotného rendereru je mimo rozsah této práce, stačí 
 pouze vědět, že je zapsán pomocí OpenGL, jelikož tato grafická 
 knihovna nemá nejlepší podporu pro multithreading a renderuje 
 3D modely ve Wavefront formátu. 
@@ -1029,6 +1072,58 @@ knihovna nemá nejlepší podporu pro multithreading a renderuje
 Haskellyzer zjednodušuje proces web scrapingu. Příkladem může být tahání dat z různých veřejných
 zpravodajských zdrojů a následné ukládání výsledků do databáze. Spojením s Haskellyzer, knihovnou 
 Scalpel a jakýmkoliv databázovým systémem je možné dosáhnout rychlé sbírání dat.
+
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
+let scrapeData a b c postgreConnection mongoConnection = 
+  | scrapeNewsSource a -> saveToPostgreSQL postgreConnection
+  | scrapeDifferentNewsSource b -> saveToMongoDB mongoConnection
+  | scrapeWeatherSource c -> saveToPostgreSQL postgreConnection
+
+\end{minted}
+
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
+  sourcesFromWhichToMine = 
+    [
+      ("urlToNewsSource1", 
+       "urlToDifferentNewsSource1",
+       "urlToWeather1"
+      ),
+      ("urlToNewsSource2", 
+       "urlToDifferentNewsSource2",
+       "urlToWeather2"
+      ),
+      ("urlToNewsSource3", 
+       "urlToDifferentNewsSource3",
+       "urlToWeather3"
+      ),
+      ("urlToNewsSource4", 
+       "urlToDifferentNewsSource4",
+       "urlToWeather4"
+      ),
+    ]
+  
+  -- Predefine mining with algorithms here, 
+  -- using scalpel is strongly advised
+  -- also define saveToPostgreSQL and saveToMongoDB
+
+  $(generateHaskallyzerDSL "pathToFileMentionedAbove")
+  
+  beginScraping:: IO ()
+  beginScraping = do
+    mongoConnection <- -- CreateMongoConnection
+    postgreConnection <- -- CreatePostgreConnection
+
+    -- Fire mining, you can potentially wrap this 
+    -- into Writer monad to get useful logs
+    sequence_ $ mapM 
+      (\(a,b,c) -> 
+        scrapeData a b c mongoConnection postgreConnection
+      ) 
+      sourcesFromWhichToMine
+\end{minted}
+
 
 \section{Využití pro datovou analytiku}
 

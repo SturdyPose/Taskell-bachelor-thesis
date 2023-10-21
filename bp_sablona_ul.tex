@@ -321,17 +321,22 @@ Tato bakalářská práce předpokládá, že čtenář zná základy funkcioná
 protože návrh je vytvořen v Haskellu pomocí knihoven jako je Parsec a MTL (Monad Transformer).
 
 \chapter{Tacit programming}
+
 \textbf{Tacit programming} je programovací styl, 
 který klade důraz na skládání a řetězení funkcí a není založen na explicitní specifikaci parametrů funkcí.
 Pro základní ukázky bude využit JavaScript jelikož se jedná o jeden z nejpopulárnějších jazyků. 
 Základní principy funkcionálního a tacit programování jsou v jazyce JavaScript,
 jelikož se jedná o jeden z nejvíce populárních programovacích jazyků a v základu má již funkcionální možnosti.
 Detailnější principy jsou psány v Haskellu.
+
+\textbf{Javascript}
 \begin{minted}[bgcolor=CodeBackGround]{js}
+
   fetch("APIURL")
   .then(x => fancyFunction(x))
   .then(x => console.log(x))
   .catch(e => console.error(e))
+
 \end{minted}
 
 Zde se řetězí funkce zpětného volání ("Callbacks"). 
@@ -360,6 +365,8 @@ Tudíž se jedná o \textit{tacit} zápis.
 
 Následující úryvek ukazuje, 
 jak funguje \textbf{currying} a proč souvisí s tacit programováním.
+
+\textbf{Javascript}
 \begin{minted}[bgcolor=CodeBackGround]{js}
 
 const curry = (f) => a => b => f(a,b);
@@ -400,6 +407,7 @@ která přijímá pouze dva argumenty.
 Zde je definice funkce, 
 která převádí jakoukoliv funkci na curryovanou.
 
+\textbf{Javascript}
 \begin{minted}[bgcolor=CodeBackGround]{js}
 
 const curry = (f) => (..args) => args.length >= f.length ? 
@@ -738,6 +746,7 @@ je staticky silně typovaný a díky monádám, řešení okrajových případů
 \setlength{\parindent}{0pt}
 Návrh danného jazyka:
 
+\textbf{Haskelyzer}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 [CompileTime]
@@ -756,8 +765,9 @@ let nestedConcurrentProcess = exampleCSV | kalmanFilter | sum
                                                         | product
                                          | gaussianFilter
 
-let guiMainLoop = mainLoop | calculateMainState -> writeToEventQueue
-                           | gatherEventQueue -> fireEvents
+let guiMainLoop = 
+  mainLoop | calculateMainState -> writeToEventQueue
+           | gatherEventQueue -> fireEvents
 
 \end{minted}
 
@@ -1059,29 +1069,141 @@ Skvělým příkladem, kde se dá využit konkurence je při načítání
 scén. Scény jsou tvořeny 3D modely, které mohou být komplexní a 
 dlouhé a proto jejich parsování může zabrat hodně času. Pro 
 tento příklad byl zvolen vedlejší projekt, který má zaúkol 
-vyrenderovat 3D modely pomocí knihovny OpenGL a samozřejmě 
-je napsán v programovacím jazyku Haskell.
+vyrenderovat 3D modely pomocí knihovny OpenGL, WaveFront a Lens. 
+
+Knihovna Lens vygeneruje pomocí Template Haskell gettery a settery.
+Pomocí těchto vygenerovaných vlastností se dá jednoduším způsobem 
+dostat ke vnořeným vlastností dat. 
+Třeba operátor \haskellInline{\%~)} neboli 'over' přijímá data,
+jméno vlastnosti a 
+funkci která transformuje pouze danou vlastnost dat.
 
 Vysvětlení samotného rendereru je mimo rozsah této práce, stačí 
 pouze vědět, že je zapsán pomocí OpenGL, jelikož tato grafická 
 knihovna nemá nejlepší podporu pro multithreading a renderuje 
-3D modely ve Wavefront formátu. 
+3D modely ve Wavefront formátu, 
+tak dané modely se musí načíst,
+rozparsovat a 
+poté je vyrenderovat na společném vlákně.
 
-\section{Využití pro web scraping}
-
-Haskellyzer zjednodušuje proces web scrapingu. Příkladem může být tahání dat z různých veřejných
-zpravodajských zdrojů a následné ukládání výsledků do databáze. Spojením s Haskellyzer, knihovnou 
-Scalpel a jakýmkoliv databázovým systémem je možné dosáhnout rychlé sbírání dat.
-
+\textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
-let scrapeData a b c postgreConnection mongoConnection = 
-  | scrapeNewsSource a -> saveToPostgreSQL postgreConnection
-  | scrapeDifferentNewsSource b -> saveToMongoDB mongoConnection
-  | scrapeWeatherSource c -> saveToPostgreSQL postgreConnection
+data LoadedWaveFrontOBJ = LoadedWaveFrontOBJ {
+  -- WaveFrontOBJ from https://github.com/phaazon/wavefront
+    _loadedWaveFrontOBJWaveFront:: WaveFrontOBJ
+  , _loadedWaveFrontOBJScale    :: GL.GLfloat
+  , _loadedWaveFrontOBJTranslate:: Linear.V3 GL.GLfloat
+  , _loadedWaveFrontOBJRotation :: Linear.Quaternion GL.GLfloat
+} deriving Show
 
 \end{minted}
 
+\textbf{Haskelyzer}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
+let loadModels = 
+| loadModel1 
+| loadModel2 
+| loadModel3 
+| loadModel4 
+| loadModel5 -> rotate 0.0 45.0 90.0
+| loadModel6 
+| loadModel7 
+| loadModel8 
+| loadModel9 -> translate 60.0 0.0 0.0 -> scale 3.0
+| loadModel10 
+| loadModel11 
+
+\end{minted}
+
+Haskelyzer volá funkce na načítání a transformaci modelů.
+Je zapotřebí tyto funkce nadefinovat.
+
+\textbf{Haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
+$(generateHaskelyzerDSL "pathToHaskelyzer.haskelyzer")
+
+-- define model loading all the way to 11
+loadModel1, loadModel2:: IO LoadedWaveFrontOBJ
+loadModel1 = parseObj "model1.obj"
+loadModel2 = parseObj "model2.obj"
+
+rotate:: 
+  GL.GLfloat -> 
+  GL.GLfloat -> 
+  GL.GLfloat -> 
+  LoadedWaveFrontOBJ
+rotate degreesX degreesY degreesZ loadedWaveFront = 
+  let quat = 
+    rotateOnAxis degreesX degreesY degreesZ in 
+      loadedWaveFrontOBJRotation %~ ((*) quat) $ loadedWaveFront 
+
+translate:: 
+  GL.GLfloat -> 
+  GL.GLfloat -> 
+  GL.GLfloat -> 
+  LoadedWaveFrontOBJ
+translate x y z loadedWaveFront = 
+  loadedWaveFront & loadedWaveFrontOBJTranslate .~ (V3 x y z)
+      
+scale:: 
+  GL.GLfloat -> 
+  LoadedWaveFrontOBJ
+scale x loadedWaveFront = 
+  loadedWaveFront & loadedWaveFrontOBJScale .~ x
+
+\end{minted}
+
+Funkce \haskellInline{loadModels} vrací typ \haskellInline{IO [IO LoadedWaveFrontOBJ]},
+což je pouze vnořená IO monáda, 
+která se může usnadnit pomocí pomocné funkce \haskellInline{joinTraversableMonad} a 
+to natransformuje data do typu IO \haskellInline{[LoadedWaveFrontObj]}.
+
+\textbf{Haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
+joinTraversableMonad:: 
+  (Monad m, Traversable t) => 
+  m (t (m a)) -> 
+  m (t a)
+joinTraversableMonad = (sequence =<<)
+
+beforeRendering:: StateT SomeState IO ()
+beforeRendering = do
+  -- OpenGL and it's shaders are initialized 
+  -- and now are ready to receive data on call
+
+  models <- liftIO $ joinTraversableMonad loadModels 
+
+  -- save models to state monad
+  modify $ \s -> s & sceneToLoad .~ models
+
+  renderFrame
+
+\end{minted}
+
+\section{Využití pro web scraping}
+
+Haskellyzer zjednodušuje proces web scrapingu. 
+Příkladem může být tahání dat z různých veřejných zpravodajských zdrojů a 
+následné ukládání výsledků do databáze. 
+Spojením s Haskellyzer, knihovnou Scalpel a 
+jakýmkoliv databázovým systémem je možné dosáhnout rychlé sbírání dat.
+
+Následující kód předpokládá, 
+že jsou vytvořeny tři různé scrapery a 
+očekávají url zdroj.
+Pro zjednodušení jsou zdroje zapsané ve formě \\ 
+\haskellInline{[(String, String, String)]}, 
+ale mohou být též v csv formátu.
+Cílem je dané výsledky uložit do databáze,
+tak je nutné vytvořit konekci k daným databázovým systémům. 
+
+
+
+\textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
   sourcesFromWhichToMine = 
@@ -1107,22 +1229,60 @@ let scrapeData a b c postgreConnection mongoConnection =
   -- Predefine mining with algorithms here, 
   -- using scalpel is strongly advised
   -- also define saveToPostgreSQL and saveToMongoDB
-
-  $(generateHaskallyzerDSL "pathToFileMentionedAbove")
+  createDBConnections:: IO(MongoDBConnection,PostgreConnection)
+  createDBConnections = do
+    x <- createMongoConnection 
+    y <- createPostgreConnection 
+    return (x, y)
   
+\end{minted}
+
+Dalším krokem je definice způsobu scrapingu. 
+
+\textbf{Haskelyzer}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
+let scrapeData a b c postgreConnection mongoConnection = 
+  | scrapeNewsSource a -> saveToPostgreSQL postgreConnection
+  | scrapeDifferentNewsSource b -> saveToMongoDB mongoConnection
+  | scrapeDifferentNewsSource b -> saveToPostgreSQL mongoConnection
+  | scrapeWeatherSource c -> saveToPostgreSQL postgreConnection
+
+\end{minted}
+
+Funkce ukazuje intuitivně účel. 
+Po úspěšném scrapingu se uloží výsledky do specifikované databáze.
+
+\textbf{Haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
+scrapeData:: 
+  String -> 
+  String -> 
+  String -> 
+  PostgreConnection -> 
+  MongoDBConnection -> 
+  IO([IO (Bool)]) -- Bool shows if operation was successfull
+
+  -- Predefine mining with algorithms here, 
+  -- using scalpel is strongly advised
+  -- also define saveToPostgreSQL and saveToMongoDB
+
+  $(generateHaskelyzerDSL "pathToFileMentionedAbove")
+
   beginScraping:: IO ()
   beginScraping = do
-    mongoConnection <- -- CreateMongoConnection
-    postgreConnection <- -- CreatePostgreConnection
-
+    (mongoConnection, postgreConnection) <- createDBConnections
     -- Fire mining, you can potentially wrap this 
     -- into Writer monad to get useful logs
-    sequence_ $ mapM 
+    mapM_ 
       (\(a,b,c) -> 
         scrapeData a b c mongoConnection postgreConnection
       ) 
-      sourcesFromWhichToMine
+      sourcesFromWhichToMine <&> sequence . concat
 \end{minted}
+
+
 
 
 \section{Využití pro datovou analytiku}
@@ -1131,6 +1291,8 @@ Haskellyzer má již v sobě zabudované čtení CSV souborů včetně verifikac
 transformaci dat konkurentně 
 
 \chapter{Závěr}
+
+V rámci práce jsem udělal rešerši, implementaci, prostě shrnutí
 
 \section{Nedostatky a potenciální vylepšení do budoucna}
 

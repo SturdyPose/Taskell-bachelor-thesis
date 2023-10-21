@@ -1074,7 +1074,7 @@ vyrenderovat 3D modely pomocí knihovny OpenGL, WaveFront a Lens.
 Knihovna Lens vygeneruje pomocí Template Haskell gettery a settery.
 Pomocí těchto vygenerovaných vlastností se dá jednoduším způsobem 
 dostat ke vnořeným vlastností dat. 
-Třeba operátor \haskellInline{\%~)} neboli 'over' přijímá data,
+Třeba operátor (\%\textasciitilde) neboli 'over' přijímá data,
 jméno vlastnosti a 
 funkci která transformuje pouze danou vlastnost dat.
 
@@ -1184,6 +1184,14 @@ beforeRendering = do
 
 \end{minted}
 
+Pomocí Haskelyzeru se splnil cíl.
+Obsah funkce \haskellInline{loadModels} přehledně sděluje cíl a 
+případná modifikace je iterativní a 
+též je zapsaná v tacit formátu.
+Modely se načtou před renderováním prvního snímku a 
+ty se předají do nějaké stavové monády, 
+ze které se poté mohou modely upravovat a renderovat.
+
 \section{Využití pro web scraping}
 
 Haskellyzer zjednodušuje proces web scrapingu. 
@@ -1200,8 +1208,6 @@ Pro zjednodušení jsou zdroje zapsané ve formě \\
 ale mohou být též v csv formátu.
 Cílem je dané výsledky uložit do databáze,
 tak je nutné vytvořit konekci k daným databázovým systémům. 
-
-
 
 \textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
@@ -1281,9 +1287,6 @@ scrapeData::
       ) 
       sourcesFromWhichToMine <&> sequence . concat
 \end{minted}
-
-
-
 
 \section{Využití pro datovou analytiku}
 

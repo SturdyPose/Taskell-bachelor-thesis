@@ -1084,7 +1084,7 @@ knihovna nemá nejlepší podporu pro multithreading a renderuje
 3D modely ve Wavefront formátu, 
 tak dané modely se musí načíst,
 rozparsovat a 
-poté je vyrenderovat na společném vlákně.
+poté je vyrenderovat na hlavním vlákně.
 
 \textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
@@ -1096,6 +1096,8 @@ data LoadedWaveFrontOBJ = LoadedWaveFrontOBJ {
   , _loadedWaveFrontOBJTranslate:: Linear.V3 GL.GLfloat
   , _loadedWaveFrontOBJRotation :: Linear.Quaternion GL.GLfloat
 } deriving Show
+
+$(makeLenses ''ObjectDescription)
 
 \end{minted}
 
@@ -1184,11 +1186,13 @@ beforeRendering = do
 
 \end{minted}
 
-Pomocí Haskelyzeru se splnil cíl.
-Obsah funkce \haskellInline{loadModels} přehledně sděluje cíl a 
-případná modifikace je iterativní a 
-též je zapsaná v tacit formátu.
-Modely se načtou před renderováním prvního snímku a 
+Pomocí Haskelyzeru došlo ke splnění cíle.
+Konkurentně se načetly modely, 
+kde vývojář má kontrolu nad jednolivými vlákny.
+Obsah funkce \haskellInline{loadModels} přehledně sděluje cíl,  
+případné modifikace jsou uživatelsky přívětivé a 
+funkce je zapsaná v tacit formátu.
+Modely se načetly před renderováním prvního snímku a 
 ty se předají do nějaké stavové monády, 
 ze které se poté mohou modely upravovat a renderovat.
 
@@ -1289,15 +1293,39 @@ scrapeData::
 \end{minted}
 
 \section{Využití pro datovou analytiku}
+ 
+Zpracování dat může zabrat spoustu času, 
+jelikož většinou jednotlivé úpravy nad daty běží na jednom vlákně.
+Cílem je zjistit zdali clusterování dat pomocí 
+Haskelyzeru bude rychlejší než clusterování na jednom vlákně.
+Příklad clusteruje 64-dimenzionální data a clusteruje 
+od 2 až po 64 clusterů. 
+Pro Haskelyzer se rozdělí počet clusterů podle počtu dostupných vláken.
 
-Haskellyzer má již v sobě zabudované čtení CSV souborů včetně verifikace. Je možné provést 
-transformaci dat konkurentně 
+Kód se nachází ve veřejném repositáři: \cite{ClusteringExample}.
+
+Překvapivě bylo zjištěno, 
+že jednovláknová implementace clusterovacího algoritmu 
+dosahuje přibližně stonásobně vyšší výkon v porovnání s vícevláknovou variantou. 
+Tento výsledek vyvolává otázky o optimálnosti paralelního zpracování v rámci dané úlohy 
+a použité implementace.
+Jedním z potenciálních důvodů je, 
+že vytvoření nového procesu na každém vlákně dodává výkonovou zátěž
+a tím se zvyšuje čas pro uskutečnění operace.
+Proto je vždy důležité změřit, 
+zda-li má smysl přidat pro problém více vláken.
+
+{\centering
+\captionof{figure}{Výsledky benchmarkingu, kde jedno vlákno je rychlejší}
+\resizebox{16.9cm}{!}{\includegraphics{Benchmark-results-35.png}}
+}
 
 \chapter{Závěr}
 
 V rámci práce jsem udělal rešerši, implementaci, prostě shrnutí
 
 \section{Nedostatky a potenciální vylepšení do budoucna}
+
 
 \chapter{Citace}
 

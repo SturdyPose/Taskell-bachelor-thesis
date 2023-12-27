@@ -1033,17 +1033,69 @@ a předpokladá se, že tento vstup bude parsován identicky jako předem defino
 
 \section{Implementace pomocí LLVM}
 
-Prvopočáteční implementace zahrnovala využití knihovny LLVM, která 
-má za následek převzít AST a převést tento jazyk do LLVM intermediate representation (IR)
+Prvopočáteční implementace zahrnovala využití knihovny LLVM,
+která má za následek převzít AST a 
+převést tento jazyk do LLVM intermediate representation (IR)
 (\cite{IntroToLLVM}).
-Bohužel LLVM se spíše hodí na vytvoření generického programovacího jazyka, než na vytvoření
-DSL. DSL se dá touto knihovnou vytvořit, ale pro každou vygenerovanou funkci se musí
-vytvořit binding mezi IR, jazykem C a Haskellem. Toto řešení je rozhodně možné, 
-ale zvyšuje to komplexitu projektu a jednotlivé bindings mohou též být zdrojem 
-nechtěných bugů. Proto se sešlo od implementace pomocí LLVM a místo toho ho nahradil 
-mechanismus Template Haskell.
+Bohužel LLVM je knihovna primárně pro tvoření generických programovacích jazyků, 
+než na tvoření DSL. 
+DSL se dá pomocí této knihovny vytvořit, 
+ale pro každou vygenerovanou funkci se musí vytvořit binding mezi IR a
+jazykem C, který je kompilován pomocí CLANG compileru a Haskellem. 
+Toto řešení je rozhodně možné, ale zvyšuje to komplexitu projektu a 
+jednotlivé bindings mohou též být zdrojem nechtěných bugů. 
+Proto se sešlo od implementace pomocí LLVM a
+místo toho ho nahradil mechanismus Template Haskell.
 
 \section{Z AST do Template Haskell}
+
+V tuto chvíli jsou zde pouze limitované funkcionality.
+Z AST se nyní generují pouze curry funkce,
+kde všechny koncové funkce musí vracet stejný datový typ.
+
+Zde je příklad, 
+kde loadModel1 a 
+loadModel2 nemusí mít stejný počáteční datový typ, 
+ale koncové funkce jako je \haskellInline{scale} 
+vrací stejný datový typ \haskellInline{a}.
+
+\textbf{Haskelyzer}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+let loadModels =
+| loadModel1 -> rotate 0.0 45.0 90.0 -> scale 4.0
+| loadModel2 -> translate 60.0 0.0 0.0 -> scale 3.0
+\end{minted}
+
+Při překladu z AST se vygeneruje během kompilace tato funkce.
+
+\textbf{Haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+loadModels:: IO [Model]
+loadModels = 
+    let _loadModel1 = ((scale 4.0) . (rotate 0.0 45.0 90.0)) loadModel1 in 
+    let _loadModel2 = ((scale 3.0) . (rotate 0.0 45.0 90.0)) loadModel2 in 
+      runListConcurrently [_loadModel1, _loadModel2] 
+\end{minted}
+
+Toto je složitější než se na první pohled zdá,
+protože celý kontext této funkce se může změnit v ten moment,
+kdy se začlení parametry funkce.
+
+\textbf{Haskelyzer}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+let loadModels scaleFactor =
+| loadModel1 -> rotate 0.0 45.0 90.0 -> scale scaleFactor 
+| loadModel2 -> translate 60.0 0.0 0.0 -> scale scaleFactor 
+\end{minted}
+
+\textbf{Haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+loadModels:: IO [Float -> Model]
+loadModels scaleFactor = 
+    let _loadModel1 = \x1 -> ((scale x1) . (rotate 0.0 45.0 90.0)) loadModel1 in 
+    let _loadModel2 = \x2 -> ((scale x2) . (rotate 0.0 45.0 90.0)) loadModel2 in 
+      runListConcurrently [_loadModel1, _loadModel2] 
+\end{minted}
 
 \chapter{Ověření použitelnosti (testování funkčnosti, praktické příklady využití)}
 
@@ -1260,7 +1312,6 @@ let scrapeData a b c postgreConnection mongoConnection =
 
 \end{minted}
 
-Funkce ukazuje intuitivně účel. 
 Po úspěšném scrapingu se uloží výsledky do specifikované databáze.
 
 \textbf{Haskell}

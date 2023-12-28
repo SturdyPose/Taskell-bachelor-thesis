@@ -1090,12 +1090,136 @@ let loadModels scaleFactor =
 
 \textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
-loadModels:: IO [Float -> Model]
+loadModels:: Float -> IO [Model]
 loadModels scaleFactor = 
-    let _loadModel1 = \x1 -> ((scale x1) . (rotate 0.0 45.0 90.0)) loadModel1 in 
-    let _loadModel2 = \x2 -> ((scale x2) . (rotate 0.0 45.0 90.0)) loadModel2 in 
+    let _loadModel1 = ((scale scaleFactor) . (rotate 0.0 45.0 90.0)) loadModel1 in 
+    let _loadModel2 = ((scale scaleFactor) . (rotate 0.0 45.0 90.0)) loadModel2 in 
       runListConcurrently [_loadModel1, _loadModel2] 
 \end{minted}
+
+Prvně se definuje soubor, 
+kde se Haskelyzer nachází,
+tento soubor se označí jako modul pro kompilátor,
+protože veškeré změny v souboru se musí překompilovat. 
+Výstup funkce je \haskellInline{[Decl]} obalený 
+\haskellInline{Quasi Quotes - Q} monádou.
+
+Nadále se AST zpracuje do jednotlivých, 
+kompilátorem podporovaných, 
+Haskell funkcí.
+
+\textbf{Haskell}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+generateHaskalyzer:: FilePath -> Q [Dec]
+generateHaskalyzer filePath = do
+    absoPathTkl <- runIO $ makeAbsolute filePath
+    addDependentFile absoPathTkl -- recompile on file change
+    -- enable printing during compilation
+    runIO $ hSetBuffering stdout NoBuffering 
+    runIO $ hSetBuffering stderr NoBuffering 
+
+    ast <- runIO $ readFile filePath >>= parseTopLevelP
+    case ast of
+      Right exs -> mapM astExprToDec exs
+      Left pe -> error $ show pe
+
+astExprToDec:: Expr -> Q Dec
+astExprToDec (Var n args haskFunctions ) = do
+    let name = mkName n
+    liftIO $ print haskFunctions
+
+    -- generate uncapturable names which are not global
+    argsAsVarP <- 
+        mapM (\x -> do y <- newName x; return (x, y)) args
+
+    let argsMap = Map.fromList argsAsVarP
+
+    haskFunctionsAsExp <- 
+        mapM (haskelyzerFunctionToExpr argsMap) haskFunctions
+    let result = 
+        FunD 
+          name 
+          [
+            Clause 
+              (map (VarP . snd) argsAsVarP) 
+              (NormalB $ composed haskFunctionsAsExp) 
+              []
+          ]
+    liftIO $ print $ pprint result 
+    return result
+    where
+        composed:: [Exp] -> Exp
+        composed (fa:fb:fs) = let composeName = mkName "." in
+            foldl 
+              (\acc x -> 
+                InfixE 
+                  (Just x) 
+                  (VarE composeName) 
+                  (Just acc)) 
+              (InfixE (Just fb) (VarE composeName) (Just fa)) 
+              fs
+        composed [fa] = fa
+        composed [] = error "Variable can't be empty"
+
+composeHaskelyzerFunction:: 
+  Map String Name -> [HaskelyzerFunction] -> Q Exp
+composeHaskelyzerFunction knownArgumentsMap [] = 
+  error "Can't compose empty list"
+composeHaskelyzerFunction knownArgumentsMap (f:fs) = do
+    hf <- haskelyzerFunctionToExpr knownArgumentsMap f
+    foldrM helper hf fs
+
+    where
+      helper x acc =
+        let f = haskelyzerFunctionToExpr knownArgumentsMap x 
+          in 
+            f >>= \a -> return $ UInfixE a (VarE '($)) acc
+
+haskelyzerFunctionToExpr:: 
+  Map String Name -> HaskelyzerFunction -> Q Exp
+haskelyzerFunctionToExpr 
+  knownArgumentsMap 
+  (HaskelyzerFunction name args) = do
+        -- Get variables from local parameters, 
+        -- if none exist use global ones
+        createdArguments <-
+                foldrM
+                    (\arg acc -> 
+                      let val = knownArgumentsMap Map.!? arg in 
+                      case val of 
+                          Nothing -> return (mkName arg:acc) 
+                          Just x -> return (x:acc) else 
+                    ) 
+                    [] 
+                    args
+
+        let varsP = map VarP createdArguments 
+        let fName = mkName name
+
+        return ( functionApplicationE fName createdArguments)
+        -- return (LamE varsP  )
+
+        where
+            functionApplicationE:: Name -> [Name] -> Exp
+            functionApplicationE functionName (n:ns)= 
+              foldr 
+                (\x acc -> AppE acc (VarE x) ) 
+                (AppE (VarE functionName) (VarE n)) 
+                ns
+            functionApplicationE functionName [] = VarE functionName
+
+haskelyzerFunctionToExpr knownArgumentsMap (Concurrent fs) = do
+    composedFunctions <- mapM (composeHaskelyzerFunction knownArgumentsMap) fs
+    AppE (VarE 'runListConcurrently) $ ListE composedFunctions
+
+
+runListConcurrently:: [IO a] -> IO [a]
+runListConcurrently = mapConcurrently id
+
+\end{minted}
+
+
+
 
 \chapter{Ověření použitelnosti (testování funkčnosti, praktické příklady využití)}
 

@@ -864,9 +864,25 @@ rozparsuje poslední možnost a tou je jakýkoliv text.
 
 \section{Lexer a hlavní datové typy}
 
-Na začátku je důležité si nadefinovat výsledek parsování. Parsec zprostředkovává 
-jednoduchý token parser, který definuje například komentáře, operátory a reservovaná
-jména.
+% Na začátek je důležité si nadefinovat výsledek parsování.
+% Parsec zprostředkovává jednoduchý token parser, 
+% který definuje komentáře, 
+% operátory a rezervovaná jména.
+Haskelyzer využívá takzvaný \i{lexeme} parser.
+Tento druh parseru má za úkol ignorovat veškeré whitespace tokeny jako
+jsou například tabulátory, jednoduché mezery nebo nové řádky.
+Díky tomuto druhu parseru se může vývojář pouze soustředit na 
+jednotlivé tokeny. 
+Naneštěstí knihovna Parsec má v sobě nevyřešené bugy v \i{lexeme} funkcionalitě, 
+které se nemohou opravit, 
+protože by se mohly zničit již exisující parsery,
+které jsou budovány kolem těchto bugů.
+Tento problém není ani správně dokumentován a proto 
+se doporučuje místo knihovny Parsec, 
+využít v nových parserech knihovnu MegaParsec nebo AttoParsec. 
+
+Definice lexeru si vyžaduje nakonfigurovat jednotlivé parametry,
+jako je senzitivita velkých a malých písmen, komentáře a rezervovaná jména.
 
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
@@ -893,10 +909,10 @@ haskelyzerLexer =
 \end{minted}
 
 Lze si všimnout, že tato funkce má poněkud zajímavý typ \haskellInline{IndentT Identity}.
-Jelikož jazyk nepoužívá středníky tak místo toho využívá odsazení, proto se zde využívá 
-pomocný monad transformer \haskellInline{IndentT} z knihovny \textit{indents}. 
-Díky tomu není nutné manuálně počítat jednotlivá odsazení, ale jsou automaticky
-dle kontextu započteny.
+Jelikož jazyk nepoužívá středníky a místo toho využívá jednotlivá odsazení, 
+tak se zde využívá pomocný monad transformer \haskellInline{IndentT} z knihovny \textit{indents}. 
+Díky tomu není nutné manuálně počítat jednotlivá odsazení, 
+protože budou automaticky započteny v záslosti na zdroji.
 
 Dále je zapotřebí si definovat jednoduché binární a unární operátory.
 
@@ -917,7 +933,6 @@ data UnaryOp
 
 \end{minted}
 
-Nejzajímavější částí je definice datových typů, které jsou zároveň rekurzivní. 
 
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
@@ -953,14 +968,25 @@ data Literal =
 
 \end{minted}
 
+\haskellInline{[Expr]} je v podstatě AST.
+Seznam jednotlivých \i{expression} je stavební kámen DSL. 
+
 \haskellInline{Data Literal} jsou pouze primitivní datové typy stejně jako
 \haskellInline{CsvDataType}, rozdílem je že \haskellInline{CsvDataType} předem definuje, 
 zda-li všechny sloupce v CSV souboru jsou očekáváným datovým typem. \\
 Typ \haskellInline{OptionalColumnNameWithType} je pro CSV soubory, kde CSV soubor má možnost
 mít záhlaví a \haskellInline{data Schema} ukládá tuto informaci včetně cestu k tomuto souboru. 
 
-Velmi důležitou součástí je \haskellInline{data HaskelyzerFunction}. První část je pouze 
-funkce a její argumenty, druhá část je \haskellInline{Concurrent [[HaskellyzerFunction]]}.
+
+Haskelyzer podporuje vnořené funkce. 
+Pro podporu této vlastnosti \haskellInline{HaskelyzerFunction} musí být rekurzivní, 
+protože \haskellInline{HaskelyzerFunction} může nabrat formu 
+\\
+\haskellInline{Concurrent [[Concurrent [[HaskelyzerFunction "Foo" []]]]}
+\\
+\haskellInline{,[HaskelyzerFunction "Fun" ["arg1"]]]}.
+
+První část \haskellInline{HaskelyzerFunction} je pouze funkce a její argumenty, druhá část je \haskellInline{Concurrent [[HaskellyzerFunction]]}.
 Ve výše zmíněných příkladech bylo poukázáno, jak každá vygenerovaná funkce může vytvořit 
 další konkurentní funkce a v nich další vnořené konkurentní funkce. Díky této vnořenosti 
 je potřeba uchovávat funkce v listu listů.
@@ -1262,11 +1288,11 @@ funkci která transformuje pouze danou vlastnost dat.
 
 Vysvětlení samotného rendereru je mimo rozsah této práce, stačí 
 pouze vědět, že je zapsán pomocí OpenGL, jelikož tato grafická 
-knihovna nemá nejlepší podporu pro multithreading a renderuje 
+knihovna nemá podporu pro multithreading a renderuje 
 3D modely ve Wavefront formátu, 
 tak dané modely se musí načíst,
 rozparsovat a 
-poté je vyrenderovat na hlavním vlákně.
+poté vyrenderovat na hlavním vlákně.
 
 \textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
@@ -1343,7 +1369,7 @@ scale x loadedWaveFront =
 Funkce \haskellInline{loadModels} vrací typ \haskellInline{IO [IO LoadedWaveFrontOBJ]},
 což je pouze vnořená IO monáda, 
 která se může usnadnit pomocí pomocné funkce \haskellInline{joinTraversableMonad} a 
-to natransformuje data do typu IO \haskellInline{[LoadedWaveFrontObj]}.
+to natransformuje data do typu \haskellInline{IO [LoadedWaveFrontObj]}.
 
 \textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
@@ -1456,7 +1482,7 @@ scrapeData::
   IO([IO (Bool)]) -- Bool shows if operation was successfull
 
   -- Predefine mining with algorithms here, 
-  -- using scalpel is strongly advised
+  -- using scalpel lib is strongly advised
   -- also define saveToPostgreSQL and saveToMongoDB
 
   $(generateHaskelyzerDSL "pathToFileMentionedAbove")
@@ -1473,7 +1499,7 @@ scrapeData::
       sourcesFromWhichToMine <&> sequence . concat
 \end{minted}
 
-\section{Využití pro datovou analytiku}
+\section{Využití pro datovou analytiku a změření výkonu}
  
 Zpracování dat může zabrat spoustu času, 
 jelikož většinou jednotlivé úpravy nad daty běží na jednom vlákně.
@@ -1501,12 +1527,47 @@ zda-li má smysl přidat pro problém více vláken.
 \resizebox{16.9cm}{!}{\includegraphics{Benchmark-results-35.png}}
 }
 
-\chapter{Závěr}
-
-V rámci práce jsem udělal rešerši, implementaci, prostě shrnutí
-
 \section{Nedostatky a potenciální vylepšení do budoucna}
 
+\chapter{Závěr}
+
+Hlavním cílem této práce bylo vytvoření doménově specifického jazyka (DSL) se zaměřením 
+na tacit (beztečkovou) syntaxi a 
+jak je takový DSL navržen, 
+pomocí programovacího jazyka Haskell, 
+s ověřením použitelnosti a funkčnosti v různých aplikacích.
+
+V první kapitole je popsáno, 
+co vůbec takový tacit zápis je,
+v jakém kontextu se dá tacit syntaxe využít a naopak kdy se tomu radši vyhnout a
+jak je podporovaný napříč populárními programovacími jazyky,
+jako je Haskell nebo Javascript. 
+Následně se provádí rešerše nad APL což je programovací jazyk,
+který je primárně navržen pro tacit zápis.
+
+V druhé kapitole se nachází definice DSL a
+využití různých DSL ve specických doménách problematiky.
+
+V třetí kapitole se nachází implementace navrženého DSL, 
+Haskelyzeru, 
+který řeší problém domény konkurence.
+Jednotlivé sekce obsahují popis navrženého parseru, 
+lexeru a 
+jak se abstraktní syntaktický strom převádí 
+do Haskell kódu během kompilace projektu, 
+pomocí meta-programming mechanismu Template Haskell.
+
+V poslední kapitole se ověřuje použitelnost narvženého DSL v 
+grafické aplikaci s kontextem načítání modelů do scén,
+web scraping aplikaci pro scrapování několika web domén současně a 
+datové analýze, 
+kde se provádí clustering a zároveň se měří výkon DSL.
+Na konci jsou předneseny nedostatky Haskelyzeru a 
+potenciální zlepšení do budoucna.
+
+Veškeré přednesené charakteristiky a 
+informace o tvorbě DSL v této bakalářské práci
+mohou sloužit jako základ pro tvorbu jakéhokoliv DSL v programovacím jazyce Haskell.
 
 \chapter{Citace}
 

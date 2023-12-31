@@ -258,6 +258,25 @@ Translation of czech key words.
 
 \addchap{Úvod}
 
+Cílem práce je vytvoření doménově specifický konkuretní jazyk, který usnadní přehled business logiky a zlepší 
+vývojářské prostředí (developer experience) se zaměřením na \textit{tacit} - "beztečkové" paradigma.
+V práci budou ukázky, jak
+tacit programming vypadá a budou vyzdvyženy argumenty proč s tacit programmingem
+vůbec pracovat.
+Do tohoto paradigmatu spadají jazyky APL rodiny. 
+Ukázky v této práci potvrdí, že jazyky které nebyly primárně navržené jako "beztečkové" 
+umožňují v tomto stylu psát.
+
+Před studováním této bakalářské práce se doporučuje znát základy funkcionálního programování a
+to konkrétně Haskellu.
+Nachází se zde příklady,
+které se srovnávají s jazykem C nebo JavaScriptem,
+ale tyto příklady nejsou jako náhrada za znalosti Haskellu.
+Návrh je vytvořen v Haskellu pomocí knihoven jako
+jsou Parsec a MTL (Monad Transformer Library).
+
+\chapter{Programovací paradigma a Tacit programming}
+
 Programovací paradigma je způsob myšlení a přístupu k návrhu, 
 strukturování a implementaci počítačových programů. 
 Definuje sadu pravidel, postupů, technik a konceptů, které určují způsob,
@@ -305,22 +324,6 @@ který se zabývá měnícím se stavem nebo interakcí s okolím.
 
 
 Je důležité si uvědomit, že míra povolené mutace dat se může lišit mezi jednotlivými funkcionálními jazyky a je závislá na jejich návrhu a filozofii. Každý jazyk si volí kompromis mezi funkcionalitou a striktností v oblasti mutace, aby splňoval požadavky svých uživatelů a cílů, které si klade.
-
-\section{Cíl práce}
-
-Cílem práce je vytvoření doménově specifický konkuretní jazyk, který usnadní přehled business logiky a zlepší 
-vývojářské prostředí (developer experience) se zaměřením na \textit{tacit} - "beztečkové" paradigma.
-V práci budou ukázky, jak
-tacit programming vypadá a budou vyzdvyženy argumenty proč s tacit programmingem
-vůbec pracovat.
-Do tohoto paradigmatu spadají jazyky APL rodiny. 
-Ukázky v této práci potvrdí, že jazyky které nebyly primárně navržené jako "beztečkové" 
-umožňují v tomto stylu psát.
-
-Tato bakalářská práce předpokládá, že čtenář zná základy funkcionálních jazyků a obzvlášť Haskellu, 
-protože návrh je vytvořen v Haskellu pomocí knihoven jako je Parsec a MTL (Monad Transformer).
-
-\chapter{Tacit programming}
 
 \textbf{Tacit programming} je programovací styl, 
 který klade důraz na skládání a řetězení funkcí a není založen na explicitní specifikaci parametrů funkcí.
@@ -415,7 +418,7 @@ const curry = (f) => (..args) => args.length >= f.length ?
     curry.apply(this, args.concat(args2));
 
 \end{minted}
-\section{Principy a odlišnosti od klasického paradigmatu}
+\section{Principy a odlišnosti od procedurálního/OOP paradigmatu}
 
 Procedurální paradigma se zaměřuje na psaní procedurálních instrukcí.
 Typickým příkladem tohoto paradigmatu je programovací jazyk C, 
@@ -868,12 +871,12 @@ rozparsuje poslední možnost a tou je jakýkoliv text.
 % Parsec zprostředkovává jednoduchý token parser, 
 % který definuje komentáře, 
 % operátory a rezervovaná jména.
-Haskelyzer využívá takzvaný \i{lexeme} parser.
+Haskelyzer využívá takzvaný \textit{lexeme} parser.
 Tento druh parseru má za úkol ignorovat veškeré whitespace tokeny jako
 jsou například tabulátory, jednoduché mezery nebo nové řádky.
 Díky tomuto druhu parseru se může vývojář pouze soustředit na 
 jednotlivé tokeny. 
-Naneštěstí knihovna Parsec má v sobě nevyřešené bugy v \i{lexeme} funkcionalitě, 
+Naneštěstí knihovna Parsec má v sobě nevyřešené bugy v \textit{lexeme} funkcionalitě, 
 které se nemohou opravit, 
 protože by se mohly zničit již exisující parsery,
 které jsou budovány kolem těchto bugů.
@@ -1075,9 +1078,27 @@ Proto se sešlo od implementace pomocí LLVM a
 místo toho ho nahradil mechanismus Template Haskell.
 
 \section{Z AST do Template Haskell}
+Template Haskell je rozšíření Haskellu od verze 6, 
+který umožňuje typově bezpečné meta-programování během kompilace.
+% https://wiki.haskell.org/Template_Haskell
+Tím se otevírají možnosti vytvořit funkcionality, 
+kde program se může modifikovat sám sebe, 
+čemuž se říká \textbf{reflekce}.
+Pro tvorbu Haskelyzeru je Template Haskell nedílnou součástí,
+bez které se nedá obejít.
+Je též možné vytvořit výstupní soubor s vygenerovaným Haskel kódem a 
+jej následně umístit do jednotlivých modulů,
+ale to nezaručuje, 
+že vytvořený program bude typově bezpečný.
+Pokud by se chtěla zaručit tato bezpečnost,
+tak by se vygenerovaný kód musel projít přes 
+Haskell interpreter z knihovny Hint.
+Čtenář může usoudit, 
+že toto celé je nepotřebně komplexní a 
+že je výrazně snažší využít již existujích meta-programming funkcionalit. 
 
 V tuto chvíli jsou zde pouze limitované funkcionality.
-Z AST se nyní generují pouze curry funkce,
+Z AST se nyní generují pouze curryované funkce,
 kde všechny koncové funkce musí vracet stejný datový typ.
 
 Zde je příklad, 
@@ -1528,6 +1549,29 @@ zda-li má smysl přidat pro problém více vláken.
 }
 
 \section{Nedostatky a potenciální vylepšení do budoucna}
+
+Do Haskelyzeru byla přidaná funkcionalita na načitání CSV souborů,
+kde probíhá validace s možností vkládání dat do programu.
+Tato funkcionalita nebyla řádně testována, 
+ale nabízí zjednodušení zpracování dat.
+Tato funkcionalita se může rozšířit při přidání dalších parserů 
+s případnou podporu pro SQL-NOSQL.
+
+Potenciálním vylepšením by byla ponechaní threadů, 
+které by byly znovu využity.
+V aplikaci na načítání modelů do scén se nachází pouze část,
+kdy se scéna načte pouze jednou.
+Ale co se má dít v případě, 
+kdy modely musí být načítány postupně?
+Nyní se pokaždé vytvoří nový thread a 
+právě tvorba nového threadu zabírá hromadu času,
+což bylo možné si povšimnout v třetí sekci na datovou analytiku.
+
+Nyní Haskelyzer nepodporuje obyčejné konstanty jako argumenty a
+spoléhá na konstanty,
+které musí místo toho nabízet daný modul, 
+kde ja Haskelyzer vyvolán.
+Též zde chybí základní podpora foldingu pro sbírání výskedků z Haskelyzeru.
 
 \chapter{Závěr}
 

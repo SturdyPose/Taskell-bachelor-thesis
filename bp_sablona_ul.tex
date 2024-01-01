@@ -252,6 +252,7 @@ Translation of Czech abstract.
 Translation of czech key words.
 
 {
+
   \hypersetup{linkcolor=black}
   \tableofcontents
 }
@@ -275,7 +276,7 @@ ale tyto příklady nejsou jako náhrada za znalosti Haskellu.
 Návrh je vytvořen v Haskellu pomocí knihoven jako
 jsou Parsec a MTL (Monad Transformer Library).
 
-\chapter{Programovací paradigma a Tacit programming}
+\chapter{Programovací paradigma a tacit programming}
 
 Programovací paradigma je způsob myšlení a přístupu k návrhu, 
 strukturování a implementaci počítačových programů. 
@@ -283,27 +284,40 @@ Definuje sadu pravidel, postupů, technik a konceptů, které určují způsob,
 jakým se programy píší a organizují. Paradigma poskytuje rámec pro definici a 
 řešení problémů v programování.
 
-Některé z nejznámějších programovacích paradigmat zahrnují:
+Některé z nejznámějších programovacích paradigmat zahrnují 
+procedurální, objektově orientované a funkcionální.
 
-\section{Procedurální paradigma}
+\section{Procedurální-imperativní paradigma}
 Zaměřuje se na sekvenci instrukcí, 
-které jsou vykonávány postupně. 
-Program je rozdělen na procedury a funkce, které provádějí určité operace. Příkladem takového 
-paradigmatu je jazyk C, GOlang a Assembly. Zde se programátoři často setkávají s nutností
-manuální správou paměti (\textit{malloc}, \textit{free}).
+které jsou vykonávány postupně
+v závislosti na architektuře procesoru.
+Program je rozdělen na procedury a funkce, 
+které provádějí určité operace. 
+Příkladem takového paradigmatu je jazyk C, 
+Zig, 
+GOlang a 
+Assembly. 
 
 \section{Objektově orientované paradigma - OOP}
+
 Klade důraz na objekty a jejich interakce. 
-Program je strukturován kolem tříd, které obsahují data (atributy) a metody (funkce), 
-které s těmito daty pracují. Toto paradigma je obohaceno o \textbf{polymorfismus}.
-Vývojáři si mohou OOP představit jako nadmonžinu Procedurálního paradigmatu.
+Program je strukturován kolem tříd, 
+které obsahují data (atributy) a 
+metody (funkce), 
+které s těmito daty pracují. 
+Toto paradigma je obohacené o \textbf{polymorfismus}.
 
 V závislosti na programovacím jazyce, 
-vývojáři mohou vužívat automatickou správu paměti díky \textit{garbage collectoru}, kde 
-tuto správu paměti vužívají C\# a Java. Pokud je zapotřebí manuální správa paměti, je zde
-C\+\+ nebo Rust. Rust je zajímavý tím, že využívá \textit{borrow checker} a má napodobit
-chování smart pointerů.
+vývojáři mohou vužívat automatickou správu paměti díky \textit{garbage collectoru}, 
+kde tuto správu paměti vužívají C\# a Java. 
+Pokud je zapotřebí manuální správa paměti, 
+je zde C\+\+ nebo Rust. 
+Rust je zajímavý tím, že využívá \textit{borrow checker} 
+a má napodobit chování smart pointerů.
 
+Zde se programátoři často setkávají s nutností
+manuální správou paměti (\textit{malloc}, \textit{free}) pokud
+daný jazyk nemá \textit{garbage collector}.
 
 \section{Funkcionální paradigma - FP}
 Jedná se o deklarativní způsob programování, kde funkce jsou 
@@ -314,18 +328,51 @@ To přispívá ke stabilitě, zjednodušené paralelizaci a eliminaci některýc
 Jazyky jako Lisp a jeho dialekty, oCaml, Closure, F\# a Haskell 
 jsou běžnými příklady funkcioního programování.
 
-V jednotlivých funkcionálních jazycích je povolena různá míra mutace dat. 
-Například jazyk F\# umožňuje mutaci dat kdekoli v programu, což je částečně záměrem, 
-aby oslovil uživatele jazyka C\#. Na druhou stranu, 
-v jazyce Haskell jsou mutace omezeny v IO monádě a data musí být uloženy 
-ve specifických typech jako IORef, STRef nebo MVar. Takto Haskell 
-pomáhá udržet jasnou separaci mezi čistým funkcionalním kódem a kódem, 
+V různých funkcionálních jazycích je povolena různá míra mutace dat.
+Například jazyk F\# umožňuje mutaci dat kdekoli v programu, 
+což je částečně záměrem, 
+aby uživatelé jiných programovací jazyků měli snažší přenos svých vědomostí do 
+nového prostředí.
+Na druhou stranu, 
+v jazyce Haskell jsou mutace omezeny v IO monádě a 
+data musí být uloženy 
+ve specifických typech jako IORef, STRef nebo MVar. 
+Takto Haskell pomáhá udržet jasnou separaci mezi čistým funkcionalním kódem a kódem, 
 který se zabývá měnícím se stavem nebo interakcí s okolím.
 
+Je důležité si uvědomit, 
+že míra povolené mutace dat se může lišit mezi jednotlivými funkcionálními jazyky a 
+je závislá na jejich návrhu a filozofii. 
+Každý jazyk si volí kompromis mezi funkcionalitou a 
+striktností v oblasti mutace, 
+aby splňoval požadavky svých uživatelů a cílů, 
+které si klade.
 
-Je důležité si uvědomit, že míra povolené mutace dat se může lišit mezi jednotlivými funkcionálními jazyky a je závislá na jejich návrhu a filozofii. Každý jazyk si volí kompromis mezi funkcionalitou a striktností v oblasti mutace, aby splňoval požadavky svých uživatelů a cílů, které si klade.
+\section{Vliv paradigmat na programovací jazyky}
+Velmi málo jazyků implementuje paradigma stoprocentně. 
+Když to udělají, 
+jsou takzvaně \textit{čisté}. 
+Je neuvěřitelně vzácné mít "čistě OOP" jazyk nebo 
+"čistě funkcionální" jazyk. 
+Mnoho jazyků má pár výjimek, například v OCamlu budete programovat pomocí funkcí 90\% nebo 
+více času, ale pokud potřebujete stav, můžete ho získat. 
+I Haskell, který se považuje za \textit{čistě} funkcionální jazyk,
+tak podporuje \textit{do} notaci díky němuž se dá psát kód imperativně.
+Dalším příkladem je že velmi málo jazyků implementuje OOP, 
+jak si jej Alan Kay představoval.
+Mnoho jazyků usnadňuje programování v jednom nebo více paradigmat. 
+V jazyce Scala můžete snadno provádět imperativní, 
+objektově orientované a funkcionální programování. 
+Pokud je jazyk úmyslně navržen tak, 
+aby umožňoval programování v mnoha paradigmatech současně, 
+nazýváme ho jazykem s více paradigmaty. 
+Pokud jazyk neúmyslně podporuje více paradigmat, 
+neexistuje pro to zvláštní slovo.
+% https://cs.lmu.edu/~ray/notes/paradigms
 
-\textbf{Tacit programming} je programovací styl, 
+\section{Tacit programming}
+
+Tacit programming je programovací styl, 
 který klade důraz na skládání a řetězení funkcí a není založen na explicitní specifikaci parametrů funkcí.
 Pro základní ukázky bude využit JavaScript jelikož se jedná o jeden z nejpopulárnějších jazyků. 
 Základní principy funkcionálního a tacit programování jsou v jazyce JavaScript,

@@ -824,11 +824,17 @@ parsování a obsahuje všechny definice jazyka.
 \section{Parsec a kombinátory}
 
 V tradičních imperativních jazycích parsování probíha pomocí načtení souboru 
-do takzvaného \textit{streamu} a poté se ze streamu načítají jednotlivé znaky 
-na zpracování tokenů. Díky Haskell knihovnám jako je Parsec, AttoParsec nebo Megaparsec,
-není potřeba zpracovávat jednotlivé znaky, ale stačí definovat kombinátory, 
-které tyto tokeny vrací. Haskelyzer využívá knihovnu Parsec. Zde je následující přiklad 
-jednoduchého kombinátoru.
+do takzvaného \textit{streamu} a 
+poté se ze streamu načítají jednotlivé znaky na zpracování tokenů. 
+Stream se používá z důvodu konzumace paměti, 
+kde každý stream může být naimplementován jinak.
+Díky Haskell knihovnám jako je Parsec, 
+AttoParsec nebo Megaparsec,
+není potřeba zpracovávat jednotlivé znaky, 
+ale stačí definovat kombinátory, 
+které tyto tokeny vrací. 
+Haskelyzer využívá knihovnu Parsec. 
+Zde je následující přiklad primitivního kombinátoru.
 
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
@@ -852,18 +858,30 @@ parseToVariant = many $ integer <|> float <|>
 
 \end{minted}
 
-Cílem výše zmíněného příkladu je, přečíst soubor a rozparsovat ho na list, 
-který obsahuje 3 různé datové typy a to na \textit{integer, double, string}.
-Typový synonym \haskellInline{CustomParser a} je synonym pro \haskellInline{Parsec String () a},
-což znamená, že Parsec čte soubor do streamu typu String, nemá žádný stav (Parsec je \textit{Monad Transformer},
-který zároveň má v sobě zahrnutou stavovou monádu) a po úspěšném parsování 
-vrací generický typ a. 
+Cílem výše zmíněného příkladu je, 
+přečíst soubor do \haskellInline{String} 
+a rozparsovat ho na list, 
+který obsahuje 3 různé datové typy 
+a to na \textit{integer, double nebo string}.
+Typový synonym \haskellInline{CustomParser a} 
+je synonym pro \haskellInline{Parsec String () a},
+což znamená, 
+že Parsec čte soubor do streamu typu \haskellInline{String}, 
+kde nemá žádný stav nebo-li prázdný tuple \haskellInline{()}. 
+Parsec je \textit{Monad Transformer},
+který zároveň má v sobě zahrnutou stavovou monádu a 
+po úspěšném parsování vrací typ a. 
 
-Je nutné zmínit fukci \haskellInline{parseToVariant}. Díky kombinačnímu operátoru \haskellInline{<|>} 
-lze pouze definovat vysokoúrovňovou parsovací logiku bez potřeby manuální jednotlivých tokenů. 
+Je nutné zmínit fukci \haskellInline{parseToVariant}. 
+Díky kombinačnímu operátoru \haskellInline{<|>} 
+lze pouze definovat vysokoúrovňovou parsovací logiku bez potřeby manipulace jednotlivých tokenů. 
 Tento operátor funguje na bázi \textbf{alternativa} nebo
-\textbf{fallback}. Pokud selže parser integer, tak se pokusí parsovat float, pokud i ten selže, tak vždy se 
-rozparsuje poslední možnost a tou je jakýkoliv text.
+\textbf{fallback}. 
+Pokud selže parser integer, 
+tak se pokusí parsovat float, 
+pokud i ten selže, 
+tak vždy se rozparsuje poslední možnost a 
+tou je jakýkoliv text.
 
 \section{Lexer a hlavní datové typy}
 
@@ -873,7 +891,8 @@ rozparsuje poslední možnost a tou je jakýkoliv text.
 % operátory a rezervovaná jména.
 Haskelyzer využívá takzvaný \textit{lexeme} parser.
 Tento druh parseru má za úkol ignorovat veškeré whitespace tokeny jako
-jsou například tabulátory, jednoduché mezery nebo nové řádky.
+jsou například tabulátory, 
+jednoduché mezery nebo nové řádky.
 Díky tomuto druhu parseru se může vývojář pouze soustředit na 
 jednotlivé tokeny. 
 Naneštěstí knihovna Parsec má v sobě nevyřešené bugy v \textit{lexeme} funkcionalitě, 
@@ -885,7 +904,8 @@ se doporučuje místo knihovny Parsec,
 využít v nových parserech knihovnu MegaParsec nebo AttoParsec. 
 
 Definice lexeru si vyžaduje nakonfigurovat jednotlivé parametry,
-jako je senzitivita velkých a malých písmen, komentáře a rezervovaná jména.
+jako je senzitivita velkých a malých písmen, 
+komentáře a rezervovaná jména.
 
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
@@ -911,13 +931,16 @@ haskelyzerLexer =
 
 \end{minted}
 
-Lze si všimnout, že tato funkce má poněkud zajímavý typ \haskellInline{IndentT Identity}.
-Jelikož jazyk nepoužívá středníky a místo toho využívá jednotlivá odsazení, 
+Lze si všimnout, 
+že tato funkce má poněkud zajímavý typ \haskellInline{IndentT Identity}.
+Jelikož jazyk nepoužívá středníky a 
+místo toho využívá jednotlivá odsazení, 
 tak se zde využívá pomocný monad transformer \haskellInline{IndentT} z knihovny \textit{indents}. 
 Díky tomu není nutné manuálně počítat jednotlivá odsazení, 
 protože budou automaticky započteny v záslosti na zdroji.
 
-Dále je zapotřebí si definovat jednoduché binární a unární operátory.
+Pokud navrhovaný DSL obsahuje nějaké binární či unární operace, 
+tak je zapotřebí si definovat do základních stavebních bloků lexeru.
 
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
@@ -933,11 +956,6 @@ data UnaryOp
     | Nroot -- Like SquareRoot but N 
     | Exponent
     deriving (Eq, Ord, Show)
-
-\end{minted}
-
-
-\begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 type OptionalColumnNameWithType = (Maybe String, CsvDataType)
 data Schema = Schema VarNamePath [OptionalColumnNameWithType] 
@@ -971,15 +989,16 @@ data Literal =
 
 \end{minted}
 
-\haskellInline{[Expr]} je v podstatě AST.
-Seznam jednotlivých \i{expression} je stavební kámen DSL. 
+\haskellInline{[Expr]} je co tvoří AST.
+Seznam jednotlivých \i{expression} je hlavní datový typ všech DSL. 
 
 \haskellInline{Data Literal} jsou pouze primitivní datové typy stejně jako
-\haskellInline{CsvDataType}, rozdílem je že \haskellInline{CsvDataType} předem definuje, 
+\haskellInline{CsvDataType}, 
+rozdílem je že \haskellInline{CsvDataType} předem definuje, 
 zda-li všechny sloupce v CSV souboru jsou očekáváným datovým typem. \\
-Typ \haskellInline{OptionalColumnNameWithType} je pro CSV soubory, kde CSV soubor má možnost
+Typ \haskellInline{OptionalColumnNameWithType} je pro CSV soubory, 
+kde CSV soubor má možnost
 mít záhlaví a \haskellInline{data Schema} ukládá tuto informaci včetně cestu k tomuto souboru. 
-
 
 Haskelyzer podporuje vnořené funkce. 
 Pro podporu této vlastnosti \haskellInline{HaskelyzerFunction} musí být rekurzivní, 
@@ -989,22 +1008,28 @@ protože \haskellInline{HaskelyzerFunction} může nabrat formu
 \\
 \haskellInline{,[HaskelyzerFunction "Fun" ["arg1"]]]}.
 
-První část \haskellInline{HaskelyzerFunction} je pouze funkce a její argumenty, druhá část je \haskellInline{Concurrent [[HaskellyzerFunction]]}.
-Ve výše zmíněných příkladech bylo poukázáno, jak každá vygenerovaná funkce může vytvořit 
-další konkurentní funkce a v nich další vnořené konkurentní funkce. Díky této vnořenosti 
+První část \haskellInline{HaskelyzerFunction} je pouze funkce a 
+její argumenty, 
+druhá část je \haskellInline{Concurrent [[HaskellyzerFunction]]}.
+Ve výše zmíněných příkladech bylo poukázáno, 
+jak každá vygenerovaná funkce může vytvořit 
+další konkurentní funkce a v nich další vnořené konkurentní funkce. 
+Díky této vnořenosti 
 je potřeba uchovávat funkce v listu listů.
 
-\haskellInline{Var Name [HaskellyzerFunction]} vygeneruje funkci s názvem "Name" a pořadí 
-funkcí v \haskellInline{[HaskellyzerFunction]} určují, v jakém pořadí budou funkce aplikovány,
+\haskellInline{Var Name [HaskellyzerFunction]} vygeneruje funkci s názvem "Name" a 
+pořadí funkcí v \haskellInline{[HaskellyzerFunction]} určují, 
+v jakém pořadí budou funkce aplikovány,
 v tomto případě jsou \textbf{aplikovány zleva do prava}.
-
 
 \section{Parser}
 
-Zpočátku se určí tabulka operátorů a v jakém pořadí se operátory 
-aplikují, poté se tato tabulka předá nultému výrazovému parseru, kde 
-tento parser dokáže rozpoznat zda-li výraz  patří mezi
-hlavní výrazy. Zároveň se pro zjednodušení zápisu se definuje typový 
+Zpočátku se určí tabulka operátorů a 
+v jakém pořadí se operátory aplikují, 
+poté se tato tabulka předá nultému výrazovému parseru, 
+kde tento parser dokáže rozpoznat zda-li výraz patří mezi
+hlavní výrazy. 
+Zároveň se pro zjednodušení zápisu se definuje typový 
 synonym pro parser.
 
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
@@ -1049,7 +1074,8 @@ parseToplevelP input =
 \end{minted}
 
 Funkce \haskellInline{parseToplevelP} je hlavní vstup pro parsování obsahu,
-který vrací \textbf{AST}. Jelikož typ \haskellInline{[Expr]} je zároveň rekurzivní,
+který vrací \textbf{AST}. 
+Jelikož typ \haskellInline{[Expr]} je zároveň rekurzivní,
 tak tvoří strom - \textbf{AST}.
 
 \section{Testování}
@@ -1057,9 +1083,13 @@ tak tvoří strom - \textbf{AST}.
 Bez testování parseru by nevznikl žádný spolehlivý parser, 
 což dělá testovací fázi jakousi nutností.
 S každou přidanou větví parseru musí být přidaná další část v testování,
-kterou tuto větev prošetří. Logika testování parseru stojí pouze na tom,
-že se předá jednoduchý vstup ve formě řetězce 
-a předpokladá se, že tento vstup bude parsován identicky jako předem definované AST.
+kterou tuto větev prošetří. 
+Logika testování parseru stojí pouze na tom,
+že se předá jednoduchý vstup ve formě řetězce nebo souboru
+a předpokladá se, 
+že výstup parsování bude identické jako předem definované AST.
+V testovací fázi se hodí též přidat i vyjímky,
+které by měli parsování selhat.
 
 \section{Implementace pomocí LLVM}
 

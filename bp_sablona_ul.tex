@@ -36,9 +36,8 @@
 \fi
 
 \usepackage[
-  style=authoryear,
   backend=biber,
-  citestyle=authortitle
+  style=iso-authoryear,
   ]{biblatex}
 \usepackage{minted}
 \usepackage{listings}
@@ -356,7 +355,7 @@ Je neuvěřitelně vzácné mít "čistě OOP" jazyk nebo
 "čistě funkcionální" jazyk. 
 Mnoho jazyků má pár výjimek, například v OCamlu budete programovat pomocí funkcí 90\% nebo 
 více času, ale pokud potřebujete stav, můžete ho získat. 
-I Haskell, který se považuje za \textit{čistě} funkcionální jazyk,
+I Haskell který se považuje za \textit{čistě} funkcionální jazyk,
 tak podporuje \textit{do} notaci díky němuž se dá psát kód imperativně.
 Dalším příkladem je že velmi málo jazyků implementuje OOP, 
 jak si jej Alan Kay představoval.
@@ -745,7 +744,7 @@ zatímco CSS se zaměřuje na stylizaci webu pomocí DOM selectorů. Pravdou je,
 protocol a proto v různých webových enginech, můžete dostat různé výsledky. Příkladem z praxe je zpracování
 fontů.
 
-Též existují jazyky DSL, které jsou specifické pouze pro jednu dannou enterprise aplikaci, kde její implementace
+Též existují jazyky DSL, které jsou specifické pouze pro jednu danou enterprise aplikaci, kde její implementace
 často spočívá na bázi XML nebo podobného formátu jako je např YAML. Zde DSL slouží například pro 
 zjednodušení UI nebo business logiky. Třeba pro porovnání \textbf{XAML} pro .NET platformu zjednodušuje logiku, 
 stylizuje UI a zároveň zbavuje potřeby tvoření "glue" kódu, který je vygenerován automaticky.
@@ -782,19 +781,91 @@ na testování a deployment.
 }
 
 \chapter{Návrh vlastního DSL}
+
+Častým problémem práce s konkurencí je, 
+že je mnohdy náročné rozdělit data do jednotlivých transformací bez toho, 
+aniž by programátoři vydali obrovské úsilí.
+Situace často přerůstá do komplexního problému, 
+neboť je nezbytné porozumět, 
+kde aplikovat semafory a mutexy. 
+V případě výskytu výjimky pak hledání místa, 
+kde k výjimce došlo, 
+může být vyčerpávající a nervydrásající,
+protože vlákna procesoru běží nezávisle na sobě,
+tak tok dat je vždy nedeterministický.
+
+Vezmeme si scénář z reálného života, 
+na kterém si ukážeme nedeterminismus vláken.
+Tři lidé sdílejí domácnost a 
+jeden má zaúkol uvařit knedlo vepřo zelo.
+Bohužel v lednici se nenacházejí žádné potřebné ingredience
+a tak aby to bylo vůči všem stranám férové,
+zbylé dva členové domácnosti musí nakoupit.
+V blízkosti se nachází večerka a řeznictví, 
+ale bohužel na opačných stranách ulice, 
+tak pro urychlení se obě strany dohodnou, 
+že se rozdělí na ušetření času.
+Zatímco jsou všichni pryč,
+kuchař si předpřipravil náčiní a ingredience ze spižírny.
+Aby si ušetřil čas, 
+tak už dal vodu do kastrolu a nechal si předehřát troubu.
+Mezitím se vrátil jeden člen domácnosti s vepřovou krkovicí,
+která se okořenila a dala do trouby.
+Po pár hodinách se vrátil zbývající člen se zbytkem nákupu, 
+protože večerka je v neděli zavřená a 
+další obchod je pár kilometrů daleko.
+Výsledkem celého vaření jsou knedlíky se spálenou krkovicí.
+
+Dalo se tomu předejít,
+pokud by se o všechno postaral jeden člen domácnosti.
+Ale pokud jsou k dispozici další lidské zdroje pro urychlení práce,
+proč je nepoužít?
+Samozřejmě se uvnitř počítače nenachází lidé, 
+ale moderní procesor s mnoha jádry.
+V kontextu konkurence a paralelismu existují dva způsoby 
+jak tomu předejít a to jsou semafor a mutex.
+
+
+
+
 Pro návrh DSL je hlavní vědět o jakou doménu problematiky se jedná.
-Zatím neexistuje žádná DSL implementace pro konkurenci či paralelizaci vysokého objemu dat.
+Totiž zatím neexistuje žádná DSL implementace pro konkurenci a
+paralelizaci vysokého objemu dat.
+
 Příkladem vysokého počtu dat je vzorek signálu a 
-detailnější zpracování takového vzorku je časově velice náročné. Tato časová náročnost může být vyřešena právě zmíněnou
-konkurencí, či paralelizací problému. 
+detailnější zpracování takového vzorku je časově velice náročné. 
+Tato časová náročnost může být vyřešena právě zmíněnou konkurencí, 
+či paralelizací problému. 
 Toto DSL je pojmenované jako \textbf{Haskelyzer}.
-Pro řešení této problematiky byl zvolen Haskell, jelikož se zdá jako nejoptimálnější.
-Pro rozbor jazyka byly komunitami vytvořené knihovny (Parsec, MegaParse, AttoParsec),
-obsahuje mechaniky tacit programmingu, 
-je staticky silně typovaný a díky monádám, řešení okrajových případů je donucené GHC kompilátorem.
+Pro řešení této problematiky byl zvolen Haskell, 
+jelikož se zdá jako nejoptimálnější pro rozbor jazyka,
+kde jsou komunitami vytvořené knihovny Parsec, MegaParsec a AttoParsec.
+Obsahuje mechaniky tacit programmingu, 
+je staticky silně typovaný a díky monádám, 
+řešení okrajových případů jsou donucené GHC kompilátorem.
+
+Hlubokou inspirací sloužila funkcionalita rozšíření "Arrows" 
+v jazyce Haskell. % TODO: https://en.wikibooks.org/wiki/Haskell/Understanding_arrows
+Toto rozšíření umožňují efektivnější propojení transformací dat.
+Ovšem,
+i když arrows přinášejí vylepšený zápis toku dat,
+narážíme na problém,
+kde samotný tok dat není zcela transparentní.
+Navzdory tomu,
+že arrows poskytují lepší zápis pro manipulaci s daty,
+není jasně oddělen od zbytku Haskell kódu.
+V jiných programovacích jazycích,
+jako je Python nebo F\#,
+existuje také operátor pro předávání dat nazývaný "pipe",
+avšak v těchto jazycích slouží pouze k spojování dat bez dalších syntaktických ozdob.
+Pozoruhodným rysem těchto šipek je fakt,
+že jsou zapisovány tacitně.
+
+\section{Vysvětlení gramatiky jazyka}
+
 
 \setlength{\parindent}{0pt}
-Návrh danného jazyka:
+Původní návrh daného jazyka:
 
 \textbf{Haskelyzer}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
@@ -815,36 +886,99 @@ let nestedConcurrentProcess = exampleCSV | kalmanFilter | sum
                                                         | product
                                          | gaussianFilter
 
-let guiMainLoop = 
-  mainLoop | calculateMainState -> writeToEventQueue
-           | gatherEventQueue -> fireEvents
+\end{minted}
+
+TODO:
+Na předešlém příkladu je vidět,
+že jsou zde funkce deklarovány pomocí \haskellInline{let}.
+U \haskellInline{exampleCSV} myšlenka byla, 
+že při zpracovávání vysokého objemu dat,
+tak často dochází k dlouhé prodlevě jen kvůli načtení.
+Atribut nad \haskellInline{exampleCSV} 
+má 2 možnosti, 
+\haskellInline{[RunTime]} a \haskellInline{[CompileTime]}.
+V obou případech se
+zkontroluje CSV soubor během kompilace, 
+zda všechny datové typy souladí s předpisem.
+Rozdílem je, 
+že v \haskellInline{[CompileTime]} atributu se CSV soubor
+stane součástí programu. 
+Jednou z nevýhod této metody je, 
+že při spuštění programu se zaplní paměť, 
+protože obsah csv souboru je součástí samotného spustitelného programu.
+Nicméně díky tomu není nutné používat IO monádu a 
+obsah csv souboru je k dispozici kdekoliv v programu.
+Při procesu kompilace se též provádí kontrola, 
+zda v csv souboru existuje dvojice "(a, Int)", 
+kde "a" představuje název sloupce a 
+všechny hodnoty ve sloupci "a" jsou typu "Int".
+To stejné platí pro ostatní dvojice, 
+kde sloupec b má být typu Float a tak dále.
+
+Pro vytvoření konkurentního výpočtu je zapotřebí využít \textit{concurrent pipe compostion}
+\haskellInline{ | } operátoru. 
+Každý další \haskellInline{ | } vytváří dálší vlákno na kterém je prováděný výpočet.
+Celá syntaxe je závislá na odsazení, 
+tudíž všechny \haskellInline{ | } musí mít stejné odsazení.
+
+Funkce \textit{concurrentProcess} vytvoří funkci typu \haskellInline{IO ([a],[b])} a 
+předpokládá, 
+že v programu jsou definované a implementované funkce
+\haskellInline{kalmanFilter:: CSV -> [a]} a \\
+\haskellInline{gaussianFilter:: CSV -> [a]}. 
+Výsledné IO monádě se nelze vyhnout, 
+jelikož se jedná o konkurentní proces, 
+kde vznikají vlákna v jež jsou provedeny výpočty. 
+
+Příklad s funkcí \haskellInline{let nestedConcurrentProcess} ukazuje, 
+že \textit{pipe operátory} se dají vnořovat. 
+To znamená, 
+že funkce sum i product musí mít typ \\
+\haskellInline{sum:: (Num a, Num b) => [a] -> b}. 
+Výsledná funkce bude vygenerováná jako typ \\
+\haskellInline{concurrentProcess:: (Num a, Num b) => IO((a,b), [c])}.
+
+\section{Refactoring původního designu}
+
+TODO:
+
+\textbf{Haskelyzer}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
+let guiMainLoop = | calculateMainState -> writeToEventQueue
+                  | gatherEventQueue -> fireEvents
 
 \end{minted}
 
-\section{Vysvětlení gramatiky jazyka}
+\haskellInline{let guiMainLoop} poukazuje, 
+že není potřeba využít toto DSL pouze pro analýzu dat, ale
+i pro definování kritických business části programu. 
+Nedílnou součástí GUI aplikací je \textit{EventQueue}, kde
+se zaznamenávají všechny interakce uživatele a 
+program může s těmito interakcemi pracovat.
 
-Celý proces je závislý na \textit{Template Haskell} mechanismu. Díky tomuto mechanismu jsou k dispozici části kompilátoru, které umožní generovat kód dle specifikace.
+\section{Proč Template Haskell místo LLVM}
 
-Vytvoří se funkce \textit{exampleCSV}, která vrací obsah csv souboru. Při procesu kompilace se provádí kontrola, zda v csv souboru existuje dvojice "(a, Int)", kde "a" představuje název sloupce a všechny hodnoty ve sloupci "a" jsou typu "Int".
-Díky atributu \textit{CompileTime} je možné vytvořit funkci \textit{exampleCSV} bez nutnosti použití IO monády. Jednou z nevýhod této metody je, že při spuštění programu se zaplní paměť, protože obsah csv souboru je součástí samotného spustitelného programu.
-Nicméně díky tomu není nutné používat IO monádu a obsah csv souboru je k dispozici kdekoliv v programu.
+Prvopočáteční implementace zahrnovala využití knihovny LLVM,
+která má za následek převzít AST a 
+převést tento jazyk do LLVM intermediate representation (IR)
+(\cite{IntroToLLVM}).
+Bohužel LLVM je knihovna primárně pro tvoření generických programovacích jazyků, 
+než na tvoření DSL. 
+DSL se dá pomocí této knihovny vytvořit, 
+ale pro každou vygenerovanou funkci se musí vytvořit binding mezi IR a
+jazykem C, 
+který je kompilován pomocí CLANG compileru a Haskellem. 
+Toto řešení je rozhodně možné, 
+ale zvyšuje to komplexitu projektu a 
+jednotlivé bindings mohou též být zdrojem nechtěných bugů. 
+Proto se sešlo od implementace pomocí LLVM a
+místo toho ho nahradil mechanismus Template Haskell.
 
-Funkce \textit{concurrentProcess} vytvoří funkci typu \haskellInline{IO ([a],[b])} a předpokládá, že v programu jsou definované a implementované funkce
-\haskellInline{kalmanFilter:: CSV -> [a]} a \\
-\haskellInline{gaussianFilter:: CSV -> [a]}. Výsledné IO monádě se nejde vyhnout, jelikož se jedná o konkurentní proces, kde vznikají vlákna v jež jsou provedeny výpočty. 
+Celý proces je závislý na \textit{Template Haskell} mechanismu. 
+Díky tomuto mechanismu jsou k dispozici části kompilátoru, 
+které umožní generovat kód dle specifikace.
 
-Pro vytvoření konkurentního výpočtu je zapotřebí využít \textit{concurrent pipe compostion}
-\haskellInline{ | } operátoru. Každý další \textit{pipe operátor} vytváří dálší vlákno na kterém je prováděný výpočet.
-Celá syntaxe je závislá na odsazení, tudíž všechny \textit{pipe operátory} musí mít stejné odsazení.
-
-Příklad s funkcí \haskellInline{let nestedConcurrentProcess} ukazuje, 
-že \textit{pipe operátory} se dají vnořovat. To znamená, že funkce sum i product musí mít typ \\
-\haskellInline{sum:: (Num a, Num b) => [a] -> b}. Výsledná funkce bude vygenerováná jako typ \\
-\haskellInline{concurrentProcess:: (Num a, Num b) => IO((a,b), [c])}.
-
-Poslední příklad s \haskellInline{let guiMainLoop} poukazuje, že není potřeba využít toto DSL pouze pro analýzu dat, ale
-i pro definování kritických business části programu. Nedílnou součástí GUI aplikací je \textit{EventQueue}, kde
-se zaznamenávají všechny interakce uživatele a program může s těmito interakcemi pracovat.
 
 % \begin{minted}{hs}
 % [CompileTime]
@@ -1137,22 +1271,6 @@ a předpokladá se,
 že výstup parsování bude identické jako předem definované AST.
 V testovací fázi se hodí též přidat i vyjímky,
 které by měli parsování selhat.
-
-\section{Implementace pomocí LLVM}
-
-Prvopočáteční implementace zahrnovala využití knihovny LLVM,
-která má za následek převzít AST a 
-převést tento jazyk do LLVM intermediate representation (IR)
-(\cite{IntroToLLVM}).
-Bohužel LLVM je knihovna primárně pro tvoření generických programovacích jazyků, 
-než na tvoření DSL. 
-DSL se dá pomocí této knihovny vytvořit, 
-ale pro každou vygenerovanou funkci se musí vytvořit binding mezi IR a
-jazykem C, který je kompilován pomocí CLANG compileru a Haskellem. 
-Toto řešení je rozhodně možné, ale zvyšuje to komplexitu projektu a 
-jednotlivé bindings mohou též být zdrojem nechtěných bugů. 
-Proto se sešlo od implementace pomocí LLVM a
-místo toho ho nahradil mechanismus Template Haskell.
 
 \section{Z AST do Template Haskell}
 Template Haskell je rozšíření Haskellu od verze 6, 

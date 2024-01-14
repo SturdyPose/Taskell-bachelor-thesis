@@ -782,6 +782,7 @@ na testování a deployment.
 
 \chapter{Návrh vlastního DSL}
 
+Pro návrh DSL je hlavní vědět o jakou doménu problematiky se jedná.
 Častým problémem práce s konkurencí je, 
 že je mnohdy náročné rozdělit data do jednotlivých transformací bez toho, 
 aniž by programátoři vydali obrovské úsilí.
@@ -822,16 +823,9 @@ Ale pokud jsou k dispozici další lidské zdroje pro urychlení práce,
 proč je nepoužít?
 Samozřejmě se uvnitř počítače nenachází lidé, 
 ale moderní procesor s mnoha jádry.
-V kontextu konkurence a paralelismu existují dva způsoby 
-jak tomu předejít a to jsou semafor a mutex.
 
-
-
-
-Pro návrh DSL je hlavní vědět o jakou doménu problematiky se jedná.
-Totiž zatím neexistuje žádná DSL implementace pro konkurenci a
+Zatím neexistuje žádná DSL implementace pro konkurenci a
 paralelizaci vysokého objemu dat.
-
 Příkladem vysokého počtu dat je vzorek signálu a 
 detailnější zpracování takového vzorku je časově velice náročné. 
 Tato časová náročnost může být vyřešena právě zmíněnou konkurencí, 
@@ -840,6 +834,10 @@ Toto DSL je pojmenované jako \textbf{Haskelyzer}.
 Pro řešení této problematiky byl zvolen Haskell, 
 jelikož se zdá jako nejoptimálnější pro rozbor jazyka,
 kde jsou komunitami vytvořené knihovny Parsec, MegaParsec a AttoParsec.
+Zároveň Haskell je navržen tak, 
+že každá hodnota se chová jako konstanta, 
+tudíž nemouhou být pozměněny (kromě pár vyjímek),
+což dělá skvělého kandidáta na implementaci paralelních výpočtů.
 Obsahuje mechaniky tacit programmingu, 
 je staticky silně typovaný a díky monádám, 
 řešení okrajových případů jsou donucené GHC kompilátorem.

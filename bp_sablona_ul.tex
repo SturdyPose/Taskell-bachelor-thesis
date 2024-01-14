@@ -782,7 +782,7 @@ na testování a deployment.
 
 \chapter{Návrh vlastního DSL}
 
-Pro návrh DSL je hlavní vědět o jakou doménu problematiky se jedná.
+Pro návrh DSL je klíčové vědět o jakou doménu problematiky se jedná.
 Častým problémem práce s konkurencí je, 
 že je mnohdy náročné rozdělit data do jednotlivých transformací bez toho, 
 aniž by programátoři vydali obrovské úsilí.
@@ -793,15 +793,15 @@ V případě výskytu výjimky pak hledání místa,
 kde k výjimce došlo, 
 může být vyčerpávající a nervydrásající,
 protože vlákna procesoru běží nezávisle na sobě,
-tak tok dat je vždy nedeterministický.
+tak je tok dat vždy nedeterministický.
 
-Vezmeme si scénář z reálného života, 
+Představme si scénář z reálného života, 
 na kterém si ukážeme nedeterminismus vláken.
 Tři lidé sdílejí domácnost a 
 jeden má zaúkol uvařit knedlo vepřo zelo.
-Bohužel v lednici se nenacházejí žádné potřebné ingredience
+Bohužel v lednici se nenacházejí žádné potřebné ingredience,
 a tak aby to bylo vůči všem stranám férové,
-zbylé dva členové domácnosti musí nakoupit.
+zbylí dva členové domácnosti musí nakoupit.
 V blízkosti se nachází večerka a řeznictví, 
 ale bohužel na opačných stranách ulice, 
 tak pro urychlení se obě strany dohodnou, 
@@ -811,7 +811,7 @@ kuchař si předpřipravil náčiní a ingredience ze spižírny.
 Aby si ušetřil čas, 
 tak už dal vodu do kastrolu a nechal si předehřát troubu.
 Mezitím se vrátil jeden člen domácnosti s vepřovou krkovicí,
-která se okořenila a dala do trouby.
+která byla okořeněna a dána do trouby.
 Po pár hodinách se vrátil zbývající člen se zbytkem nákupu, 
 protože večerka je v neděli zavřená a 
 další obchod je pár kilometrů daleko.
@@ -821,8 +821,11 @@ Dalo se tomu předejít,
 pokud by se o všechno postaral jeden člen domácnosti.
 Ale pokud jsou k dispozici další lidské zdroje pro urychlení práce,
 proč je nepoužít?
-Samozřejmě se uvnitř počítače nenachází lidé, 
-ale moderní procesor s mnoha jádry.
+Samozřejmě toto je celé jen pouze příklad,
+jak se může daný program s vícero procesory, 
+který má zaúkol uvařit, chovat.
+Moderní programovací jazyky programátorům umožňují pracovat s jádry,
+ale nedeterministicky a mnohdy s velmi matoucím tokem dat. 
 
 Zatím neexistuje žádná DSL implementace pro konkurenci a
 paralelizaci vysokého objemu dat.

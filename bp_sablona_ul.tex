@@ -372,7 +372,9 @@ neexistuje pro to zvláštní slovo.
 \section{Tacit programming}
 
 Tacit programming je programovací styl, 
-který klade důraz na skládání a řetězení funkcí a není založen na explicitní specifikaci parametrů funkcí.
+který klade důraz na kompozici funkcí, 
+které manipulují argumenty a 
+kde se tyto argumenty explicitně nespecifikují.
 Pro základní ukázky bude využit JavaScript jelikož se jedná o jeden z nejpopulárnějších jazyků. 
 Základní principy funkcionálního a tacit programování jsou v jazyce JavaScript,
 jelikož se jedná o jeden z nejvíce populárních programovacích jazyků a v základu má již funkcionální možnosti.
@@ -433,7 +435,7 @@ const partiallyAppliedData2 = ["A", "B", "C"]
 //  "Hello C from 1"]
 
 \end{minted}
-Curry funkce transfomuje existujícé funkci tak, 
+Curry funkce transfomuje existující funkci tak, 
 že máme pro každý argument vlastní vracející funkci. 
 Z funkce \textbf{f(a,b,c,d)} vzniká funkce \textbf{f(a)(b)(c)(d)} (\cite{Currying}).
 V čem je toto výhodné?
@@ -464,14 +466,34 @@ const curry = (f) => (..args) => args.length >= f.length ?
     curry.apply(this, args.concat(args2));
 
 \end{minted}
-\section{Principy a odlišnosti od procedurálního/OOP paradigmatu}
 
-Procedurální paradigma se zaměřuje na psaní procedurálních instrukcí.
-Typickým příkladem tohoto paradigmatu je programovací jazyk C, 
-protože se jedná o standard, 
-tak v následujících příkladech budu porovnávat jazyk C s jazykem Haskell.
-Haskell je primárně funkcionální jazyk, 
-tento jazyk umožňujě psát funkce v "beztečkovém" stylu. 
+Nutné je zmínit, 
+co \textbf{není} tacitní zápis.
+
+\textbf{C#}
+\begin{minted}[bgcolor=CodeBackGround]{csharp}
+
+class MainClass 
+{
+  static void Main(string[] args)
+  {
+    string a = 
+      new StringBuilder()
+      .Append("Hello")
+      .Append(" ")
+      .Append("World")
+      .ToString();
+  }
+}
+
+\end{minted}
+
+
+\section{Využití Tacit programmingu v různých programovacích jazycích}
+
+Tacit programming se dá nejlépe využít v jazycích,
+které mají v sobě již zakomponované funkce jako hodnoty a
+anonymní funkce nebo-li lambda výrazy.
 
 Následující příklad sumace:
 
@@ -499,7 +521,7 @@ int sum(int* arr, size_t numOfElements)
 }
 
 \end{minted}
-Na příkladu jde vidět, 
+Z příkladu si lze povšimnout, 
 že beztečkový styl zápisu je opravdu kompaktní. 
 V Haskellu není třeba explicitně manipulovat s parametry funkcí.
 Tento příklad je založen na podstatě tacit programmingu.
@@ -849,7 +871,7 @@ Hlubokou inspirací sloužila funkcionalita rozšíření "Arrows"
 v jazyce Haskell. % TODO: https://en.wikibooks.org/wiki/Haskell/Understanding_arrows
 Toto rozšíření umožňují efektivnější propojení transformací dat.
 Ovšem,
-i když arrows přinášejí vylepšený zápis toku dat,
+i když arrows přináší vylepšený zápis toku dat,
 narážíme na problém,
 kde samotný tok dat není zcela transparentní.
 Navzdory tomu,
@@ -889,8 +911,7 @@ let nestedConcurrentProcess = exampleCSV | kalmanFilter | sum
 
 \end{minted}
 
-TODO:
-Na předešlém příkladu je vidět,
+Na uvedém příkladu je vidět,
 že jsou zde funkce deklarovány pomocí \haskellInline{let}.
 U \haskellInline{exampleCSV} myšlenka byla, 
 že při zpracovávání vysokého objemu dat,
@@ -941,22 +962,39 @@ Výsledná funkce bude vygenerováná jako typ \\
 
 \section{Refactoring původního designu}
 
-TODO:
+Během implementace DSL se zjistilo,
+že vložení CSV souborů do kompilovaného programu se nehodí
+kvůli náročnosti na paměť a 
+zároveň je zde nevýhodou když je potřeba změnit soubor s daty.
+Též došlo k zjištění,
+že DSL se nemusí pouze využít na analýzu dat,
+ale může se použít pro obecné manažování konkurentních procesů.
 
 \textbf{Haskelyzer}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
-let guiMainLoop = | calculateMainState -> writeToEventQueue
-                  | gatherEventQueue -> fireEvents
+let guiMainLoop = | gatherMainState -> writeEventQueue -> render
+                  | gatherEventQueue -> fireEventsToMainState
 
 \end{minted}
 
-\haskellInline{let guiMainLoop} poukazuje, 
-že není potřeba využít toto DSL pouze pro analýzu dat, ale
-i pro definování kritických business části programu. 
-Nedílnou součástí GUI aplikací je \textit{EventQueue}, kde
+Pokud se jedná o GUI aplikaci,
+tak v GUI aplikacích se vždy nachází hlavní cyklus,
+který má zaúkol zpracovat uživatelské akce a 
+vykreslit stav programu.
+\haskellInline{let guiMainLoop} je příkladem,
+jak takový hlavní cyklus může vypadat.
+Nedílnou součástí GUI aplikací je stav aplikace a
+\textit{EventQueue}, kde
 se zaznamenávají všechny interakce uživatele a 
 program může s těmito interakcemi pracovat.
+Jedním z důvodů proč sbírání uživatelských akcí na jiném vlákně je,
+že pokud by celý program běžel pouze na jednom procesoru,
+tak některé uživatelské akce mohou bránit vykreslování a
+tím by docházelo k zasekáváním programu.
+Například přehrávání zvuku musí běžet na jiném vlákně,
+protože jinak by se program vyrendroval poté,
+až by se dokončilo přehrávání zvuku.
 
 \section{Proč Template Haskell místo LLVM}
 
@@ -974,12 +1012,7 @@ Toto řešení je rozhodně možné,
 ale zvyšuje to komplexitu projektu a 
 jednotlivé bindings mohou též být zdrojem nechtěných bugů. 
 Proto se sešlo od implementace pomocí LLVM a
-místo toho ho nahradil mechanismus Template Haskell.
-
-Celý proces je závislý na \textit{Template Haskell} mechanismu. 
-Díky tomuto mechanismu jsou k dispozici části kompilátoru, 
-které umožní generovat kód dle specifikace.
-
+místo toho ho nahradil mechanismus metaprograming Template Haskell.
 
 % \begin{minted}{hs}
 % [CompileTime]
@@ -1753,15 +1786,15 @@ ale nabízí zjednodušení zpracování dat.
 Tato funkcionalita se může rozšířit při přidání dalších parserů 
 s případnou podporu pro SQL-NOSQL.
 
-Potenciálním vylepšením by byla ponechaní threadů, 
+Potenciálním vylepšením by bylo ponechaní threadů, 
 které by byly znovu využity.
 V aplikaci na načítání modelů do scén se nachází pouze část,
 kdy se scéna načte pouze jednou.
 Ale co se má dít v případě, 
-kdy modely musí být načítány postupně?
+kdy se modely musí načítíst postupně?
 Nyní se pokaždé vytvoří nový thread a 
-právě tvorba nového threadu zabírá hromadu času,
-což bylo možné si povšimnout v třetí sekci na datovou analytiku.
+právě tvorba nového threadu zabírá spoustu času,
+což bylo možné si povšimnout v třetím příkladu na datovou analytiku.
 
 Nyní Haskelyzer nepodporuje obyčejné konstanty jako argumenty a
 spoléhá na konstanty,

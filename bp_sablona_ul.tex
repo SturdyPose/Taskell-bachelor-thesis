@@ -468,17 +468,25 @@ const curry = (f) => (..args) => args.length >= f.length ?
 \end{minted}
 
 Nutné je zmínit, 
-co \textbf{není} tacitní zápis.
+co \textbf{není} tacitní zápis. 
+Řetězení metod nebo funkcí není jejich kompozicí!
+Z definice tacit programmingu vyplývá,
+že musí docházet ke kompozici funkcí bez specifikace parametrů a
+ne řetězit funkce v závislosti na jejich typu nebo prototypu.
 
-\textbf{C#}
+\textbf{C\#}
 \begin{minted}[bgcolor=CodeBackGround]{csharp}
 
 class MainClass 
 {
   static void Main(string[] args)
   {
-    string a = 
-      new StringBuilder()
+    string someString = Foo("Some argument");
+  }
+
+  static string Foo(string arg)
+  {
+      return new StringBuilder(argument)
       .Append("Hello")
       .Append(" ")
       .Append("World")
@@ -488,6 +496,11 @@ class MainClass
 
 \end{minted}
 
+Proč příklad se C\# není zapsán jako tacit? 
+Funkce \textit{Append} vrací vlastní referenci na \textit{StringBuilder} a 
+ne novou funkci. 
+Též se zde pracuje s argumenty funkce, 
+což je proti definici tacit programmingu.
 
 \section{Využití Tacit programmingu v různých programovacích jazycích}
 

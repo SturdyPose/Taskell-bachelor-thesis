@@ -504,9 +504,12 @@ což je proti definici tacit programmingu.
 
 \section{Využití Tacit programmingu v různých programovacích jazycích}
 
-Tacit programming se dá nejlépe využít v jazycích,
+Tacit programming se dá pouze využít v jazycích,
 které mají v sobě již zakomponované funkce jako hodnoty a
 anonymní funkce nebo-li lambda výrazy.
+Pokud jsou tyto podmínky splněné, 
+tak lze obecně nadefinovat funkci pro kompozici i přesto,
+že to nebude syntakticky kompaktní.
 
 Následující příklad sumace:
 
@@ -537,9 +540,6 @@ int sum(int* arr, size_t numOfElements)
 Z příkladu si lze povšimnout, 
 že beztečkový styl zápisu je opravdu kompaktní. 
 V Haskellu není třeba explicitně manipulovat s parametry funkcí.
-Tento příklad je založen na podstatě tacit programmingu.
-Co se týče algoritmizace, 
-tacit programming je znám pro vytváření algoritmických řešení pomocí pouze jednoho řádku kódu. 
 
 Další příklad poukazuje Fibonacciho posloupnost.
 \textbf{Haskell}
@@ -579,9 +579,12 @@ void fibonacci(uint* arr, size_t numOfElements)
 
 \end{minted}
 
-Z pohledu imperativního programátora implementace v C je zcela jasná. Funkce přijímá ukazatel na
-pole a modifikuje toto pole. Zatímco v Haskellu tato implementace může být matoucí. Funkce scanl je 
-velice podobná funkci foldl, jen místo vracení akumulátoru, tak vrací průběžně vypočtené hodnoty.
+Z pohledu imperativního programátora implementace v C je zcela jasná. 
+Funkce přijímá ukazatel na pole a modifikuje toto pole. 
+Zatímco v Haskellu tato implementace může být matoucí. 
+Funkce scanl je velice podobná funkci foldl, 
+jen místo konečného vracení akumulátoru, 
+tak vrací průběžně vypočtené hodnoty.
 
 \section{Debugging}
 

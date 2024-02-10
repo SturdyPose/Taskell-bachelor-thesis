@@ -777,23 +777,29 @@ implementace algoritmů, ale místo toho pokud budou mít přístup rovnou k DSL
 hodnota cukrů v krvi pacienta, tak mohou plnit svojí práci o mnohem efektivněji. (\cite{DomainSpecificLanguages})
 
 \section{Web a enterprise}
-Jedním z nejrozšířenejších DSL jazyků je ze světa webu a to \textbf{HTML a CSS}. HTML se zaměřuje na vytvoření rámce pro zobrazení textu,
-zatímco CSS se zaměřuje na stylizaci webu pomocí DOM selectorů. Pravdou je, že pro CSS se nenachází žádný 
-protocol a proto v různých webových enginech, můžete dostat různé výsledky. Příkladem z praxe je zpracování
-fontů.
+Jedním z nejrozšířenejších DSL jazyků je ze světa webu a to \textbf{HTML a CSS}. 
+HTML se zaměřuje na vytvoření rámce pro zobrazení textu,
+zatímco CSS se zaměřuje na stylizaci webu pomocí DOM selectorů. 
+Různé webové enginy renderují CSS jinak jelikož W3C standard neomezuje specifikaci
+všech selectorů.
+Jedním z takových příkladů je zpracování fontů.
 
-Též existují jazyky DSL, které jsou specifické pouze pro jednu danou enterprise aplikaci, kde její implementace
-často spočívá na bázi XML nebo podobného formátu jako je např YAML. Zde DSL slouží například pro 
-zjednodušení UI nebo business logiky. Třeba pro porovnání \textbf{XAML} pro .NET platformu zjednodušuje logiku, 
-stylizuje UI a zároveň zbavuje potřeby tvoření "glue" kódu, který je vygenerován automaticky.
+Též existují jazyky DSL, 
+které jsou specifické pouze pro jednu danou enterprise aplikaci, 
+kde její implementace často spočívá na bázi XML nebo podobného formátu jako je např YAML. 
+Zde DSL slouží například pro zjednodušení UI nebo business logiky. 
+Třeba pro porovnání \textbf{XAML} pro .NET platformu zjednodušuje logiku, 
+stylizuje UI a zároveň zbavuje potřeby tvoření "glue" kódu, 
+který je vygenerován automaticky.
 
 \section{Grafické DSL}
 DSL se též týká programů co běží na grafických kartách. 
 Renderovací programy jsou též známé pod pojmem \textit{shader}.
-Každá grafická knihovna má vlastí DSL jazyk, který jsou velmi
-podobné jazyku C. Všechny renderovací jazyky prochází takzvanou 
-\textit{graphic pipeline}. OpenGL a Vulkan využívají pro rendering 
-OpengGL Shading Language (GLSL). OpenGL kompiluje GLSL během runtime 
+Každá grafická knihovna má vlastí DSL jazyk, 
+který jsou velmi podobné jazyku C.
+Všechny renderovací jazyky prochází takzvanou \textit{graphics pipeline}. 
+OpenGL a Vulkan využívají pro rendering OpengGL Shading Language (GLSL). 
+OpenGL kompiluje GLSL během runtime 
 programu zatímco Vulkan využívá předkompilovaného GLSL bytecode nazývaný SPIRV.
 
 Grafické karty se nevyužívají pouze pro rendering jelikož mají širokou škálu
@@ -804,19 +810,40 @@ velkoobjemných dat, kde tuto techniku využívají dnešní algoritmy pro
 strojové učení. 
 
 \section{Ostatní DSL}
-Další jazyk který je velice využíván v hardwarovém prostředí je \textbf{VHDL} nebo \textbf{Verilog}. Tyto DSL jsou zaměřená
-na simulaci obvodů pomocí FPGA (hradlových polí). 
+Další jazyk který je velice využíván v hardwarovém prostředí je \textbf{VHDL} nebo \textbf{Verilog}. 
+Tyto DSL jsou zaměřená na simulaci obvodů pomocí FPGA (hradlových polí). 
 Pro kompilaci projektů existuje \textbf{makefile} a je nejčastěji spárován s C/C++. 
 Jsou zde DSL pro "continuous integration and deployment". 
-Různé firmy co nabízejí online repositáře se v tomto budou trochu lišit, ale
-většina z nich poskytují jakousi formu automatizace vydání programu do oběhu. Toto poskytují firmy jako je GitHub,
-GitLab nebo Azure Dev Ops. Na GitHubu pomocí YAMLu se dají sepsat konfigurační soubory 
+Různé firmy co nabízejí online repositáře se v tomto budou trochu lišit, 
+ale většina z nich poskytují jakousi formu automatizace vydání programu do oběhu.
+Toto poskytují firmy jako je GitHub,
+GitLab nebo Azure Dev Ops. 
+Na GitHubu pomocí YAMLu se dají sepsat konfigurační soubory 
 na testování a deployment.
 
 {\centering
 \captionof{figure}{Výstřižek z GitHub Actions}
 \resizebox{16.9cm}{!}{\includegraphics{Deployment.PNG}}
 }
+
+\section{Problémy DSL}
+
+Každý projekt si vyžaduje čas, údržbu a dokumentaci.
+To se též týká DSL.
+Proto je velmi důležité zvážit, 
+jestli je užitečné vytvořit DSL nad nějakou knihovnou.
+Opravdový problém nastává, 
+když je potřeba dané DSL rozšířit nad rámec DSL a
+stává se z toho \textbf{Ghetto Language}.
+Na tuto problematiku naráží Martin Fowler ve své knize Domain Specific Languages.
+Člověk který udržuje dané DSL má za povinost určit meze,
+kam bude projekt zasahovat. 
+Totiž může nastat situace,
+kdy do DSL budou postupně implementovány podmínky,
+poté cykly a 
+z ničeho nic existuje turingovsky kompletní jazyk, 
+který je složitý na pochopení a údržbu. \cite{Fowlerc2011}
+
 
 \chapter{Návrh vlastního DSL}
 

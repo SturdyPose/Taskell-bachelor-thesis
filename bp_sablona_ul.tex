@@ -263,69 +263,54 @@ vývojářské prostředí (developer experience) se zaměřením na \textit{tac
 V práci budou ukázky, jak
 tacit programming vypadá a budou vyzdvyženy argumenty proč s tacit programmingem
 vůbec pracovat.
-Do tohoto paradigmatu spadají jazyky APL rodiny. 
+Do tohoto programovacího stylo spadají jak funkcionální jazyky,
+tak i jazyky APL rodiny. 
 Ukázky v této práci potvrdí, že jazyky které nebyly primárně navržené jako "beztečkové" 
 umožňují v tomto stylu psát.
 
 Před studováním této bakalářské práce se doporučuje znát základy funkcionálního programování a
 to konkrétně Haskellu.
 Nachází se zde příklady,
-které se srovnávají s jazykem C nebo JavaScriptem,
-ale tyto příklady nejsou jako náhrada za znalosti Haskellu.
+které se srovnávají s jazykem C nebo JavaScriptem.
 Návrh je vytvořen v Haskellu pomocí knihoven jako
 jsou Parsec a MTL (Monad Transformer Library).
 
 \chapter{Programovací paradigma a tacit programming}
 
 Programovací paradigma je způsob myšlení a přístupu k návrhu, 
-strukturování a implementaci počítačových programů. 
-Definuje sadu pravidel, postupů, technik a konceptů, které určují způsob,
-jakým se programy píší a organizují. Paradigma poskytuje rámec pro definici a 
+strukturování a 
+implementaci počítačových programů. 
+Definuje sadu pravidel, postupů, technik a konceptů, 
+které určují způsob,
+jakým se programy píší a organizují. 
+Paradigma poskytuje rámec pro definici a 
 řešení problémů v programování.
 
 Některé z nejznámějších programovacích paradigmat zahrnují 
 procedurální, objektově orientované a funkcionální.
+Na různá paradigmata má zároveň vliv způsob 
+správy paměti.
 
-\section{Procedurální-imperativní paradigma}
-Zaměřuje se na sekvenci instrukcí, 
+\section{Vysvětlení paradigmat}
+
+Procedurální paradigma se zaměřuje na sekvenci instrukcí, 
 které jsou vykonávány postupně
 v závislosti na architektuře procesoru.
 Program je rozdělen na procedury a funkce, 
 které provádějí určité operace. 
-Příkladem takového paradigmatu je jazyk C, 
-Zig, 
-GOlang a 
-Assembly. 
 
-\section{Objektově orientované paradigma - OOP}
-
-Klade důraz na objekty a jejich interakce. 
+Objektově orientované paradigma klade důraz na objekty a
+jejich interakce. 
 Program je strukturován kolem tříd, 
 které obsahují data (atributy) a 
 metody (funkce), 
 které s těmito daty pracují. 
-Toto paradigma je obohacené o \textbf{polymorfismus}.
 
-V závislosti na programovacím jazyce, 
-vývojáři mohou vužívat automatickou správu paměti díky \textit{garbage collectoru}, 
-kde tuto správu paměti vužívají C\# a Java. 
-Pokud je zapotřebí manuální správa paměti, 
-je zde C\+\+ nebo Rust. 
-Rust je zajímavý tím, že využívá \textit{borrow checker} 
-a má napodobit chování smart pointerů.
-
-Zde se programátoři často setkávají s nutností
-manuální správou paměti (\textit{malloc}, \textit{free}) pokud
-daný jazyk nemá \textit{garbage collector}.
-
-\section{Funkcionální paradigma - FP}
-Jedná se o deklarativní způsob programování, kde funkce jsou 
-považovány za základní stavební bloky programu. 
-Funkcionální jazyky mají za cíl minimalizovat mutaci dat a preferovat neměnné \textit{immutable}
-struktury. 
-To přispívá ke stabilitě, zjednodušené paralelizaci a eliminaci některých typů chyb. 
-Jazyky jako Lisp a jeho dialekty, oCaml, Closure, F\# a Haskell 
-jsou běžnými příklady funkcioního programování.
+Funckionálního paradigma je deklarativní způsob programování, 
+kde funkce jsou považovány za základní stavební bloky programu. 
+Funkcionální jazyky mají za cíl minimalizovat vedlejší efekty.
+To přispívá ke stabilitě, zjednodušení problematiky domény a 
+eliminaci některých typů chyb. 
 
 V různých funkcionálních jazycích je povolena různá míra mutace dat.
 Například jazyk F\# umožňuje mutaci dat kdekoli v programu, 

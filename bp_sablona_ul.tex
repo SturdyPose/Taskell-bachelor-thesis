@@ -343,7 +343,7 @@ více času, ale pokud potřebujete stav, můžete ho získat.
 I Haskell který se považuje za \textit{čistě} funkcionální jazyk,
 tak podporuje \textit{do} notaci díky němuž se dá psát kód imperativně.
 Dalším příkladem je že velmi málo jazyků implementuje OOP, 
-jak si jej Alan Kay představoval. (\cite{ProgrammingParadigms})
+jak si jej Alan Kay představoval (\cite{ProgrammingParadigms}).
 Mnoho jazyků usnadňuje programování v jednom nebo více paradigmat. 
 V jazyce Scala můžete snadno provádět imperativní, 
 objektově orientované a funkcionální programování. 
@@ -609,7 +609,7 @@ nimi jsou dělané matematické operace s poněkud netradiční syntaxí. Totiž
 předem jazykem definovaná funkce je přidělená ke speciálnímu UTF-8 chararakteru. 
 Například funkce pro přirozený logaritmus je {\apl '⍟'} nebo zaokrouhlení nahoru či dolů 
 jsou {\apl '⌈' '⌊'}.
-Každá funkce se dá zapsat monadicky či dyadicky. 
+Každá funkce se dá zapsat monadicky či dyadicky (\cite{WhyAPLIsWorthKnowing}).
 
 Monadický zápis má argument operandu na pravé straně:
 \aplInline{-5    ⍝ monadic}
@@ -628,7 +628,6 @@ s obsahem pole.
   2×⍳6        ⍝ Multiply by 2 the 6 integers starting from the origin.
 0 2 4 6 8 10
 \end{lstlisting} 
-(\cite{WhyAPLIsWorthKnowing})
 
 Pokud pole jsou u dyadického zápisu stejné délky, tak jsou hodnoty vypočteny jako jednotlivé 
 skaláry.
@@ -645,6 +644,8 @@ Operátory jsou vyhodnocovány z prava do leva.
 3 6
 \end{lstlisting}
 
+Zmíněné části kódu jsou vyjmuty z \cite{WhyAPLIsWorthKnowing}.
+
 Booleany jsou reprezentovány jako 1 (True) a 0 (False). Zde je ukázka algoritmu, kde 
 se sečte sekvence přirozených čísel (včetně nuly, ale při součtu nemá vliv), 
 která jsou dělitelná buď třemi nebo pěti.
@@ -656,10 +657,14 @@ která jsou dělitelná buď třemi nebo pěti.
 234168
 \end{lstlisting}
 
-Funkce \aplInline{(0=3|⍵)∨(0=5|⍵) ⍝ '|' - modulo, '=' is equal operator} zjišťuje zda-li je číslo
-dělitelné třemi nebo pěti a vrací 0 nebo 1. Operátor \aplInline{/} funguje jako replicate 
-(pokud je spojené s dalším operátorem, tak funguje jako reduce). 
-Jelikož je vyhodnocování z prava do leva, tak pokud argument funkce je 
+Funkce \aplInline{(0=3|⍵)∨(0=5|⍵) ⍝ '|' - modulo, 
+'=' is equal operator} zjišťuje zda-li je číslo
+dělitelné třemi nebo pěti a vrací 0 nebo 1. 
+Operátor \aplInline{/} funguje jako replicate 
+(pokud je spojené s dalším operátorem, 
+tak funguje jako reduce). 
+Jelikož je vyhodnocování z prava do leva, 
+tak pokud argument funkce je 
 například 7 a 12 tak: 
 
 \aplInline{((0=3| 7 12)∨(0=10 | 7 12))/7 12 ⍝ Result: 12}.
@@ -669,17 +674,20 @@ kombinací operátorů \aplInline{+/} se udělá suma výsledků.
 
 Lze si ale povšimnout, 
 že výše zmíněný příklad není zapsán v tacit stylu jelikož využívá argument \aplInline{⍵}.
-Je možné napsat zmíněný příklad do tacit stylu, ale zároveň se zvyšuje komplexita porozumění.
+Je možné napsat zmíněný příklad do tacit stylu, 
+ale zároveň se zvyšuje komplexita porozumění.
 \begin{lstlisting}[language=apl,extendedchars=true]
   Euler1 ← +/((0=3|⊢)∨(0=5|⊢))×⊢
 \end{lstlisting}
 
-(\cite{CzechApl})
+Eulerova implementace a 
+pochopení psaní tacit stylu v APL pomohl článek (\cite{CzechApl}).
 
 \section{Kdy využít tacit zápis}
 
 Tacit styl může být mocný a elegantní.
-Zde je několik argumentů, proč by se měl tacit zápis využít:
+Zde je několik argumentů, 
+proč by se měl tacit zápis využít:
 
 \textbf{Kompaktnost a elegance:}
 Tacitní zápis může často zredukovat kód na mnohem kratší a elegantnější formu, 
@@ -753,12 +761,16 @@ To může vést k nepřehledným a těžko udržovatelným programům.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \chapter{DSL - principy a využití}
-DSL (Domain Specific Language) jsou jazyky, které se zaměřují na specifickou doménu problematiky.
-Obecně DSL jazyky jsou mnohem jednodušší než jejich plnohodnotné protějšky. Výhodou je, že 
-náročnost učení je mnohem nižší než u GPL (General Purpose Language). Zároveň při potřebě 
-expertů na specializovaný obor, nepotřebují znát detaily 
-implementace algoritmů, ale místo toho pokud budou mít přístup rovnou k DSL - výpočet šikmosti stěny budovy,
-hodnota cukrů v krvi pacienta, tak mohou plnit svojí práci o mnohem efektivněji. (\cite{DomainSpecificLanguages})
+DSL (Domain Specific Language) jsou jazyky, 
+které se zaměřují na specifickou doménu problematiky.
+Obecně DSL jazyky jsou mnohem jednodušší než jejich plnohodnotné protějšky. 
+Výhodou je, 
+že náročnost učení je mnohem nižší než u GPL (General Purpose Language). 
+Zároveň při potřebě expertů na specializovaný obor, 
+nepotřebují znát detaily implementace algoritmů, 
+ale místo toho pokud budou mít přístup rovnou k DSL - výpočet šikmosti stěny budovy,
+hodnota cukrů v krvi pacienta, 
+tak mohou plnit svojí práci o mnohem efektivněji (\cite{DomainSpecificLanguages}).
 
 \section{Web a enterprise}
 Jedním z nejrozšířenejších DSL jazyků je ze světa webu a to \textbf{HTML a CSS}. 
@@ -1027,8 +1039,7 @@ až by se dokončilo přehrávání zvuku.
 
 Prvopočáteční implementace zahrnovala využití knihovny LLVM,
 která má za následek převzít AST a 
-převést tento jazyk do LLVM \textit{intermediate representation} (IR).
-(\cite{IntroToLLVM})
+převést tento jazyk do LLVM \textit{intermediate representation} (IR) (\cite{IntroToLLVM}).
 Bohužel LLVM je knihovna primárně pro tvoření generických programovacích jazyků, 
 než na tvoření DSL. 
 DSL se dá pomocí této knihovny vytvořit, 
@@ -1056,12 +1067,18 @@ místo toho ho nahradil mechanismus metaprograming Template Haskell.
 Návrh jakéhokoliv DSL (a nejen DSL, ale i programovacího jazyka celkově) zahrnuje
 \textbf{Lexer, Parser a Abstraktní syntaktický strom (AST)}.
 
-\textbf{Lexer} má zaúkol přečíst soubor a najít jednotlivé tokeny v daném souboru.
-Tyto tokeny mohou obsahovat metadata, jako jsou řádek a sloupec, kde se token nachází,
-jaký token předcházel a jaký následuje atd... Tyto tokeny jsou zpracovány \textbf{parserem}, 
-který má zaúkol přečíst tokeny a hledat mezi nimi dle předem definované gramatiky vztahy 
-a zpracovat je do abstraktního syntaktického stromu. AST je výsledek
-parsování a obsahuje všechny definice jazyka.
+\textbf{Lexer} má zaúkol přečíst soubor a 
+najít jednotlivé tokeny v daném souboru.
+Tyto tokeny mohou obsahovat metadata, 
+jako jsou řádek a sloupec, 
+kde se token nachází,
+jaký token předcházel a jaký následuje atd... 
+Tyto tokeny jsou zpracovány \textbf{parserem}, 
+který má zaúkol přečíst tokeny a 
+hledat mezi nimi dle předem definované gramatiky vztahy a 
+zpracovat je do abstraktního syntaktického stromu. 
+AST je výsledek parsování a 
+obsahuje všechny definice jazyka.
 
 \section{Parsec a kombinátory}
 
@@ -1127,10 +1144,11 @@ tou je jakýkoliv text.
 
 \section{Lexer a hlavní datové typy}
 
-% Na začátek je důležité si nadefinovat výsledek parsování.
-% Parsec zprostředkovává jednoduchý token parser, 
-% který definuje komentáře, 
-% operátory a rezervovaná jména.
+Na začátek je důležité si nadefinovat hlavní datové typy, 
+které budou sloužit jako výsledek parsování.
+Parsec zprostředkovává jednoduchý token parser, 
+který definuje komentáře, 
+operátory a rezervovaná jména.
 Haskelyzer využívá takzvaný \textit{lexeme} parser.
 Tento druh parseru má za úkol ignorovat veškeré whitespace tokeny jako
 jsou například tabulátory, 
@@ -1141,8 +1159,8 @@ Naneštěstí knihovna Parsec má v sobě nevyřešené bugy v \textit{lexeme} f
 které se nemohou opravit, 
 protože by se mohly zničit již exisující parsery,
 které jsou budovány kolem těchto bugů.
-Tento problém není ani správně dokumentován a proto 
-se doporučuje místo knihovny Parsec, 
+Tento problém není ani správně dokumentován a 
+proto se doporučuje místo knihovny Parsec, 
 využít v nových parserech knihovnu MegaParsec nebo AttoParsec. 
 
 Definice lexeru si vyžaduje nakonfigurovat jednotlivé parametry,

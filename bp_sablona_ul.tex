@@ -266,13 +266,37 @@ Translation of Czech abstract.
 Translation of czech key words.
 
 {
-
   \hypersetup{linkcolor=black}
   \tableofcontents
 }
 
 \addchap{Úvod}
 
+V současnosti se vyrábí procesory s co největším počtem jader, 
+a tím pádem i vláken, 
+i přesto,
+že je velmi náročné pro jednu aplikaci tyto další vlákna využít.
+Objevují se zde často potíže se stavem programu,
+kde se musí daný stav šířit napříč různými vlákny.
+Proto cílem této bakalářské práce bylo vytvořit DSL, 
+který má pomoci s pochopením přenosu dat mezi různými vlákny
+a vyřešit problémy spjaté s přenosem,
+což má za následek snažší přístup k dalším počítačovým zdrojům.
+Pro implementaci DSL byl využit programovací jazyk Haskell a 
+v práci se nachází odůvodnění,
+proč byl tento jazyk zvolen. 
+
+V první kapitole se nachází vysvětlivka programovacích paradigmat a 
+jak vypadá tacitní syntaxe, 
+protože navržené DSL využívá tuto syntaxi. 
+V druhé kapitole se nachází využití různých DSL v závisloti na kontextu projektu.
+Ve třetí kapitole se může čtenář dočíst, 
+jak došlo k navržení DSL a 
+v následující kapitole jak došlo k implementaci v jazyce Haskell.
+V předposlední kapitole se nachází tři praktické ukázky, 
+jak lze takové DSL využít.
+V poslední kapitole jsou vytknuty nedostatky implementace a
+kde by mohlo dojít k vylepšení. 
 
 Před studováním této bakalářské práce se doporučuje znát základy funkcionálního programování a
 to konkrétně Haskellu.

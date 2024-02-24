@@ -227,6 +227,8 @@ V Ústí nad Labem dne \today \hspace{0.3\textwidth} Podpis:
 
 \textbf{\textsf{Abstrakt}}
 
+\textsc{\TITULcz}
+
 Cílem této bakalářské práce je vytvoření doménově specifického jazyka se zaměřením na konkurentní výpočty, 
 který usnadní přehled business logiky a zlepší vývojářské prostředí (developer experience) se zaměřením na \textit{tacit} - "beztečkové" paradigma.
 V práci se nachází ukázky, 
@@ -239,15 +241,15 @@ Nadále se zde nachází obecné vysvětlení,
 jak prasovat jazyk pomocí knihovny Parsec a
 jak užít výsledek parsování do metaprogramming mechanismu "Template Haskell".
 Byly vytvořeny tři ukázky, 
-které validují užití vytvořeného DSL.
-Nakonec se nachází do budoucna případné vylepšení DSL.
-
-\textsc{\TITULcz}
+které validují užití vytvořeného DSL a
+nachází se diskuze o možných budoucích vylepšení.
 
 % Abstrakt shrnuje základní motivaci práce (kontext), hlavní cíl a následně jednotlivé
 % autorské kroky k~jeho splnění (co bylo uděláno od úvodních rešerší, přes návrh, implementaci k případnému nasazení. Minimální rozsah je 800 znaků (maximální půl strany).
 
 \textbf{\textsf{Klíčová slova}}
+
+Haskell, Doménově specifický jazyk, Beztečkové programování, Konkurence, Parser, Template Haskell, Metaprogramming
 
 % seznam klíčových slov (obecných termínů vystihujících téma práce) v počtu dva až deset 
 
@@ -259,11 +261,27 @@ Nakonec se nachází do budoucna případné vylepšení DSL.
 
 \textsc{\TITULen}
 
-Translation of Czech abstract.
+
+The aim of this bachelor thesis is to create a 
+domain-specific language focusing on concurrent computations, 
+which will facilitate understanding of business logic and 
+enhance developer experience by targeting the tacit paradigm. 
+The thesis contains examples illustrating what 
+tacit programming looks like and 
+highlights arguments for writing programs tacitly. 
+The examples in this work confirm that 
+languages not primarily designed as "tacit" allow writing in this style.
+Furthermore, 
+there is a general explanation 
+of how to parse the language using the Parsec library and 
+how to utilize the parsing result in 
+the metaprogramming mechanism "Template Haskell". 
+Three examples have been created to validate the use of the created DSL,
+and there is a discussion about possible future enhancements.
 
 \textbf{\textsf{Key words}}
 
-Translation of czech key words.
+Haskell, Domain Specific Language, Tacit programming, Concurrency, Parser, Template Haskell, Metaprogramming
 
 {
   \hypersetup{linkcolor=black}
@@ -1834,8 +1852,6 @@ Příklad clusteruje 64-dimenzionální data a clusteruje
 od 2 až po 64 clusterů. 
 Pro Haskelyzer se rozdělí počet clusterů podle počtu dostupných vláken.
 
-Kód se nachází ve veřejném repositáři. (\cite{ClusteringExample})
-
 Překvapivě bylo zjištěno, 
 že jednovláknová implementace clusterovacího algoritmu 
 dosahuje přibližně stonásobně vyšší výkon v porovnání s vícevláknovou variantou. 
@@ -1924,5 +1940,11 @@ mohou sloužit jako základ pro tvorbu jakéhokoliv DSL v programovacím jazyce 
 \printbibliography[heading=none]
 \appendix
 
+
+\chapter{Externí přílohy}
+
+Zdrojový kód DSL se nachází na adrese \href{https://github.com/Poselsky/Haskalyzer}{https://github.com/Poselsky/Haskalyzer}.
+
+Příklad z clusteringu se nachází na odkaze \href{https://github.com/Poselsky/haskell-clustering-example}{https://github.com/Poselsky/haskell-clustering-example}.
 
 \end{document}

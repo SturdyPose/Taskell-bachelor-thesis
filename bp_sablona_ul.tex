@@ -238,7 +238,7 @@ Ukázky v této práci potvrzují,
 že jazyky které nebyly primárně navržené jako "beztečkové" 
 umožňují v tomto stylu psát.
 Nadále se zde nachází obecné vysvětlení, 
-jak prasovat jazyk pomocí knihovny Parsec a
+jak parsovat jazyk pomocí knihovny Parsec a
 jak užít výsledek parsování do metaprogramming mechanismu "Template Haskell".
 Byly vytvořeny tři ukázky, 
 které validují užití vytvořeného DSL a
@@ -865,9 +865,10 @@ GitLab nebo Azure Dev Ops.
 Na GitHubu pomocí YAMLu se dají sepsat konfigurační soubory 
 na testování a deployment.
 
-{\centering
+{\begin{center}
 \captionof{figure}{Výstřižek z GitHub Actions}
 \resizebox{16.9cm}{!}{\includegraphics{Deployment.PNG}}
+\end{center}
 }
 
 \section{Problémy DSL}
@@ -1056,6 +1057,9 @@ zároveň je zde nevýhodou když je potřeba změnit soubor s daty.
 Též došlo k zjištění,
 že DSL se nemusí pouze využít na analýzu dat,
 ale může se použít pro obecné manažování konkurentních procesů.
+Takovým příkladem může být GUI aplikace,
+kde k vykreslování dochází na jiném vlákně 
+než jsou uživatelské interakce.
 
 \textbf{Haskelyzer}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
@@ -1065,8 +1069,7 @@ let guiMainLoop = | gatherMainState -> writeEventQueue -> render
 
 \end{minted}
 
-Pokud se jedná o GUI aplikaci,
-tak v GUI aplikacích se vždy nachází hlavní cyklus,
+V GUI aplikacích se vždy nachází hlavní cyklus,
 který má zaúkol zpracovat uživatelské akce a 
 vykreslit stav programu.
 \haskellInline{let guiMainLoop} je příkladem,
@@ -1127,6 +1130,12 @@ hledat mezi nimi dle předem definované gramatiky vztahy a
 zpracovat je do abstraktního syntaktického stromu. 
 AST je výsledek parsování a 
 obsahuje všechny definice jazyka.
+
+{\begin{center}
+\captionof{figure}{Proces zpracování Haskelyzeru}
+\resizebox{16.9cm}{!}{\includegraphics{Parsing.png}}
+\end{center}
+}
 
 \section{Parsec a kombinátory}
 
@@ -1296,6 +1305,13 @@ data Literal =
   deriving (Show, Ord, Eq)
 
 \end{minted}
+
+{
+\begin{center}
+\captionof{figure}{Lexer v kontextu jazyka}
+\resizebox{10cm}{!}{\includegraphics{Taskell-Diagram.png}}
+\end{center}
+}
 
 \haskellInline{[Expr]} je co tvoří AST.
 Seznam jednotlivých \i{expression} je hlavní datový typ všech DSL. 
@@ -1746,8 +1762,7 @@ Modely se načetly před renderováním prvního snímku a
 ty se předají do nějaké stavové monády, 
 ze které se poté mohou modely upravovat a renderovat.
 
-{
-Zde je ukázka z rendereru.
+Zde je reálná ukázka z rendereru.
 
 \textbf{Haskelyzer}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
@@ -1762,10 +1777,10 @@ let loadModels =
 
 A výsledek po transformacích:
 
-{\centering
+{\begin{center}
 \captionof{figure}{Výstřižek z rendereru}
 \resizebox{16.9cm}{!}{\includegraphics{Renderer-screenshot.png}}
-}
+\end{center}
 }
 
 \section{Využití pro web scraping}
@@ -1884,9 +1899,10 @@ a tím se zvyšuje čas pro uskutečnění operace.
 Proto je vždy důležité změřit, 
 zda-li má smysl přidat pro problém více vláken.
 
-{\centering
+{\begin{center}
 \captionof{figure}{Výsledky benchmarkingu, kde jedno vlákno je rychlejší}
 \resizebox{16.9cm}{!}{\includegraphics{Benchmark-results-35.png}}
+\end{center}
 }
 
 \section{Nedostatky a potenciální vylepšení do budoucna}

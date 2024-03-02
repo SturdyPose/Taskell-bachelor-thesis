@@ -1595,8 +1595,7 @@ runListConcurrently = mapConcurrently id
 
 \end{minted}
 
-
-\chapter{Ověření použitelnosti (testování funkčnosti, praktické příklady využití)}
+\chapter{Praktické příklady využití}
 
 S rozšiřujícím se kódem a funkcionalitou projektu se zvyšuje obtížnost určení, 
 kde se nachází problém a jak jsou data distribuována v daném systému. 
@@ -1746,6 +1745,28 @@ funkce je zapsaná v tacit formátu.
 Modely se načetly před renderováním prvního snímku a 
 ty se předají do nějaké stavové monády, 
 ze které se poté mohou modely upravovat a renderovat.
+
+{
+Zde je ukázka z rendereru.
+
+\textbf{Haskelyzer}
+\begin{minted}[bgcolor=CodeBackGround]{haskell}
+
+let loadModels = 
+| loadRook -> scale 10 -> translate 20 0 20
+| loadRook -> scale 10 -> rotate (-90) 0 0-> translate 40 0 0
+| loadPawn -> scale 10 -> translate 0 0 0
+| loadPawn -> scale 20 -> rotate 180 0 0-> translate 100 0 0
+
+\end{minted}
+
+A výsledek po transformacích:
+
+{\centering
+\captionof{figure}{Výstřižek z rendereru}
+\resizebox{16.9cm}{!}{\includegraphics{Renderer-screenshot.png}}
+}
+}
 
 \section{Využití pro web scraping}
 

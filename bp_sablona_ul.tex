@@ -391,7 +391,7 @@ tak podporuje \textit{do} notaci díky němuž se dá psát kód imperativně
 i když se jedná o syntaktické cukrátko \textit{monad bind} operátoru.
 Dalším příkladem je že velmi málo jazyků implementuje OOP, 
 jak si jej Alan Kay představoval (\cite{ProgrammingParadigms}).
-Mnoho jazyků usnadňuje programování v jednom nebo více paradigmat. 
+Mnoho jazyků umožňuje programování v jednom nebo více paradigmat. 
 V jazyce Scala můžete snadno provádět imperativní, 
 objektově orientované a funkcionální programování. 
 Pokud je jazyk úmyslně navržen tak, 
@@ -745,10 +745,6 @@ což může zvýšit čitelnost a snížit objem psaného kódu.
 Vzhledem k tomu, že tacitní zápis minimalizuje použití proměnných a stavu, 
 může to snížit možnosti chyb spojených s nechtěnými efekty a nekonzistencemi v datech.
 
-\textbf{Výkonové optimalizace:}
-V některých případech může tacitní zápis vést k efektivnějšímu kódu, 
-protože se snižuje zbytečná manipulace s proměnnými a daty.
-
 \textbf{Snížení náročnosti na paměť:}
 Tacitní zápis může minimalizovat požadavky na paměť tím, 
 že eliminuje nutnost uchovávat mezivýsledky v proměnných.
@@ -787,21 +783,26 @@ Programátoři, kteří nejsou zvyklí na tento styl,
 budou mít problémy s debugováním a vylepšováním kódu.
 
 \textbf{Nepodporované vývojářské prostředí:}
-Některé programovací jazyky a prostředí nejsou vhodné pro zápis ve formě tacit, 
-což může být dalším důvodem, proč by nemělo být programátorům vnucováno.
+Některé programovací jazyky a 
+prostředí nejsou vhodné pro zápis ve formě tacit, 
+což může být dalším důvodem, 
+proč by nemělo být programátorům vnucováno.
 
 \textbf{Ztráta flexibility:}
 Tacitní styl může omezit flexibilitu programátorů při psaní kódu.
-Může být obtížnější provádět změny a úpravy v kódu, což může zpomalit vývoj.
+Může být obtížnější provádět změny a 
+úpravy v kódu, což může zpomalit vývoj.
 
 \textbf{Vzdělávací nároky:}
-Programátoři, kteří nejsou obeznámeni s tacitním stylem, 
+Programátoři, 
+kteří nejsou obeznámeni s tacitním stylem, 
 budou muset investovat čas a úsilí do jeho pochopení a osvojení. 
 To může zpomalit vývojový cyklus a zvyšovat náklady na vývoj.
 
 \textbf{Nedostatek standardů:}
 V různých programovacích jazycích mohou být různé konvence a 
-standardy pro zápis ve formě tacit. To může způsobit nekonzistenci a zmatek mezi programátory.
+standardy pro zápis ve formě tacit. 
+To může způsobit nekonzistenci a zmatek mezi programátory.
 
 \textbf{Kompromisy na úkor čitelnosti:}
 Někdy se programátoři mohou pokoušet dosáhnout krátkého kódu na úkor čitelnosti a jasnosti. 
@@ -1225,6 +1226,7 @@ Definice lexeru si vyžaduje nakonfigurovat jednotlivé parametry,
 jako je senzitivita velkých a malých písmen, 
 komentáře a rezervovaná jména.
 
+\textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 haskelyzerLexer :: Tok.GenTokenParser String () (IndentT Identity)
@@ -1260,6 +1262,7 @@ protože budou automaticky započteny v záslosti na zdroji.
 Pokud navrhovaný DSL obsahuje nějaké binární či unární operace, 
 tak je zapotřebí si definovat do základních stavebních bloků lexeru.
 
+\textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 data BinOp
@@ -1306,6 +1309,8 @@ data Literal =
   deriving (Show, Ord, Eq)
 
 \end{minted}
+
+\newpage
 
 {
 \begin{center}
@@ -1359,6 +1364,7 @@ hlavní výrazy.
 Zároveň se pro zjednodušení zápisu se definuje typový 
 synonym pro parser.
 
+\textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 binary s f assoc = 
@@ -1454,6 +1460,8 @@ let loadModels =
 | loadModel1 -> rotate 0.0 45.0 90.0 -> scale 4.0
 | loadModel2 -> translate 60.0 0.0 0.0 -> scale 3.0
 \end{minted}
+
+\newpage
 
 Při překladu z AST se vygeneruje během kompilace tato funkce.
 
@@ -1655,6 +1663,8 @@ tak dané modely se musí načíst,
 rozparsovat a 
 poté vyrenderovat na hlavním vlákně.
 
+\newpage
+
 \textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
@@ -1778,6 +1788,8 @@ let loadModels =
 
 \end{minted}
 
+\newpage
+
 A výsledek po transformacích:
 
 {\begin{center}
@@ -1803,6 +1815,7 @@ ale mohou být též v csv formátu.
 Cílem je dané výsledky uložit do databáze,
 tak je nutné vytvořit konekci k daným databázovým systémům. 
 
+\newpage
 \textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
@@ -1880,6 +1893,7 @@ scrapeData::
       ) 
       sourcesFromWhichToMine <&> sequence . concat
 \end{minted}
+\newpage
 
 \section{Využití pro datovou analytiku a změření výkonu}
  

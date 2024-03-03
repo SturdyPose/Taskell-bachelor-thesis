@@ -205,7 +205,7 @@ Prohlašuji, že jsem tuto bakalářskou práci vypracoval\ifthenelse{\boolean{f
 jen pramenů, které cituji a uvádím v přiloženém seznamu literatury.
 
 \vspace{1em}
-Byl\ifthenelse{\boolean{feminum}}{a}{} jsem seznámen\ifthenelse{\boolean{feminum}}{a}{} s tím, že se na moji práci vztahují práva a povinnosti vyplývající ze zákona č. 121/2000 Sb., ve znění zákona č. 81/2005 Sb., autorský zákon, zejména se skutečností, že Univerzita Jana Evangelisty Purkyně v Ústí nad Labem má právo na uzavření licenční smlouvy o užití této práce jako školního díla podle § 60 odst. 1 autorského zákona,s tím, že pokud dojde k užití této práce mnou nebo bude poskytnuta licence o užití jinému
+Byl\ifthenelse{\boolean{feminum}}{a}{} jsem seznámen\ifthenelse{\boolean{feminum}}{a}{} s tím, že se na moji práci vztahují práva a povinnosti vyplývající ze zákona č. 121/2000 Sb., ve znění zákona č. 81/2005 Sb., autorský zákon, zejména se skutečností, že Univerzita Jana Evangelisty Purkyně v Ústí nad Labem má právo na uzavření licenční smlouvy o užití této práce jako školního díla podle § 60 odst. 1 autorského zákona, s tím, že pokud dojde k užití této práce mnou nebo bude poskytnuta licence o užití jinému
 subjektu, je Univerzita Jana Evangelisty Purkyně v Ústí nad Labem oprávněna ode mne požadovat přiměřený příspěvek na úhradu nákladů, které na vytvoření díla vynaložila, a to podle okolností až do jejich skutečné výše.
 
 \vspace{1em}
@@ -230,12 +230,13 @@ V Ústí nad Labem dne \today \hspace{0.3\textwidth} Podpis:
 \textsc{\TITULcz}
 
 Cílem této bakalářské práce je vytvoření doménově specifického jazyka se zaměřením na konkurentní výpočty, 
-který usnadní přehled business logiky a zlepší vývojářské prostředí (developer experience) se zaměřením na \textit{tacit} - "beztečkové" paradigma.
+který usnadní přehled business logiky a zlepší vývojářské prostředí (developer experience) se zaměřením na \textit{tacit} - "bez tečkové" paradigma.
 V práci se nachází ukázky, 
 jak tacit programming vypadá a 
-jsou zde vyzdvyženy argumenty proč psát programy tacitně.
+jsou zde vyzdviženy argumenty proč psát programy tacitně.
 Ukázky v této práci potvrzují, 
-že jazyky které nebyly primárně navržené jako "beztečkové" 
+že jazyky, 
+které nebyly primárně navržené jako "bez tečkové", 
 umožňují v tomto stylu psát.
 Nadále se zde nachází obecné vysvětlení, 
 jak parsovat jazyk pomocí knihovny Parsec a
@@ -249,7 +250,7 @@ nachází se diskuze o možných budoucích vylepšení.
 
 \textbf{\textsf{Klíčová slova}}
 
-Haskell, Doménově specifický jazyk, Beztečkové programování, Konkurence, Parser, Template Haskell, Metaprogramming
+Haskell, Doménově specifický jazyk, Bez tečkové programování, Konkurence, Parser, Template Haskell, Metaprogramming
 
 % seznam klíčových slov (obecných termínů vystihujících téma práce) v počtu dva až deset 
 
@@ -299,7 +300,7 @@ kde se musí daný stav šířit napříč různými vlákny.
 Proto cílem této bakalářské práce bylo vytvořit DSL, 
 který má pomoci s pochopením přenosu dat mezi různými vlákny
 a vyřešit problémy spjaté s přenosem,
-což má za následek snažší přístup k dalším počítačovým zdrojům.
+což má za následek snazší přístup k dalším počítačovým zdrojům.
 Pro implementaci DSL byl využit programovací jazyk Haskell a 
 v práci se nachází odůvodnění,
 proč byl tento jazyk zvolen. 
@@ -307,7 +308,7 @@ proč byl tento jazyk zvolen.
 V první kapitole se nachází vysvětlivka programovacích paradigmat a 
 jak vypadá tacitní syntaxe, 
 protože navržené DSL využívá tuto syntaxi. 
-V druhé kapitole se nachází využití různých DSL v závisloti na kontextu projektu.
+V druhé kapitole se nachází využití různých DSL v závislosti na kontextu projektu.
 Ve třetí kapitole se může čtenář dočíst, 
 jak došlo k navržení DSL a 
 v následující kapitole jak došlo k implementaci v jazyce Haskell.
@@ -316,10 +317,10 @@ jak lze takové DSL využít.
 V poslední kapitole jsou vytknuty nedostatky implementace a
 kde by mohlo dojít k vylepšení. 
 
-Před studováním této bakalářské práce se doporučuje znát základy funkcionálního programování a
-to konkrétně Haskellu.
+Před studováním této bakalářské práce se doporučuje znát základy funkcionálního programování,
+a to konkrétně Haskellu.
 Nachází se zde příklady,
-které se srovnávají s jazykem C nebo JavaScriptem.
+které se srovnávají s jazykem C nebo Javascriptem.
 Návrh je vytvořen v Haskellu pomocí knihoven jako
 jsou Parsec a MTL (Monad Transformer Library).
 
@@ -354,7 +355,7 @@ které obsahují data (atributy) a
 metody (funkce), 
 které s těmito daty pracují. (\cite{Martin2018}, s. 49)
 
-Funckionálního paradigma je deklarativní způsob programování, 
+Funkcionální paradigma je deklarativní způsob programování, 
 kde funkce jsou považovány za základní stavební bloky programu. 
 Funkcionální jazyky mají za cíl minimalizovat vedlejší efekty.
 To přispívá ke stabilitě, zjednodušení problematiky domény a 
@@ -363,13 +364,13 @@ eliminaci některých typů chyb. (\cite{Martin2018}, s. 49)
 V různých funkcionálních jazycích je povolena různá míra mutace dat.
 Například jazyk F\# umožňuje mutaci dat kdekoli v programu, 
 což je částečně záměrem, 
-aby uživatelé jiných programovací jazyků měli snažší přenos svých vědomostí do 
+aby uživatelé jiných programovací jazyků měli snazší přenos svých vědomostí do 
 nového prostředí.
 Na druhou stranu, 
 v jazyce Haskell jsou mutace omezeny v IO monádě a 
 data musí být uloženy 
 ve specifických typech jako IORef, STRef nebo MVar (\cite{Jones2010}). 
-Takto Haskell pomáhá udržet jasnou separaci mezi čistým funkcionalním kódem a kódem, 
+Takto Haskell pomáhá udržet jasnou separaci mezi čistým funkcionálním kódem a kódem, 
 který se zabývá měnícím se stavem nebo interakcí s okolím.
 
 Je důležité si uvědomit, 
@@ -387,7 +388,8 @@ jsou takzvaně \textit{čisté} (\cite{ProgrammingParadigms}).
 Je neuvěřitelně vzácné mít "čistě OOP" jazyk nebo 
 "čistě funkcionální" jazyk. 
 Haskell který se považuje za \textit{čistě} funkcionální jazyk,
-tak podporuje \textit{do} notaci díky němuž se dá psát kód imperativně
+tak podporuje \textit{do} notaci, 
+díky němuž se dá psát kód imperativně
 i když se jedná o syntaktické cukrátko \textit{monad bind} operátoru.
 Dalším příkladem je že velmi málo jazyků implementuje OOP, 
 jak si jej Alan Kay představoval (\cite{ProgrammingParadigms}).
@@ -406,7 +408,7 @@ Tacit programming je programovací styl,
 který klade důraz na kompozici funkcí, 
 které manipulují argumenty a 
 kde se tyto argumenty explicitně nespecifikují (\cite{Barros2005}).
-Základní principy funkcionálního a tacit programování jsou v jazyce JavaScript,
+Základní principy funkcionálního a tacit programování jsou v jazyce Javascript,
 jelikož se jedná o jeden z nejvíce populárních programovacích jazyků v roce 2023
 a v základu má již funkcionální možnosti (\cite{StackSurvey}).
 Detailnější principy jsou psány v Haskellu.
@@ -466,7 +468,7 @@ const partiallyAppliedData2 = ["A", "B", "C"]
 //  "Hello C from 1"]
 
 \end{minted}
-Curry funkce transfomuje existující funkci tak, 
+Curry funkce transformuje existující funkci tak, 
 že máme pro každý argument vlastní vracející funkci  (\cite{Currying}). 
 Z funkce \textbf{f(a,b,c,d)} vzniká funkce \textbf{f(a)(b)(c)(d)}.
 V čem je toto výhodné?
@@ -569,7 +571,7 @@ int sum(int* arr, size_t numOfElements)
 
 \end{minted}
 Z příkladu si lze povšimnout, 
-že beztečkový styl zápisu je opravdu kompaktní. 
+že bez tečkový styl zápisu je opravdu kompaktní. 
 V Haskellu není třeba explicitně manipulovat s parametry funkcí.
 
 Další příklad poukazuje Fibonacciho posloupnost.
@@ -622,7 +624,7 @@ tak vrací průběžně vypočtené hodnoty.
 Debugging je zásadní činností při vývoji softwaru, 
 která umožňuje identifikovat, 
 analyzovat a odstraňovat chyby ve zdrojovém kódu (\cite{WhatIsDebugging}). 
-Proces debuggování je obzvláště důležitý v imperativních a objektově orientovaných jazycích, 
+Proces debuggingu je obzvláště důležitý v imperativních a objektově orientovaných jazycích, 
 které často disponují vyspělými debugovacími nástroji.
 V těchto jazycích je očekáváno sekvenční vykonávání instrukcí, 
 což usnadňuje postupné sledování jejich provádění. 
@@ -633,7 +635,7 @@ V případě lenivého jazyka Haskell však debugging přináší značné obtí
 Haskell využívá mechanismu lenivého vyhodnocování, což znamená, 
 že hodnoty jsou vypočteny až ve chvíli, kdy jsou skutečně potřeba (\cite{HaskellDebugging}).
 Tato vlastnost komplikuje proces sledování výpočtu a identifikaci chyb. 
-I přes existenci několika debuggovacích nástrojů pro Haskell může 
+I přes existenci několika debugovacích nástrojů pro Haskell může 
 debugging pro zkušeného vývojáře představovat opravdovou výzvu. 
 Zmatek může vznikat zejména při určování, 
 kde a jak byla konkrétní proměnná získána, 
@@ -822,7 +824,7 @@ hodnota cukrů v krvi pacienta,
 tak mohou plnit svojí práci o mnohem efektivněji (\cite{DomainSpecificLanguages}).
 
 \section{Web a enterprise}
-Jedním z nejrozšířenejších DSL jazyků je ze světa webu a to \textbf{HTML a CSS}. 
+Jedním z nejrozšířenějších DSL jazyků je ze světa webu a to \textbf{HTML a CSS}. 
 HTML se zaměřuje na vytvoření rámce pro zobrazení textu,
 zatímco CSS se zaměřuje na stylizaci webu pomocí DOM selectorů. 
 Různé webové enginy renderují CSS jinak jelikož W3C standard neomezuje specifikaci
@@ -844,8 +846,8 @@ Každá grafická knihovna má vlastí DSL jazyk,
 který jsou velmi podobné jazyku C.
 Všechny renderovací jazyky prochází takzvanou \textit{graphics pipeline}. 
 OpenGL a Vulkan využívají pro rendering OpengGL Shading Language (GLSL). 
-OpenGL kompiluje GLSL během runtime 
-programu zatímco Vulkan využívá předkompilovaného GLSL bytecode nazývaný SPIRV.
+OpenGL kompiluje GLSL během runtime programu,
+zatímco Vulkan využívá předkompilovaného GLSL bytecode nazývaný SPIRV.
 
 Grafické karty se nevyužívají pouze pro rendering jelikož mají širokou škálu
 využitelnosti. 
@@ -859,7 +861,9 @@ Další jazyk který je velice využíván v hardwarovém prostředí je \textbf
 Tyto DSL jsou zaměřená na simulaci obvodů pomocí FPGA (hradlových polí). 
 Pro kompilaci projektů existuje \textbf{makefile} a je nejčastěji spárován s C/C++. 
 Jsou zde DSL pro "continuous integration and deployment". 
-Různé firmy co nabízejí online repositáře se v tomto budou trochu lišit, 
+Různé firmy,
+co nabízejí online repositáře,
+se v tomto budou trochu lišit, 
 ale většina z nich poskytují jakousi formu automatizace vydání programu do oběhu.
 Toto poskytují firmy jako je GitHub,
 GitLab nebo Azure Dev Ops. 
@@ -882,7 +886,8 @@ Opravdový problém nastává,
 když je potřeba dané DSL rozšířit nad rámec DSL a
 stává se z toho \textbf{Ghetto Language}.
 Na tuto problematiku naráží Martin Fowler ve své knize Domain Specific Languages.
-Člověk který udržuje dané DSL má za povinost určit meze,
+Člověk,
+který udržuje dané DSL má za povinnost určit meze,
 kam bude projekt zasahovat. 
 Totiž může nastat situace,
 kdy do DSL budou postupně implementovány podmínky,
@@ -902,14 +907,14 @@ neboť je nezbytné porozumět,
 kde aplikovat semafory a mutexy. 
 V případě výskytu výjimky pak hledání místa, 
 kde k výjimce došlo, 
-může být vyčerpávající a nervydrásající,
+může být vyčerpávající a nervy drásající,
 protože vlákna procesoru běží nezávisle na sobě,
 tak je tok dat vždy nedeterministický.
 
 Představme si scénář z reálného života, 
 na kterém si ukážeme nedeterminismus vláken.
 Tři lidé sdílejí domácnost a 
-jeden má zaúkol uvařit knedlo vepřo zelo.
+jeden má za úkol uvařit knedlo vepřo zelo.
 Bohužel v lednici se nenacházejí žádné potřebné ingredience,
 a tak aby to bylo vůči všem stranám férové,
 zbylí dva členové domácnosti musí nakoupit.
@@ -934,7 +939,7 @@ Ale pokud jsou k dispozici další lidské zdroje pro urychlení práce,
 proč je nepoužít?
 Samozřejmě toto je celé jen pouze příklad,
 jak se může daný program s vícero procesory, 
-který má zaúkol uvařit, chovat.
+který má za úkol uvařit, chovat.
 Moderní programovací jazyky programátorům umožňují pracovat s jádry,
 ale nedeterministicky a mnohdy s velmi matoucím tokem dat. 
 
@@ -950,7 +955,7 @@ jelikož se zdá jako nejoptimálnější pro rozbor jazyka,
 kde jsou komunitami vytvořené knihovny Parsec, MegaParsec a AttoParsec.
 Zároveň Haskell je navržen tak, 
 že každá hodnota se chová jako konstanta, 
-tudíž nemouhou být pozměněny (kromě pár vyjímek),
+tudíž nemohou být pozměněny (kromě pár výjimek),
 což dělá skvělého kandidáta na implementaci paralelních výpočtů.
 Obsahuje mechaniky tacit programmingu, 
 je staticky silně typovaný a díky monádám, 
@@ -1000,7 +1005,7 @@ let nestedConcurrentProcess = exampleCSV | kalmanFilter | sum
 
 \end{minted}
 
-Na uvedém příkladu je vidět,
+Na uvedeném příkladu je vidět,
 že jsou zde funkce deklarovány pomocí \haskellInline{let}.
 U \haskellInline{exampleCSV} myšlenka byla, 
 že při zpracovávání vysokého objemu dat,
@@ -1046,7 +1051,7 @@ Příklad s funkcí \haskellInline{let nestedConcurrentProcess} ukazuje,
 To znamená, 
 že funkce sum i product musí mít typ \\
 \haskellInline{sum:: (Num a, Num b) => [a] -> b}. 
-Výsledná funkce bude vygenerováná jako typ \\
+Výsledná funkce bude vygenerovaná jako typ \\
 \haskellInline{concurrentProcess:: (Num a, Num b) => IO((a,b), [c])}.
 
 \section{Refactoring původního designu}
@@ -1071,7 +1076,7 @@ let guiMainLoop = | gatherMainState -> writeEventQueue -> render
 \end{minted}
 
 V GUI aplikacích se vždy nachází hlavní cyklus,
-který má zaúkol zpracovat uživatelské akce a 
+který má za úkol zpracovat uživatelské akce a 
 vykreslit stav programu.
 \haskellInline{let guiMainLoop} je příkladem,
 jak takový hlavní cyklus může vypadat.
@@ -1119,14 +1124,14 @@ místo toho ho nahradil mechanismus metaprograming Template Haskell.
 Návrh jakéhokoliv DSL (a nejen DSL, ale i programovacího jazyka celkově) zahrnuje
 \textbf{Lexer, Parser a Abstraktní syntaktický strom (AST)}.
 
-\textbf{Lexer} má zaúkol přečíst soubor a 
+\textbf{Lexer} má za úkol přečíst soubor a 
 najít jednotlivé tokeny v daném souboru.
 Tyto tokeny mohou obsahovat metadata, 
 jako jsou řádek a sloupec, 
 kde se token nachází,
 jaký token předcházel a jaký následuje atd... 
 Tyto tokeny jsou zpracovány \textbf{parserem}, 
-který má zaúkol přečíst tokeny a 
+který má za úkol přečíst tokeny a 
 hledat mezi nimi dle předem definované gramatiky vztahy a 
 zpracovat je do abstraktního syntaktického stromu. 
 AST je výsledek parsování a 
@@ -1141,7 +1146,7 @@ Zdroj: Vlastní zpracování
 
 \section{Parsec a kombinátory}
 
-V tradičních imperativních jazycích parsování probíha pomocí načtení souboru 
+V tradičních imperativních jazycích parsování probíhá pomocí načtení souboru 
 do takzvaného \textit{streamu} a 
 poté se ze streamu načítají jednotlivé znaky na zpracování tokenů. 
 Stream se používá z důvodu konzumace paměti, 
@@ -1190,7 +1195,7 @@ Parsec je \textit{Monad Transformer},
 který zároveň má v sobě zahrnutou stavovou monádu a 
 po úspěšném parsování vrací typ a. 
 
-Je nutné zmínit fukci \haskellInline{parseToVariant}. 
+Je nutné zmínit funkci \haskellInline{parseToVariant}. 
 Díky kombinačnímu operátoru \haskellInline{<|>} 
 lze pouze definovat vysokoúrovňovou parsovací logiku bez potřeby manipulace jednotlivých tokenů. 
 Tento operátor funguje na bázi \textbf{alternativa} nebo
@@ -1218,8 +1223,8 @@ Naneštěstí knihovna Parsec má v sobě nevyřešené bugy v \textit{lexeme} f
 které se nemohou opravit, 
 protože by se mohly zničit již exisující parsery,
 které jsou budovány kolem těchto bugů.
-Tento problém není ani správně dokumentován a 
-proto se doporučuje místo knihovny Parsec, 
+Tento problém není ani správně dokumentován, 
+a proto se doporučuje místo knihovny Parsec, 
 využít v nových parserech knihovnu MegaParsec nebo AttoParsec. 
 
 Definice lexeru si vyžaduje nakonfigurovat jednotlivé parametry,
@@ -1257,7 +1262,7 @@ Jelikož jazyk nepoužívá středníky a
 místo toho využívá jednotlivá odsazení, 
 tak se zde využívá pomocný monad transformer \haskellInline{IndentT} z knihovny \textit{indents}. 
 Díky tomu není nutné manuálně počítat jednotlivá odsazení, 
-protože budou automaticky započteny v záslosti na zdroji.
+protože budou automaticky započteny v závislosti na zdroji.
 
 Pokud navrhovaný DSL obsahuje nějaké binární či unární operace, 
 tak je zapotřebí si definovat do základních stavebních bloků lexeru.
@@ -1421,7 +1426,7 @@ Logika testování parseru stojí pouze na tom,
 že se předá jednoduchý vstup ve formě řetězce nebo souboru
 a předpokladá se, 
 že výstup parsování bude identické jako předem definované AST.
-V testovací fázi se hodí též přidat i vyjímky,
+V testovací fázi se hodí též přidat i výjimky,
 které by měli parsování selhat.
 
 \section{Z AST do Template Haskell}
@@ -1442,7 +1447,7 @@ tak by se vygenerovaný kód musel projít přes
 Haskell interpreter z knihovny Hint.
 Čtenář může usoudit, 
 že toto celé je nepotřebně komplexní a 
-že je výrazně snažší využít již existujích meta-programming funkcionalit. 
+že je výrazně snazší využít již existujicích meta-programming funkcionalit. 
 
 V tuto chvíli jsou zde pouze limitované funkcionality.
 Z AST se nyní generují pouze curryované funkce,
@@ -1629,8 +1634,9 @@ kde se nachází problém a jak jsou data distribuována v daném systému.
 Jednou z nejkomplikovanějších výzev při psaní softwaru je jeho škálovatelnost. 
 Haskelyzer má výhodu oproti tradičnímu způsobu psaní kódu v tom, 
 že nejkritičtější části kódu jsou odděleny od business řešení a nabízejí širší pohled na tok dat. 
-To může být z jedním hlavních argumentů, proč toto DSL využí pro větší projekty,
-protože usnadnuje jeho škálování.
+To může být z jedním hlavních argumentů, 
+proč toto DSL využít pro větší projekty,
+protože usnadňuje jeho škálování.
 Vývojáři mají možnost určit, které části jsou nejdůležitější pro daný cíl a zapsat je do Haskelyzeru.
 
 Konkurence má výhodu v tom, že obecně zvyšuje škálovatelnost softwaru, 
@@ -1645,11 +1651,11 @@ kterou lze statickým jazykovým analyzátorem převést do UML zápisu.
 Skvělým příkladem, kde se dá využit konkurence je při načítání 
 scén. Scény jsou tvořeny 3D modely, které mohou být komplexní a 
 dlouhé a proto jejich parsování může zabrat hodně času. Pro 
-tento příklad byl zvolen vedlejší projekt, který má zaúkol 
+tento příklad byl zvolen vedlejší projekt, který má za úkol 
 vyrenderovat 3D modely pomocí knihovny OpenGL, WaveFront a Lens. 
 
 Knihovna Lens vygeneruje pomocí Template Haskell gettery a settery.
-Pomocí těchto vygenerovaných vlastností se dá jednoduším způsobem 
+Pomocí těchto vygenerovaných vlastností se dá jednodušším způsobem 
 dostat ke vnořeným vlastností dat. 
 Třeba operátor (\%\textasciitilde) neboli 'over' přijímá data,
 jméno vlastnosti a 
@@ -1808,7 +1814,7 @@ jakýmkoliv databázovým systémem je možné dosáhnout rychlé sbírání dat
 
 Následující kód předpokládá, 
 že jsou vytvořeny tři různé scrapery a 
-očekávají url zdroj.
+očekávají URL zdroj.
 Pro zjednodušení jsou zdroje zapsané ve formě \\ 
 \haskellInline{[(String, String, String)]}, 
 ale mohou být též v csv formátu.
@@ -1906,8 +1912,8 @@ od 2 až po 64 clusterů.
 Pro Haskelyzer se rozdělí počet clusterů podle počtu dostupných vláken.
 
 Překvapivě bylo zjištěno, 
-že jednovláknová implementace clusterovacího algoritmu 
-dosahuje přibližně stonásobně vyšší výkon v porovnání s vícevláknovou variantou. 
+že jedno vláknová implementace clusterovacího algoritmu 
+dosahuje přibližně stonásobně vyšší výkon v porovnání s více vláknovou variantou. 
 Tento výsledek vyvolává otázky o optimálnosti paralelního zpracování v rámci dané úlohy 
 a použité implementace.
 Jedním z potenciálních důvodů je, 
@@ -1924,7 +1930,7 @@ zda-li má smysl přidat pro problém více vláken.
 
 \section{Nedostatky a potenciální vylepšení do budoucna}
 
-Do Haskelyzeru byla přidaná funkcionalita na načitání CSV souborů,
+Do Haskelyzeru byla přidaná funkcionalita na načítání CSV souborů,
 kde probíhá validace s možností vkládání dat do programu.
 Tato funkcionalita nebyla řádně testována, 
 ale nabízí zjednodušení zpracování dat.
@@ -1936,7 +1942,7 @@ které by byly znovu využity.
 V aplikaci na načítání modelů do scén se nachází pouze část,
 kdy se scéna načte pouze jednou.
 Ale co se má dít v případě, 
-kdy se modely musí načítíst postupně?
+kdy se modely musí načíst postupně?
 Nyní se pokaždé vytvoří nový thread a 
 právě tvorba nového threadu zabírá spoustu času,
 což bylo možné si povšimnout v třetím příkladu na datovou analytiku.
@@ -1944,12 +1950,12 @@ což bylo možné si povšimnout v třetím příkladu na datovou analytiku.
 Nyní Haskelyzer nepodporuje obyčejné konstanty jako argumenty a
 spoléhá na konstanty,
 které musí místo toho nabízet daný modul, 
-kde ja Haskelyzer vyvolán.
-Též zde chybí základní podpora foldingu pro sbírání výskedků z Haskelyzeru.
+kde je Haskelyzer vyvolán.
+Též zde chybí základní podpora foldingu pro sbírání výsledků z Haskelyzeru.
 
 \chapter{Závěr}
 Hlavním cílem této práce bylo \textbf{vytvoření doménově specifického jazyka (DSL)} se zaměřením 
-na \textbf{tacit (beztečkovou) syntaxi} a 
+na \textbf{tacit (bez tečkovou) syntaxi} a 
 jak je takový DSL navržen, 
 pomocí programovacího jazyka Haskell, 
 s ověřením použitelnosti a funkčnosti v různých aplikacích.
@@ -1963,7 +1969,7 @@ Následně se provádí rešerše nad APL což je programovací jazyk,
 který je primárně navržen pro tacit zápis.
 
 V druhé kapitole se nachází \textbf{definice DSL} a
-využití různých DSL ve specických doménách problematiky.
+využití různých DSL ve specifických doménách problematiky.
 
 V třetí kapitole se nachází \textbf{implementace navrženého DSL}, 
 Haskelyzeru, 
@@ -1974,7 +1980,7 @@ jak se abstraktní syntaktický strom převádí
 do Haskell kódu během kompilace projektu, 
 pomocí \textbf{meta-programming} mechanismu Template Haskell.
 
-V poslední kapitole se \textbf{ověřuje použitelnost} narvženého DSL v 
+V poslední kapitole se \textbf{ověřuje použitelnost} navrženého DSL v 
 grafické aplikaci s kontextem načítání modelů do scén,
 web scraping aplikaci pro scrapování několika web domén současně a 
 datové analýze, 

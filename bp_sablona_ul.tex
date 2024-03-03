@@ -345,20 +345,20 @@ Procedurální paradigma se zaměřuje na sekvenci instrukcí,
 které jsou vykonávány postupně
 v závislosti na architektuře procesoru.
 Program je rozdělen na procedury a funkce, 
-které provádějí určité operace. 
+které provádějí určité operace. (\cite{Martin2018}, s. 48-49)
 
 Objektově orientované paradigma klade důraz na objekty a
 jejich interakce. 
 Program je strukturován kolem tříd, 
 které obsahují data (atributy) a 
 metody (funkce), 
-které s těmito daty pracují. 
+které s těmito daty pracují. (\cite{Martin2018}, s. 49)
 
 Funckionálního paradigma je deklarativní způsob programování, 
 kde funkce jsou považovány za základní stavební bloky programu. 
 Funkcionální jazyky mají za cíl minimalizovat vedlejší efekty.
 To přispívá ke stabilitě, zjednodušení problematiky domény a 
-eliminaci některých typů chyb. 
+eliminaci některých typů chyb. (\cite{Martin2018}, s. 49)
 
 V různých funkcionálních jazycích je povolena různá míra mutace dat.
 Například jazyk F\# umožňuje mutaci dat kdekoli v programu, 
@@ -368,7 +368,7 @@ nového prostředí.
 Na druhou stranu, 
 v jazyce Haskell jsou mutace omezeny v IO monádě a 
 data musí být uloženy 
-ve specifických typech jako IORef, STRef nebo MVar. 
+ve specifických typech jako IORef, STRef nebo MVar (\cite{Jones2010}). 
 Takto Haskell pomáhá udržet jasnou separaci mezi čistým funkcionalním kódem a kódem, 
 který se zabývá měnícím se stavem nebo interakcí s okolím.
 
@@ -383,13 +383,12 @@ které si klade.
 \section{Vliv paradigmat na programovací jazyky}
 Velmi málo jazyků implementuje paradigma stoprocentně. 
 Když to udělají, 
-jsou takzvaně \textit{čisté}. 
+jsou takzvaně \textit{čisté} (\cite{ProgrammingParadigms}). 
 Je neuvěřitelně vzácné mít "čistě OOP" jazyk nebo 
 "čistě funkcionální" jazyk. 
-Mnoho jazyků má pár výjimek, například v OCamlu budete programovat pomocí funkcí 90\% nebo 
-více času, ale pokud potřebujete stav, můžete ho získat. 
-I Haskell který se považuje za \textit{čistě} funkcionální jazyk,
-tak podporuje \textit{do} notaci díky němuž se dá psát kód imperativně.
+Haskell který se považuje za \textit{čistě} funkcionální jazyk,
+tak podporuje \textit{do} notaci díky němuž se dá psát kód imperativně
+i když se jedná o syntaktické cukrátko \textit{monad bind} operátoru.
 Dalším příkladem je že velmi málo jazyků implementuje OOP, 
 jak si jej Alan Kay představoval (\cite{ProgrammingParadigms}).
 Mnoho jazyků usnadňuje programování v jednom nebo více paradigmat. 
@@ -399,17 +398,17 @@ Pokud je jazyk úmyslně navržen tak,
 aby umožňoval programování v mnoha paradigmatech současně, 
 nazýváme ho jazykem s více paradigmaty. 
 Pokud jazyk neúmyslně podporuje více paradigmat, 
-neexistuje pro to zvláštní slovo.
+neexistuje pro to zvláštní slovo (\cite{ProgrammingParadigms}).
 
 \section{Tacit programming}
 
 Tacit programming je programovací styl, 
 který klade důraz na kompozici funkcí, 
 které manipulují argumenty a 
-kde se tyto argumenty explicitně nespecifikují.
-Pro základní ukázky bude využit JavaScript jelikož se jedná o jeden z nejpopulárnějších jazyků. 
+kde se tyto argumenty explicitně nespecifikují (\cite{Barros2005}).
 Základní principy funkcionálního a tacit programování jsou v jazyce JavaScript,
-jelikož se jedná o jeden z nejvíce populárních programovacích jazyků a v základu má již funkcionální možnosti.
+jelikož se jedná o jeden z nejvíce populárních programovacích jazyků v roce 2023
+a v základu má již funkcionální možnosti (\cite{StackSurvey}).
 Detailnější principy jsou psány v Haskellu.
 
 \textbf{Javascript}
@@ -468,13 +467,13 @@ const partiallyAppliedData2 = ["A", "B", "C"]
 
 \end{minted}
 Curry funkce transfomuje existující funkci tak, 
-že máme pro každý argument vlastní vracející funkci. 
-Z funkce \textbf{f(a,b,c,d)} vzniká funkce \textbf{f(a)(b)(c)(d)} (\cite{Currying}).
+že máme pro každý argument vlastní vracející funkci  (\cite{Currying}). 
+Z funkce \textbf{f(a,b,c,d)} vzniká funkce \textbf{f(a)(b)(c)(d)}.
 V čem je toto výhodné?
 Například je zde uvedené pole, 
 které se skládá z částečně aplikovaných funkcí. 
-Takto může programátor naiterovat odpověď ze serveru do objektu z předchozí ukázky,
-které je závislé na třeba na uživatelském vstupu. 
+Takto může například programátor postupně naskládat výsledky opovědí ze serveru,
+které je třeba závislé na uživatelském vstupu. 
 
 Zajímavější část je u \textit{partiallyAppliedData2}. 
 Curryovaná funkce vrací funkci, 
@@ -482,7 +481,7 @@ jež očekává vstupní parametr,
 aby byla vyhodnocena. 
 Tento princip je důležitý
 pro lenivé vyhodnocení, 
-který využívá Haskell.
+který využívá Haskell (\cite{HaskellCurrying}).
 
 Může zde padnout argument, 
 že ve zmíněném případě se curryování nachází pouze pro funkci,
@@ -541,7 +540,7 @@ které mají v sobě již zakomponované funkce jako hodnoty a
 anonymní funkce nebo-li lambda výrazy.
 Pokud jsou tyto podmínky splněné, 
 tak lze obecně nadefinovat funkci pro kompozici i přesto,
-že to nebude syntakticky kompaktní.
+že \textit{composed} funkce nebude syntakticky kompaktní.
 
 Následující příklad sumace:
 
@@ -620,10 +619,11 @@ tak vrací průběžně vypočtené hodnoty.
 
 \section{Debugging}
 
-Debugging je zásadní činností při vývoji softwaru, která umožňuje identifikovat, 
-analyzovat a odstraňovat chyby ve zdrojovém kódu. 
+Debugging je zásadní činností při vývoji softwaru, 
+která umožňuje identifikovat, 
+analyzovat a odstraňovat chyby ve zdrojovém kódu (\cite{WhatIsDebugging}). 
 Proces debuggování je obzvláště důležitý v imperativních a objektově orientovaných jazycích, 
-které často disponují vyspělými debugovacími nástroji. 
+které často disponují vyspělými debugovacími nástroji.
 V těchto jazycích je očekáváno sekvenční vykonávání instrukcí, 
 což usnadňuje postupné sledování jejich provádění. 
 Inspekce zásobníku volání představuje 
@@ -631,7 +631,7 @@ další přirozenou součást debuggingu v těchto jazycích.
 
 V případě lenivého jazyka Haskell však debugging přináší značné obtíže. 
 Haskell využívá mechanismu lenivého vyhodnocování, což znamená, 
-že hodnoty jsou vypočteny až ve chvíli, kdy jsou skutečně potřeba. 
+že hodnoty jsou vypočteny až ve chvíli, kdy jsou skutečně potřeba (\cite{HaskellDebugging}).
 Tato vlastnost komplikuje proces sledování výpočtu a identifikaci chyb. 
 I přes existenci několika debuggovacích nástrojů pro Haskell může 
 debugging pro zkušeného vývojáře představovat opravdovou výzvu. 
@@ -644,7 +644,7 @@ Naštěstí Haskell nabízí možnost využití REPL
 (Read - Eval - Print - Loop) prostředí, 
 které umožňuje interaktivní evaluaci výrazů a postupné zkoumání jejich chování. 
 REPL tak může sloužit jako užitečný nástroj pro rychlé testování 
-a experimentování s funkcemi a výrazy. 
+a experimentování s funkcemi a výrazy \cite{HaskellGHCI}. 
 Přítomnost REPL v Haskellu zčásti kompenzuje obtíže spojené 
 s debuggingem a poskytuje prostředí pro analýzu a ladění kódu.
 
@@ -1134,6 +1134,7 @@ obsahuje všechny definice jazyka.
 {\begin{center}
 \captionof{figure}{Proces zpracování Haskelyzeru}
 \resizebox{16.9cm}{!}{\includegraphics{Parsing.png}}
+Zdroj: Vlastní zpracování
 \end{center}
 }
 
@@ -1310,6 +1311,7 @@ data Literal =
 \begin{center}
 \captionof{figure}{Lexer v kontextu jazyka}
 \resizebox{10cm}{!}{\includegraphics{Taskell-Diagram.png}}
+Zdroj: vlastní zpracování
 \end{center}
 }
 
@@ -1334,7 +1336,8 @@ protože \haskellInline{HaskelyzerFunction} může nabrat formu
 
 První část \haskellInline{HaskelyzerFunction} je pouze funkce a 
 její argumenty, 
-druhá část je \haskellInline{Concurrent [[HaskellyzerFunction]]}.
+druhá část je \\
+\haskellInline{Concurrent [[HaskellyzerFunction]]}.
 Ve výše zmíněných příkladech bylo poukázáno, 
 jak každá vygenerovaná funkce může vytvořit 
 další konkurentní funkce a v nich další vnořené konkurentní funkce. 
@@ -1900,7 +1903,7 @@ Proto je vždy důležité změřit,
 zda-li má smysl přidat pro problém více vláken.
 
 {\begin{center}
-\captionof{figure}{Výsledky benchmarkingu, kde jedno vlákno je rychlejší}
+\captionof{figure}{Výsledky benchmarkingu, kde je jedno vlákno rychlejší}
 \resizebox{16.9cm}{!}{\includegraphics{Benchmark-results-35.png}}
 \end{center}
 }

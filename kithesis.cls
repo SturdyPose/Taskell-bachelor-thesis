@@ -9,8 +9,6 @@
 
 \DeclareOption{male}{\setboolean{feminum}{false}}
 \DeclareOption{female}{\setboolean{feminum}{true}}
-\DeclareOption{czech}{\setboolean{czechlang}{true}}
-\DeclareOption{english}{\setboolean{czechlang}{false}}
 \ProcessOptions\relax
 
 \ifthenelse{\boolean{czechlang}}{%
@@ -47,10 +45,10 @@
 \onehalfspacing % řádkování 1 a půl
 
 % nastavení českých typografických pravidel
-\iftutex
-\RequirePackage{polyglossia}
-\ifthenelse{\boolean{czechlang}}{\setdefaultlanguage{czech}}{\setdefaultlanguage{english}}
-\else
-\usepackage{babel}
-\fi
+% \iftutex
+% \RequirePackage{polyglossia}
+% \ifthenelse{\boolean{czechlang}}{\setdefaultlanguage{czech}}{\setdefaultlanguage{english}}
+% \else
+% \usepackage{babel}
+% \fi
 

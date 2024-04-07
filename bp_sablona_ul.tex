@@ -446,12 +446,12 @@ jak funguje \textbf{currying} a~proč souvisí s~tacit programováním.
 \textbf{Javascript}
 \begin{minted}[bgcolor=CodeBackGround]{js}
 
-const curry = (f) => a~=> b => f(a,b);
+const curry = (f) => a => b => f(a,b);
 const sayHello = (a, b) = `Hello ${a} from ${b}`;
 const applyToFunctionArray = 
     (input,...args) => args.map(a => a(input))
 const partiallyAppliedData = ["A", "B", "C"].map(curry(sayHello)); 
-// [(b) => "Hello A~from ${b}", 
+// [(b) => "Hello A from ${b}", 
 //  (b) => "Hello B from ${b}", 
 //  (b) => "Hello C from ${b}"]
 const partiallyAppliedData2 = ["A", "B", "C"]
@@ -542,8 +542,8 @@ Následující příklad sumace:
 \textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
-sumCustom:: (Traversable t, Num a) => t a~->
-a~sumCustom = foldr (+) 0
+sumCustom:: (Traversable t, Num a) => t a ->
+a sumCustom = foldr (+) 0
 
 \end{minted}
 
@@ -554,7 +554,7 @@ int sum(int* arr, size_t numOfElements)
 {
     int acc = 0;
     
-    for(int i~= 0; i~< numOfElements; i++)
+    for(size_t i = 0; i< numOfElements; i++)
     {
         acc += *(arr + i);
     }
@@ -571,12 +571,12 @@ Další příklad poukazuje Fibonacciho posloupnost.
 \textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
--- Haskell je lenivý jazyk a~proto je možné vytvořit nekonečnou 
--- fibonnacciho posloupnost a~z~té si vzít jen potřebný počet čísel 
-fibonacci:: Num a~=> Int -> [a]
+-- Haskell je lenivý jazyk a proto je možné vytvořit nekonečnou 
+-- fibonnacciho posloupnost a z té si vzít jen potřebný počet čísel 
+fibonacci:: Num a => Int -> [a]
 fibonacci = (flip take) fibonacciInfinite
   where
-    fibonacciInfinite:: Num a~=> [a]
+    fibonacciInfinite:: Num a => [a]
     fibonacciInfinite = scanl (+) 0 (1:fibonacciInfinite)
 
 \end{minted}
@@ -597,7 +597,7 @@ void fibonacci(uint* arr, size_t numOfElements)
     {
       arr[1] = 1;
     }
-    for(int i~= 2; i~< numOfElements; i++)
+    for(size_t i = 2; i < numOfElements; i++)
     {
       arr[i] = arr[i - 1] + arr[i - 2];
     }
@@ -731,7 +731,7 @@ Tacit styl může být mocný a~elegantní.
 Zde je několik argumentů, 
 proč by se měl tacit zápis využít:
 
-\textbf{Kompaktnost a~elegance:}
+\textbf{Kompaktnost a elegance:}
 Tacitní zápis může často zredukovat kód na mnohem kratší a~elegantnější formu, 
 což může zvýšit čitelnost a~snížit objem psaného kódu.
 
@@ -748,7 +748,7 @@ V~některých případech může tacitní zápis zvýšit jasnost kódu tím,
 že se soustředí na to, co se děje (funkce a~operace), 
 a~minimalizuje odvádějící pozornost od proměnných a~argumentů.
 
-\textbf{Kód s~méně chybami:}
+\textbf{Kód s méně chybami:}
 S~minimálním množstvím stavových proměnných
 a~nečekaných efektů může být kód napsaný v~tacitním stylu méně náchylný k~chybám.
 
@@ -764,7 +764,7 @@ Bohužel tacit styl také může být obtížný pro programátory,
 zejména pokud nejsou na tento způsob programování zvyklí. 
 Zde jsou argumenty proti tacit stylu:
 
-\textbf{Složitost čtení a~porozumění:} 
+\textbf{Složitost čtení a porozumění:} 
 Tacitní styl může být velmi těžko čitelný a~obtížný k~pochopení, 
 což může způsobit problémy v~týmu a~při údržbě kódu. 
 Programátoři by měli být schopni snadno rozumět kódu,
@@ -803,7 +803,7 @@ Někdy se programátoři mohou pokoušet dosáhnout krátkého kódu na úkor č
 To může vést k~nepřehledným a~těžko udržovatelným programům.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{DSL - principy a~využití}
+\chapter{DSL - principy a využití}
 DSL (Domain Specific Language) jsou jazyky, 
 které se zaměřují na specifickou doménu problematiky.
 Obecně DSL jazyky jsou mnohem jednodušší než jejich plnohodnotné protějšky. 
@@ -815,7 +815,7 @@ ale místo toho pokud budou mít přístup rovnou k~DSL - výpočet šikmosti st
 hodnota cukrů v~krvi pacienta, 
 tak mohou plnit svojí práci o~mnohem efektivněji (\cite{DomainSpecificLanguages}).
 
-\section{Web a~enterprise}
+\section{Web a enterprise}
 Jedním z~nejrozšířenějších DSL jazyků je ze světa webu a~to \textbf{HTML a~CSS}. 
 HTML se zaměřuje na vytvoření rámce pro zobrazení textu,
 zatímco CSS se zaměřuje na stylizaci webu pomocí DOM selectorů. 
@@ -863,7 +863,7 @@ Na GitHubu pomocí YAMLu se dají sepsat konfigurační soubory
 na testování a~deployment.
 
 {\begin{center}
-\captionof{figure}{Výstřižek z~GitHub Actions}
+\captionof{figure}{Výstřižek z GitHub Actions}
 \resizebox{16.9cm}{!}{\includegraphics{Deployment.PNG}}
 \end{center}
 }
@@ -885,7 +885,7 @@ Totiž může nastat situace,
 kdy do DSL budou postupně implementovány podmínky,
 poté cykly
 a~z~ničeho nic existuje turingovsky kompletní jazyk, 
-který je složitý na pochopení a~údržbu. (\cite[s.~38-39]{Fowlerc2011})
+který je složitý na pochopení a~údržbu. (\cite[s.38-39]{Fowlerc2011})
 
 
 \chapter{Návrh vlastního DSL}
@@ -1154,7 +1154,7 @@ Zde je následující přiklad primitivního kombinátoru.
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 import qualified Text.Parsec.Token as Tok
-type CustomParser a~= Parsec String () a
+type CustomParser a = Parsec String () a
 
 data Variant = Double | Integer | String deriving Show
 
@@ -1364,19 +1364,19 @@ synonym pro parser.
 \textbf{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
-binary s~f assoc = 
-  Ex.Infix (reservedOp s~>> return (BinOp f)) assoc
+binary s f assoc = 
+  Ex.Infix (reservedOp s >> return (BinOp f)) assoc
 
 table = [[binary "*" Times Ex.AssocLeft,
           binary "/" Divide Ex.AssocLeft]
         ,[binary "+" Plus Ex.AssocLeft,
           binary "-" Minus Ex.AssocLeft]]
 
-type IParser a~= 
-  IndentParser -- Indent monáda z~knihovny indent
-    String     -- Vstupní typ, může zde být i~Text nebo Bytestring
-    ()         -- Stav, v~tomto případě stav není zapotřebí
-    a~-- Vracející typ po úspěšném parsování
+type IParser a = 
+  IndentParser -- Indent monáda z knihovny indent
+    String     -- Vstupní typ, může zde být i Text nebo Bytestring
+    ()         -- Stav, v tomto případě stav není zapotřebí
+    a          -- Vracející typ po úspěšném parsování
 
 expr :: IParser Expr
 expr = Ex.buildExpressionParser table factor
@@ -1391,7 +1391,7 @@ toplevelP :: IParser [Expr]
 toplevelP = do 
     def <- many $ do 
         try $ many newline
-        s~<- expr 
+        s <- expr 
         try $ many newline
         return s
     eof
@@ -1427,7 +1427,7 @@ který umožňuje typově bezpečné meta-programování během kompilace.
 % https://wiki.haskell.org/Template_Haskell
 Tím se otevírají možnosti vytvořit funkcionality, 
 kde program se může modifikovat sám sebe, 
-čemuž se říká \textbf{reflekce}.
+čemuž se říká \textbf{reflexe}.
 Pro tvorbu Haskelyzeru je Template Haskell nedílnou součástí,
 bez které se nedá obejít.
 Je též možné vytvořit výstupní soubor s~vygenerovaným Haskel kódem
@@ -1724,7 +1724,7 @@ translate::
   GL.GLfloat -> 
   GL.GLfloat -> 
   LoadedWaveFrontOBJ
-translate x y z~loadedWaveFront = 
+translate x y z loadedWaveFront = 
   loadedWaveFront & loadedWaveFrontOBJTranslate .~ (V3 x y z)
       
 scale:: 
@@ -1853,8 +1853,8 @@ Dalším krokem je definice způsobu scrapingu.
 \textbf{Haskelyzer}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
-let scrapeData a~b c postgreConnection mongoConnection = 
-  | scrapeNewsSource a~-> saveToPostgreSQL postgreConnection
+let scrapeData a b c postgreConnection mongoConnection = 
+  | scrapeNewsSource a -> saveToPostgreSQL postgreConnection
   | scrapeDifferentNewsSource b -> saveToMongoDB mongoConnection
   | scrapeDifferentNewsSource b -> saveToPostgreSQL mongoConnection
   | scrapeWeatherSource c -> saveToPostgreSQL postgreConnection
@@ -1887,7 +1887,7 @@ scrapeData::
     -- into Writer monad to get useful logs
     mapM_ 
       (\(a,b,c) -> 
-        scrapeData a~b c mongoConnection postgreConnection
+        scrapeData a b c mongoConnection postgreConnection
       ) 
       sourcesFromWhichToMine <&> sequence . concat
 \end{minted}
@@ -1984,7 +1984,7 @@ Veškeré přednesené charakteristiky
 a~informace o~tvorbě DSL v~této bakalářské práci
 mohou sloužit jako základ pro tvorbu jakéhokoliv DSL v~programovacím jazyce Haskell.
 
-\chapter{Citace}
+\chapter{Seznam použitých zdrojů}
 
 
 %%\cite{IntroToLLVM}

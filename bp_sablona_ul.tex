@@ -32,9 +32,15 @@
   backend=biber,
   style=iso-authoryear,
   ]{biblatex}
-\usepackage{minted}
+\usepackage{caption}
+\usepackage[newfloat]{minted}
 \usepackage{listings}
+
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\SetupFloatingEnvironment{listing}{name=Ukázka}
+
 \usepackage[dvipsnames]{xcolor}
+\usepackage{pdfpages}
 
 % \newcommand\mkbibcolor[2]{\textcolor{#1}{\hypersetup{citecolor=#1}#2}}
 % \DeclareCiteCommand{\cite}[\mkbibcolor{red}]
@@ -179,18 +185,20 @@ Studijní obor:          & \OBOR\\
 \cleardoublepage
 \thispagestyle{empty}
 
-\textbf{\textsf{Cíl bakalářské práce}}
+\includepdf[pages=-]{zadanBP_OlegMUSIJENKO-copy.pdf}
 
-Cílem bakalářské práce je ukázat výhody a~nevýhody tacit přístupu k~programování. Výstupem práce bude návrh vlastního doménově specifického jazyka (DSL), který
-bude využívat tacit programming, a~navazující pilotní implementace jeho interpretu.
-Návrh jazyka by se měl soustředit na následující body:\\
-• přehledná syntaxe,\\
-• možnosti použití vysokoúrovňových nástrojů pro překlad a~podporu běhu programu (např. LLVM v~Haskellu) včetně parsování jazyka (např. Parsec v~Haskellu),\\
-• efektivita při vykonávaní,\\
-• případná podpora paralelních výpočtů
+% \textbf{\textsf{Cíl bakalářské práce}}
 
-\cleardoublepage
-\thispagestyle{empty}
+% Cílem bakalářské práce je ukázat výhody a~nevýhody tacit přístupu k~programování. Výstupem práce bude návrh vlastního doménově specifického jazyka (DSL), který
+% bude využívat tacit programming, a~navazující pilotní implementace jeho interpretu.
+% Návrh jazyka by se měl soustředit na následující body:\\
+% • přehledná syntaxe,\\
+% • možnosti použití vysokoúrovňových nástrojů pro překlad a~podporu běhu programu (např. LLVM v~Haskellu) včetně parsování jazyka (např. Parsec v~Haskellu),\\
+% • efektivita při vykonávaní,\\
+% • případná podpora paralelních výpočtů
+
+% \cleardoublepage
+% \thispagestyle{empty}
 
 \textbf{Prohlášení}
 
@@ -406,7 +414,9 @@ jelikož se jedná o~jeden z~nejvíce populárních programovacích jazyků v~ro
 a~v~základu má již funkcionální možnosti (\cite{StackSurvey}).
 Detailnější principy jsou psány v~Haskellu.
 
-\textbf{Javascript}
+% \caption{Javascript}
+\begin{code}
+\captionof{listing}{Javascript}
 \begin{minted}[bgcolor=CodeBackGround]{js}
 
   fetch("APIURL")
@@ -415,6 +425,7 @@ Detailnější principy jsou psány v~Haskellu.
   .catch(e => console.error(e))
 
 \end{minted}
+\end{code}
 
 Zde se řetězí funkce zpětného volání ("Callbacks"). 
 Tento postup je běžný u~JavasSript programátorů,
@@ -425,6 +436,10 @@ mohou nám tyto anonymní funkce zabírat paměť
 a~během debuggingu nám tento styl zápisu "znečišťuje" 
 zásobník volání. 
 
+\newpage
+
+\begin{code}
+\captionof{listing}{Javascript}
 \begin{minted}[bgcolor=CodeBackGround]{js}
 
   fetch("APIURL")
@@ -433,6 +448,7 @@ zásobník volání.
   .catch(console.error)
 
 \end{minted}
+\end{code}
 
 Přepsaná ukázka je logicky ekvivalentní k~té předešlé. 
 Zásadní rozdíl je ten, 
@@ -443,7 +459,8 @@ Tudíž se jedná o~\textit{tacit} zápis.
 Následující úryvek ukazuje, 
 jak funguje \textbf{currying} a~proč souvisí s~tacit programováním.
 
-\textbf{Javascript}
+\begin{code}
+\captionof{listing}{Javascript}
 \begin{minted}[bgcolor=CodeBackGround]{js}
 
 const curry = (f) => a => b => f(a,b);
@@ -461,6 +478,8 @@ const partiallyAppliedData2 = ["A", "B", "C"]
 //  "Hello C from 1"]
 
 \end{minted}
+\end{code}
+
 Curry funkce transformuje existující funkci tak, 
 že máme pro každý argument vlastní vracející funkci  (\cite{Currying}). 
 Z~funkce \textbf{f(a,b,c,d)} vzniká funkce \textbf{f(a)(b)(c)(d)}.
@@ -484,7 +503,8 @@ která přijímá pouze dva argumenty.
 Zde je definice funkce, 
 která převádí jakoukoliv funkci na curryovanou.
 
-\textbf{Javascript}
+\begin{code}
+\captionof{listing}{Javascript}
 \begin{minted}[bgcolor=CodeBackGround]{js}
 
 const curry = (f) => (..args) => args.length >= f.length ? 
@@ -492,6 +512,7 @@ const curry = (f) => (..args) => args.length >= f.length ?
     curry.apply(this, args.concat(args2));
 
 \end{minted}
+\end{code}
 
 Nutné je zmínit, 
 co \textbf{není} tacitní zápis. 
@@ -500,7 +521,8 @@ Z~definice tacit programmingu vyplývá,
 že musí docházet ke kompozici funkcí bez specifikace parametrů
 a~ne řetězit funkce v~závislosti na jejich typu nebo prototypu.
 
-\textbf{C\#}
+\begin{code}
+\captionof{listing}{C\#}
 \begin{minted}[bgcolor=CodeBackGround]{csharp}
 
 class MainClass 
@@ -521,12 +543,14 @@ class MainClass
 }
 
 \end{minted}
+\end{code}
 
 Proč příklad se C\# není zapsán jako tacit? 
 Funkce \textit{Append} vrací vlastní referenci na \textit{StringBuilder}
 a~ne novou funkci. 
 Též se zde pracuje s~argumenty funkce, 
 což je proti definici tacit programmingu.
+\vfill
 
 \section{Využití Tacit programmingu v~různých programovacích jazycích}
 
@@ -539,15 +563,18 @@ tak lze obecně nadefinovat funkci pro kompozici i~přesto,
 
 Následující příklad sumace:
 
-\textbf{Haskell}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 sumCustom:: (Traversable t, Num a) => t a ->
 a sumCustom = foldr (+) 0
 
 \end{minted}
+\end{code}
 
-\textbf{C}
+\begin{code}
+\captionof{listing}{C}
 \begin{minted}[bgcolor=CodeBackGround]{c}
 
 int sum(int* arr, size_t numOfElements)
@@ -563,12 +590,14 @@ int sum(int* arr, size_t numOfElements)
 }
 
 \end{minted}
+\end{code}
 Z~příkladu si lze povšimnout, 
 že bez tečkový styl zápisu je opravdu kompaktní. 
 V~Haskellu není třeba explicitně manipulovat s~parametry funkcí.
 
 Další příklad poukazuje Fibonacciho posloupnost.
-\textbf{Haskell}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 -- Haskell je lenivý jazyk a proto je možné vytvořit nekonečnou 
@@ -580,11 +609,13 @@ fibonacci = (flip take) fibonacciInfinite
     fibonacciInfinite = scanl (+) 0 (1:fibonacciInfinite)
 
 \end{minted}
+\end{code}
 
 % \vfill
 % \pagebreak
 
-\textbf{C}
+\begin{code}
+\captionof{listing}{C}
 \begin{minted}[bgcolor=CodeBackGround]{c}
 
 void fibonacci(uint* arr, size_t numOfElements)
@@ -604,6 +635,7 @@ void fibonacci(uint* arr, size_t numOfElements)
 }
 
 \end{minted}
+\end{code}
 
 Z~pohledu imperativního programátora implementace v~C je zcela jasná. 
 Funkce přijímá ukazatel na pole a~modifikuje toto pole. 
@@ -976,7 +1008,8 @@ Pozoruhodným rysem těchto šipek je fakt,
 \setlength{\parindent}{0pt}
 Původní návrh daného jazyka:
 
-\textbf{Haskelyzer}
+\begin{code}
+\captionof{listing}{Haskelyzer}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 [CompileTime]
@@ -996,6 +1029,7 @@ let nestedConcurrentProcess = exampleCSV | kalmanFilter | sum
                                          | gaussianFilter
 
 \end{minted}
+\end{code}
 
 Na uvedeném příkladu je vidět,
 že jsou zde funkce deklarovány pomocí \haskellInline{let}.
@@ -1059,13 +1093,15 @@ Takovým příkladem může být GUI aplikace,
 kde k~vykreslování dochází na jiném vlákně 
 než jsou uživatelské interakce.
 
-\textbf{Haskelyzer}
+\begin{code}
+\captionof{listing}{Haskelyzer}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 let guiMainLoop = | gatherMainState -> writeEventQueue -> render
                   | gatherEventQueue -> fireEventsToMainState
 
 \end{minted}
+\end{code}
 
 V~GUI aplikacích se vždy nachází hlavní cyklus,
 který má za úkol zpracovat uživatelské akce
@@ -1151,6 +1187,8 @@ které tyto tokeny vrací.
 Haskelyzer využívá knihovnu Parsec. 
 Zde je následující přiklad primitivního kombinátoru.
 
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 import qualified Text.Parsec.Token as Tok
@@ -1172,6 +1210,7 @@ parseToVariant = many $ integer <|> float <|>
   (lexeme $ (manyTill alphaNum $ try space))
 
 \end{minted}
+\end{code}
 
 Cílem výše zmíněného příkladu je, 
 přečíst soubor do \haskellInline{String} 
@@ -1223,7 +1262,8 @@ Definice lexeru si vyžaduje nakonfigurovat jednotlivé parametry,
 jako je senzitivita velkých a~malých písmen, 
 komentáře a~rezervovaná jména.
 
-\textbf{Haskell}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 haskelyzerLexer :: Tok.GenTokenParser String () (IndentT Identity)
@@ -1247,6 +1287,7 @@ haskelyzerLexer =
         names = ["let"]
 
 \end{minted}
+\end{code}
 
 Lze si všimnout, 
 že tato funkce má poněkud zajímavý typ \haskellInline{IndentT Identity}.
@@ -1259,7 +1300,8 @@ protože budou automaticky započteny v~závislosti na zdroji.
 Pokud navrhovaný DSL obsahuje nějaké binární či unární operace, 
 tak je zapotřebí si definovat do základních stavebních bloků lexeru.
 
-\textbf{Haskell}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 data BinOp
@@ -1306,6 +1348,7 @@ data Literal =
   deriving (Show, Ord, Eq)
 
 \end{minted}
+\end{code}
 
 \newpage
 
@@ -1361,7 +1404,8 @@ hlavní výrazy.
 Zároveň se pro zjednodušení zápisu se definuje typový 
 synonym pro parser.
 
-\textbf{Haskell}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 binary s f assoc = 
@@ -1402,6 +1446,7 @@ parseToplevelP input =
     runIndent $ runParserT toplevelP () "<stdin>" input
 
 \end{minted}
+\end{code}
 
 Funkce \haskellInline{parseToplevelP} je hlavní vstup pro parsování obsahu,
 který vrací \textbf{AST}. 
@@ -1451,18 +1496,21 @@ a~loadModel2 nemusí mít stejný počáteční datový typ,
 ale koncové funkce jako je \haskellInline{scale} 
 vrací stejný datový typ \haskellInline{a}.
 
-\textbf{Haskelyzer}
+\begin{code}
+\captionof{listing}{Haskelyzer}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 let loadModels =
 | loadModel1 -> rotate 0.0 45.0 90.0 -> scale 4.0
 | loadModel2 -> translate 60.0 0.0 0.0 -> scale 3.0
 \end{minted}
+\end{code}
 
 \newpage
 
 Při překladu z~AST se vygeneruje během kompilace tato funkce.
 
-\textbf{Haskell}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 loadModels:: IO [Model]
 loadModels = runListConcurrently [_loadModel1, _loadModel2] 
@@ -1472,19 +1520,23 @@ loadModels = runListConcurrently [_loadModel1, _loadModel2]
       _loadModel2 = 
         ((scale 3.0) . (rotate 0.0 45.0 90.0)) loadModel2
 \end{minted}
+\end{code}
 
 Toto je složitější než se na první pohled zdá,
 protože celý kontext této funkce se může změnit v~ten moment,
 kdy se začlení parametry funkce.
 
-\textbf{Haskelyzer}
+\begin{code}
+\captionof{listing}{Haskelyzer}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 let loadModels scaleFactor =
 | loadModel1 -> rotate 0.0 45.0 90.0 -> scale scaleFactor 
 | loadModel2 -> translate 60.0 0.0 0.0 -> scale scaleFactor 
 \end{minted}
+\end{code}
 
-\textbf{Haskell}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 loadModels:: Float -> IO [Model]
 loadModels scaleFactor = 
@@ -1495,6 +1547,7 @@ loadModels scaleFactor =
   _loadModel2 = 
       ((scale scaleFactor) . (rotate 0.0 45.0 90.0)) loadModel2 
 \end{minted}
+\end{code}
 
 Prvně se definuje soubor, 
 kde se Haskelyzer nachází,
@@ -1507,7 +1560,8 @@ Nadále se AST zpracuje do jednotlivých,
 kompilátorem podporovaných, 
 Haskell funkcí.
 
-\textbf{Haskell}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 generateHaskalyzer:: FilePath -> Q [Dec]
 generateHaskalyzer filePath = do
@@ -1618,6 +1672,7 @@ runListConcurrently:: [IO a] -> IO [a]
 runListConcurrently = mapConcurrently id
 
 \end{minted}
+\end{code}
 
 \chapter{Praktické příklady využití}
 
@@ -1663,7 +1718,8 @@ a~poté vyrenderovat na hlavním vlákně.
 
 \newpage
 
-\textbf{Haskell}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 data LoadedWaveFrontOBJ = LoadedWaveFrontOBJ {
@@ -1677,8 +1733,10 @@ data LoadedWaveFrontOBJ = LoadedWaveFrontOBJ {
 $(makeLenses ''ObjectDescription)
 
 \end{minted}
+\end{code}
 
-\textbf{Haskelyzer}
+\begin{code}
+\captionof{listing}{Haskelyzer}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 let loadModels = 
@@ -1695,11 +1753,13 @@ let loadModels =
 | loadModel11 
 
 \end{minted}
+\end{code}
 
 Haskelyzer volá funkce na načítání a~transformaci modelů.
 Je zapotřebí tyto funkce nadefinovat.
 
-\textbf{Haskell}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 $(generateHaskelyzerDSL "pathToHaskelyzer.haskelyzer")
@@ -1734,13 +1794,15 @@ scale x loadedWaveFront =
   loadedWaveFront & loadedWaveFrontOBJScale .~ x
 
 \end{minted}
+\end{code}
 
 Funkce \haskellInline{loadModels} vrací typ \haskellInline{IO [IO LoadedWaveFrontOBJ]},
 což je pouze vnořená IO monáda, 
 která se může usnadnit pomocí pomocné funkce \haskellInline{joinTraversableMonad}
 a~to natransformuje data do typu \haskellInline{IO [LoadedWaveFrontObj]}.
 
-\textbf{Haskell}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 joinTraversableMonad:: 
@@ -1762,6 +1824,7 @@ beforeRendering = do
   renderFrame
 
 \end{minted}
+\end{code}
 
 Pomocí Haskelyzeru došlo ke splnění cíle.
 Konkurentně se načetly modely, 
@@ -1775,7 +1838,8 @@ ze které se poté mohou modely upravovat a~renderovat.
 
 Zde je reálná ukázka z~rendereru.
 
-\textbf{Haskelyzer}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 let loadModels = 
@@ -1785,6 +1849,7 @@ let loadModels =
 | loadPawn -> scale 20 -> rotate 180 0 0-> translate 100 0 0
 
 \end{minted}
+\end{code}
 
 \newpage
 
@@ -1814,7 +1879,9 @@ Cílem je dané výsledky uložit do databáze,
 tak je nutné vytvořit konekci k~daným databázovým systémům. 
 
 \newpage
-\textbf{Haskell}
+
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
   sourcesFromWhichToMine = 
@@ -1847,10 +1914,12 @@ tak je nutné vytvořit konekci k~daným databázovým systémům.
     return (x, y)
   
 \end{minted}
+\end{code}
 
 Dalším krokem je definice způsobu scrapingu. 
 
-\textbf{Haskelyzer}
+\begin{code}
+\captionof{listing}{Haskelyzer}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 let scrapeData a b c postgreConnection mongoConnection = 
@@ -1860,10 +1929,12 @@ let scrapeData a b c postgreConnection mongoConnection =
   | scrapeWeatherSource c -> saveToPostgreSQL postgreConnection
 
 \end{minted}
+\end{code}
 
 Po úspěšném scrapingu se uloží výsledky do specifikované databáze.
 
-\textbf{Haskell}
+\begin{code}
+\captionof{listing}{Haskell}
 \begin{minted}[bgcolor=CodeBackGround]{haskell}
 
 scrapeData:: 
@@ -1891,6 +1962,8 @@ scrapeData::
       ) 
       sourcesFromWhichToMine <&> sequence . concat
 \end{minted}
+\end{code}
+
 \newpage
 
 \section{Využití pro datovou analytiku a~změření výkonu}
@@ -1928,6 +2001,7 @@ Tato funkcionalita nebyla řádně testována,
 ale nabízí zjednodušení zpracování dat.
 Tato funkcionalita se může rozšířit při přidání dalších parserů 
 s~případnou podporu pro SQL-NOSQL.
+\newpage
 
 Potenciálním vylepšením by bylo ponechaní threadů, 
 které by byly znovu využity.
